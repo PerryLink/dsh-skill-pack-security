@@ -17,7 +17,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$source = Join-Path $here '..' 'skills'
+$source = Join-Path $here '..\skills'
 
 function Get-GitRoot {
   $out = & git rev-parse --show-toplevel 2>$null
@@ -28,8 +28,8 @@ function Get-GitRoot {
 switch ($Target) {
   'project-dsh'   { $root = Join-Path (Get-GitRoot) '.dsh' }
   'project-agents' { $root = Join-Path (Get-GitRoot) '.agents' }
-  'user-dsh'      { $home = if ($env:DSH_HOME) { $env:DSH_HOME } else { Join-Path $HOME '.dsh' }; $root = $home }
-  'user-agents'   { $home = if ($env:DSH_AGENTS_HOME) { $env:DSH_AGENTS_HOME } else { Join-Path $HOME '.agents' }; $root = $home }
+  'user-dsh'      { $baseHome = if ($env:DSH_HOME) { $env:DSH_HOME } else { Join-Path $HOME '.dsh' }; $root = $baseHome }
+  'user-agents'   { $baseHome = if ($env:DSH_AGENTS_HOME) { $env:DSH_AGENTS_HOME } else { Join-Path $HOME '.agents' }; $root = $baseHome }
 }
 $dest = Join-Path $root 'skills'
 
@@ -37,10 +37,10 @@ if (-not (Test-Path $source)) { throw "skills source not found: $source" }
 New-Item -ItemType Directory -Path $dest -Force | Out-Null
 
 foreach ($dir in Get-ChildItem $source -Directory) {
-  $target = Join-Path $dest $dir.Name
-  if (Test-Path $target) { Remove-Item $target -Recurse -Force }
-  Copy-Item $dir.FullName $target -Recurse
-  Write-Host "installed: $target"
+  $destDir = Join-Path $dest $dir.Name
+  if (Test-Path $destDir) { Remove-Item $destDir -Recurse -Force }
+  Copy-Item $dir.FullName $destDir -Recurse
+  Write-Host "installed: $destDir"
 }
 
 Write-Host ''
