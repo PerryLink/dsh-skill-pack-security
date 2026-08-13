@@ -14,6 +14,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="लाइसेंस: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="टॉपिक: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="टॉपिक: dsh-plugin">
@@ -27,6 +30,8 @@
 ## यह क्या है?
 
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) — जो [Cordis](https://github.com/cordiverse/cordis) पर बना "हर चीज़ एक प्लगइन है" वाला एजेंट हार्नेस है — के लिए एक **शुद्ध स्किल पैक**। यह पाँच सुरक्षा-ऑडिट पद्धतियों को `SKILL.md` बंडल के रूप में वितरित करता है: मॉडल उन्हें सत्र कैटलॉग में खोजता है और `skill` टूल से ज़रूरत पर पूरा पाठ लोड करता है।
+
+> रिपॉज़िटरी: https://github.com/PerryLink/dsh-skill-pack-security
 
 **शून्य रनटाइम कोड।** कोई टूल पंजीकृत नहीं, कोई सेवा पंजीकृत नहीं, सत्र व्यवहार में कोई बदलाव नहीं। एकमात्र निष्पादन-योग्य वैकल्पिक `provider/` प्लगइन है — पैकेजिंग का एक प्रदर्शन — और पैक उसके बिना भी ठीक वैसे ही काम करता है।
 
@@ -92,6 +97,8 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 | `scripts/install.ps1` | चारों रूट के लिए एक-कमांड इंस्टॉलर |
 | `provider/` | वैकल्पिक प्रदाता प्लगइन (पैकेजिंग प्रदर्शन, `ctx.effect()` से पंजीकृत) |
 | `verify/verify-skill-pack.mts` | आधिकारिक पार्सर और वास्तविक `skill` टूल के विरुद्ध हेडलेस सत्यापन |
+| `docs/ecosystem-conflict-check.md` | `dsh-plugin` इकोसिस्टम के GitHub टॉपिक/नाम संघर्षों का स्नैपशॉट |
+| `.github/workflows/verify.yml` | CI: हर push पर हार्नेस स्थापित कर 9 जाँचें चलाता है |
 | `LICENSE` | Apache License 2.0 |
 
 ## सत्यापन
@@ -109,9 +116,13 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 9. वैकल्पिक प्रदाता प्लगइन `ctx.effect()` से माउंट होता है और साफ़-सफ़ाई से हटता है
 
 ```powershell
+# स्थानीय: पैक के बगल वाले हार्नेस चेकआउट को स्वतः हल करता है, या स्पष्ट रूप से बताएँ
+$env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
 # All 9 checks passed for dsh-skill-pack-security.
 ```
+
+यही 9 जाँचें `.github/workflows/verify.yml` के ज़रिए हर push पर GitHub पर भी चलती हैं (ऊपर बैज)।
 
 ## रोडमैप
 

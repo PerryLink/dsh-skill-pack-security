@@ -14,6 +14,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="Licença: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Tópico: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Tópico: dsh-plugin">
@@ -27,6 +30,8 @@
 ## O que é isto?
 
 Um **pacote de skills puro** para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) — o harness de agentes "tudo é um plugin" construído sobre o [Cordis](https://github.com/cordiverse/cordis). Ele distribui cinco metodologias de auditoria de segurança como bundles `SKILL.md`: o modelo as descobre no catálogo da sessão e carrega o corpo sob demanda com a ferramenta `skill`.
+
+> Repositório: https://github.com/PerryLink/dsh-skill-pack-security
 
 **Zero código em tempo de execução.** Nenhuma ferramenta é registrada, nenhum serviço é registrado, nenhum comportamento de sessão muda. O único executável é o plugin opcional `provider/` — uma demonstração de empacotamento — e o pacote funciona igualmente sem ele.
 
@@ -92,6 +97,8 @@ Opcional: monte o pacote inteiro sem copiar usando o plugin `provider/` (veja [p
 | `scripts/install.ps1` | Instalador de um comando para as quatro raízes |
 | `provider/` | Plugin provedor opcional (demonstração de empacotamento, registrado via `ctx.effect()`) |
 | `verify/verify-skill-pack.mts` | Verificação headless contra o parser oficial e a ferramenta `skill` real |
+| `docs/ecosystem-conflict-check.md` | Instantâneo de conflitos de tópicos/nomes do GitHub no ecossistema `dsh-plugin` |
+| `.github/workflows/verify.yml` | CI: instala o harness e executa as 9 verificações a cada push |
 | `LICENSE` | Apache License 2.0 |
 
 ## Verificação
@@ -109,9 +116,13 @@ Opcional: monte o pacote inteiro sem copiar usando o plugin `provider/` (veja [p
 9. O plugin provedor opcional monta via `ctx.effect()` e descarta de forma limpa
 
 ```powershell
+# local: resolve automaticamente o checkout do harness ao lado do pack, ou aponte explicitamente
+$env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
 # All 9 checks passed for dsh-skill-pack-security.
 ```
+
+As mesmas 9 verificações também rodam no GitHub a cada push via `.github/workflows/verify.yml` (badge acima).
 
 ## Roadmap
 

@@ -14,6 +14,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Topic: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Topic: dsh-plugin">
@@ -27,6 +30,8 @@
 ## 这是什么？
 
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）的**纯技能包**——`dsh` 是构建于 [Cordis](https://github.com/cordiverse/cordis) 之上的"一切皆插件" agent 框架。本包把 5 套安全审计方法论做成 `SKILL.md` 技能：模型在会话目录中发现它们，按需用 `skill` 工具加载全文。
+
+> 仓库地址：https://github.com/PerryLink/dsh-skill-pack-security
 
 **零运行时代码。** 不注册任何工具、不注册任何服务、不改变会话行为。唯一的可执行物是可选的 `provider/` 插件（打包分发示范）——不装它，技能包照常工作。
 
@@ -92,6 +97,8 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 | `scripts/install.ps1` | 四种根目录一键安装 |
 | `provider/` | 可选 provider 插件（打包分发示范，经 `ctx.effect()` 注册） |
 | `verify/verify-skill-pack.mts` | 官方解析器 + 真实 `skill` 工具 headless 校验 |
+| `docs/ecosystem-conflict-check.md` | `dsh-plugin` 生态的 GitHub 话题/命名冲突排查快照 |
+| `.github/workflows/verify.yml` | CI：每次 push 安装 harness 并跑全部 9 组断言 |
 | `LICENSE` | Apache License 2.0 |
 
 ## 校验
@@ -109,9 +116,13 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 9. 可选 provider 插件经 `ctx.effect()` 挂载、dispose 后清空
 
 ```powershell
+# 本地运行：默认自动解析包旁的 harness checkout，也可显式指定
+$env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
 # All 9 checks passed for dsh-skill-pack-security.
 ```
+
+同样的 9 组断言由 `.github/workflows/verify.yml` 在 GitHub 上每次 push 自动重跑（徽章见上方）。
 
 ## Roadmap
 
