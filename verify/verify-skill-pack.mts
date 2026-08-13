@@ -24,14 +24,21 @@
 import assert from 'node:assert/strict'
 import { mkdir, mkdtemp, readFile, realpath, readdir, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { dirname, join, sep } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 // ---------------------------------------------------------------------------
 // Resolve the harness checkout and import its official sources via file URLs
 // (the pack lives outside the pnpm workspace, so bare specifiers would fail).
+// Default: the pack's own location, four levels under the checkout
+// (<harness>/Project/Plugins/<pack>/verify). Override with an absolute path
+// via DSH_HARNESS_CHECKOUT (used by CI and any other layout).
 // ---------------------------------------------------------------------------
-const HARNESS = new URL('../../../../', import.meta.url)
+const HARNESS = (() => {
+  const override = process.env.DSH_HARNESS_CHECKOUT
+  if (override) return pathToFileURL(override.endsWith(sep) ? override : `${override}${sep}`)
+  return new URL('../../../../', import.meta.url)
+})()
 const harnessImport = (p: string) => import(new URL(p, HARNESS).href)
 
 const { Context } = await harnessImport('vendor/cordis/src/index.ts')
@@ -306,7 +313,7 @@ async function main(): Promise<void> {
     for (const [pkg, target] of links) {
       const dest = join(shimBase, pkg)
       try {
-        await symlink(target, dest, 'junction')
+        await symlink(target, dest, process.platform === 'win32' ? 'junction' : 'dir')
       } catch {
         // already present from a previous run
       }

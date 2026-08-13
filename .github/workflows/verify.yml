@@ -1,0 +1,44 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: skill pack verification (9 checks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout skill pack
+        uses: actions/checkout@v4
+
+      - name: Checkout deepseek-harness
+        uses: actions/checkout@v4
+        with:
+          repository: deepseek-ai/deepseek-harness
+          path: harness
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: harness/pnpm-lock.yaml
+
+      - name: Install harness workspace
+        working-directory: harness
+        run: pnpm install --frozen-lockfile
+
+      - name: Run skill pack verification
+        working-directory: harness
+        env:
+          DSH_HARNESS_CHECKOUT: ${{ github.workspace }}/harness
+        run: pnpm exec tsx "${{ github.workspace }}/verify/verify-skill-pack.mts"
