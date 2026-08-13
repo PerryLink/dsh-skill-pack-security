@@ -1,0 +1,38 @@
+{
+  "name": "@dsh-skill-pack-security/provider",
+  "version": "1.0.0",
+  "description": "Optional packaging-demo provider plugin for dsh-skill-pack-security: registers the pack's skills/ directory on ctx.skills.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "files": [
+    "lib/index.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "skill-pack",
+    "skills",
+    "security",
+    "security-audit",
+    "supply-chain"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@deepseek-ai/dsh-skill-filesystem": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:^"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@deepseek-ai/dsh-skill-filesystem": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:^",
+    "tsdown": "^0.5.0",
+    "typescript": "^5.4.0"
+  },
+  "scripts": {
+    "build": "tsdown"
+  }
+}
