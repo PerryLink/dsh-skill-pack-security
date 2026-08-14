@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Topic: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Topic: dsh-plugin">
   <img src="https://img.shields.io/badge/skills-5-8257D0" alt="5 个技能">
-  <img src="https://img.shields.io/badge/verified-9%2F9%20checks-brightgreen" alt="Verified: 9/9 checks">
+  <img src="https://img.shields.io/badge/verified-19%2F19%20checks-brightgreen" alt="Verified: 19/19 checks">
   <img src="https://img.shields.io/badge/languages-EN%2FZH%2FES%2FPT%2FHI-4D6BFE" alt="Languages: EN/ZH/ES/PT/HI">
 </p>
 
@@ -61,6 +61,8 @@ Claude Code 生态 3000+ 技能已经证明这种形态的分发价值。DSH 的
 
 每个技能：主文件 ≤ 300 行（渐进披露，细节在 `references/`）；`description` 自包含"何时用/何时不用"；`whenToUse` 给出精确触发条件。
 
+**双语双套。** 每个技能以相同名称与元数据提供两个语言版：`skills/`（中文）与 `skills-en/`（英文）。每个根目录只安装一种语言——同名技能在同一根目录内按 rank 去重，只有一个语言版会进入会话目录。语言版规则见 [docs/release-checklist.md](docs/release-checklist.md)。
+
 ## 快速开始
 
 DSH 本地技能提供方按 rank 扫描四种根目录，同层内重名时低 rank 胜出：
@@ -72,13 +74,19 @@ DSH 本地技能提供方按 rank 扫描四种根目录，同层内重名时低 
 | 400 | `<dshHome>/skills`（`$DSH_HOME` 或 `~/.dsh`） | 用户级、DSH 专用 |
 | 500 | `<agentsHome>/skills`（`$DSH_AGENTS_HOME` 或 `~/.agents`） | 用户级、跨 agent 共享 |
 
-一键安装（PowerShell）：
+一键安装（PowerShell，Windows）：
 
 ```powershell
-./scripts/install.ps1 -Target user-agents   # 可选: project-dsh | project-agents | user-dsh
+./scripts/install.ps1 -Target user-agents -Language zh   # Target: project-dsh | project-agents | user-dsh | user-agents；Language: zh（默认）| en
 ```
 
-或手动复制（以 Windows PowerShell 为例，任意 shell 均可）：
+或 bash（macOS/Linux/CI）：
+
+```sh
+bash ./scripts/install.sh --target user-agents --language en
+```
+
+或手动复制（以 Windows PowerShell 为例，任意 shell 均可；英文版用 `skills-en\`）：
 
 ```powershell
 Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
@@ -86,43 +94,43 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 
 下一个 DSH 会话即可看到技能目录；正文热更新（改 `SKILL.md` 后下次 `skill` 加载即新内容，无需重启）。卸载 = 删除复制过去的目录。
 
-可选：通过 `provider/` 插件挂载整个技能包、免复制（见 [provider/README.md](provider/README.md)）。
+可选：通过 `provider/` 插件挂载整个技能包、免复制（`language: zh|en` 选择语言版，见 [provider/README.md](provider/README.md)）。
 
 ## 目录结构
 
 | 路径 | 内容 |
 |---|---|
-| `skills/<name>/SKILL.md` | 5 个技能；frontmatter 逐条符合官方 `dsh-skill-filesystem` 契约 |
+| `skills/<name>/SKILL.md` | 5 个技能（中文版）；frontmatter 逐条符合官方 `dsh-skill-filesystem` 契约 |
+| `skills-en/<name>/SKILL.md` | 5 个技能（英文版）；名称与元数据与中文版一致 |
 | `skills/<name>/references/` | 渐进披露细节：命令矩阵、分级表、模板 |
-| `scripts/install.ps1` | 四种根目录一键安装 |
-| `provider/` | 可选 provider 插件（打包分发示范，经 `ctx.effect()` 注册） |
-| `verify/verify-skill-pack.mts` | 官方解析器 + 真实 `skill` 工具 headless 校验 |
+| `scripts/install.ps1` | Windows 一键安装（四种根目录、两种语言版） |
+| `scripts/install.sh` | POSIX 等价安装器（macOS/Linux/CI） |
+| `provider/` | 可选 provider 插件（打包分发示范，经 `ctx.effect()` 注册；`language: zh\|en`） |
+| `verify/verify-skill-pack.mts` | 官方解析器 + 真实 `skill` 工具 headless 校验——双语共 12 组断言 |
+| `VERSION` | 版本单一来源；每个 SKILL.md 的 `metadata.version` 必须与其一致（CI 强制） |
 | `docs/ecosystem-conflict-check.md` | `dsh-plugin` 生态的 GitHub 话题/命名冲突排查快照 |
-| `.github/workflows/verify.yml` | CI：每次 push 安装 harness 并跑全部 9 组断言 |
+| `docs/release-checklist.md` | 发布流程：版本同步点、语言版规则、打 tag 步骤 |
+| `.github/workflows/verify.yml` | CI：12 组断言 + install.sh 演练 + provider 独立构建/打包冒烟 |
 | `LICENSE` | Apache License 2.0 |
 
 ## 校验
 
-`verify/verify-skill-pack.mts` 从本机 `deepseek-harness` checkout 导入**官方** `dsh-skill-filesystem` 解析器与**真实** `skill` 工具，实测 9 组断言：
+`verify/verify-skill-pack.mts` 从本机 `deepseek-harness` checkout 导入**官方** `dsh-skill-filesystem` 解析器与**真实** `skill` 工具，对两个语言版实测 12 组断言：
 
-1. 目录结构：5 个 bundle、无多余平铺 md、frontmatter `name` 与目录名一致、≤ 300 行、`references/` 已接线
+1. 目录结构：两个语言版齐备、各 5 个 bundle、无多余平铺 md、frontmatter `name` 与目录名一致、≤ 300 行、`references/` 已接线、`metadata.version` 与 `VERSION` 文件同步
 2. 与官方 12 个 `.agents/skills/` 技能及已知社区技能包零重名
-3. 官方 provider 发现全部 5 个技能
-4. `ctx.skills.get()` 加载全部正文、metadata 与调用策略
-5. 真实 `skill` 工具对 5 个技能返回 `<skill_content>`；未知名/非法名被拒绝
-6. 会话目录只含 `name`+`description`——`whenToUse` 不进入模型目录（官方设计）
-7. 13 个坏 frontmatter 用例逐条验证官方 fail-closed 规则（缺字段、驼峰遗留键、非布尔值、非 kebab 名、嵌套目录、名称不一致）
-8. 平铺 `flat.md` 技能可发现；嵌套 `**/SKILL.md` 不被发现
-9. 可选 provider 插件经 `ctx.effect()` 挂载、dispose 后清空
+3–6. 每个语言版（中文 `skills/`、英文 `skills-en/`）：官方 provider 发现全部 5 个技能、`ctx.skills.get()` 加载全部正文/metadata/调用策略、真实 `skill` 工具返回 `<skill_content>`（未知名/非法名被拒绝）、会话目录只含 `name`+`description`——`whenToUse` 不进入模型目录（官方设计）
+7. 13 个坏 frontmatter 用例逐条验证官方 fail-closed 规则（缺字段、驼峰遗留键、非布尔值、非 kebab 名、嵌套目录、名称不一致）；平铺 `flat.md` 技能可发现，嵌套 `**/SKILL.md` 不被发现
+8. 可选 provider 插件经 `ctx.effect()` 挂载中文版与英文版、dispose 后清空
 
 ```powershell
 # 本地运行：默认自动解析包旁的 harness checkout，也可显式指定
 $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
-# All 9 checks passed for dsh-skill-pack-security.
+# All 12 checks passed for dsh-skill-pack-security.
 ```
 
-同样的 9 组断言由 `.github/workflows/verify.yml` 在 GitHub 上每次 push 自动重跑（徽章见上方）。
+同样的 12 组断言由 `.github/workflows/verify.yml` 在 GitHub 上每次 push 自动重跑（徽章见上方），另有 `install.sh` 演练与 provider 独立构建/打包冒烟（`provider` job）。
 
 ## Roadmap
 

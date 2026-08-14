@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Topic: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Topic: dsh-plugin">
   <img src="https://img.shields.io/badge/skills-5-8257D0" alt="5 skills">
-  <img src="https://img.shields.io/badge/verified-9%2F9%20checks-brightgreen" alt="Verified: 9/9 checks">
+  <img src="https://img.shields.io/badge/verified-19%2F19%20checks-brightgreen" alt="Verified: 19/19 checks">
   <img src="https://img.shields.io/badge/languages-EN%2FZH%2FES%2FPT%2FHI-4D6BFE" alt="Languages: EN/ZH/ES/PT/HI">
 </p>
 
@@ -61,6 +61,8 @@ The Claude Code ecosystem's 3000+ skills prove the distribution value of this sh
 
 Each bundle: main file ≤ 300 lines (progressive disclosure; details live in `references/`), `description` self-contained about "when to use / when not to use", and `whenToUse` with precise triggers.
 
+**Two language editions.** Every skill ships with identical names and metadata in two editions: `skills/` (Chinese) and `skills-en/` (English). Install one language per root — same-name skills in one root resolve by rank, so only one edition enters the session catalog. See [docs/release-checklist.md](docs/release-checklist.md) for the language-edition rules.
+
 ## Quick start
 
 DSH's local skill provider scans four roots by rank — lower rank wins same-name conflicts within a layer:
@@ -72,64 +74,77 @@ DSH's local skill provider scans four roots by rank — lower rank wins same-nam
 | 400 | `<dshHome>/skills` (`$DSH_HOME` or `~/.dsh`) | User-scoped, DSH-only |
 | 500 | `<agentsHome>/skills` (`$DSH_AGENTS_HOME` or `~/.agents`) | User-scoped, cross-agent |
 
-One-command install (PowerShell):
+Ranks (lower wins same-name conflicts within a layer): `project-dsh 100 < project-agents 200 < custom 300 < user-dsh 400 < user-agents 500`. Custom rank 300 is plugin-registered (such as this pack's optional `provider/`), not a disk root.
+
+One-command install (PowerShell, Windows):
 
 ```powershell
-./scripts/install.ps1 -Target user-agents   # or: project-dsh | project-agents | user-dsh
+./scripts/install.ps1 -Target user-agents -Language zh   # Target: project-dsh | project-agents | user-dsh | user-agents; Language: zh (default) | en
 ```
 
-Or copy by hand (Windows PowerShell shown; any shell works):
+Or bash (macOS/Linux/CI):
+
+```sh
+bash ./scripts/install.sh --target user-agents --language en
+```
+
+Or copy by hand (Windows PowerShell shown; any shell works — use `skills-en\` for the English edition):
 
 ```powershell
 Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 ```
 
-The catalog appears in the next DSH session. Skill bodies hot-reload — edit `SKILL.md` and the next `skill` load reads the new body; no restart. Uninstall = delete the copied directories.
+The catalog appears in the next DSH session. Skill bodies hot-reload — edit `SKILL.md` and the next `skill` load reads the new body; no restart. Uninstall = run the installer with `-Uninstall` / `--uninstall` (it removes exactly what its manifest recorded) or delete the copied directories by hand.
 
-Optional: mount the whole pack without copying via the `provider/` plugin (see [provider/README.md](provider/README.md)).
+Optional: mount the whole pack without copying via the `provider/` plugin — `language: zh|en` picks the edition (see [provider/README.md](provider/README.md)). The provider is npm-installable as a bundle: publish it (or install from a tarball/git) and `dsh plugin add @dsh-skill-pack-security/provider` mounts it with one command.
 
 ## What's inside
 
 | Path | What it is |
 |---|---|
-| `skills/<name>/SKILL.md` | The five skills; frontmatter follows the official `dsh-skill-filesystem` contract |
+| `skills/<name>/SKILL.md` | The five skills (Chinese edition); frontmatter follows the official `dsh-skill-filesystem` contract |
+| `skills-en/<name>/SKILL.md` | The five skills (English edition); same names and metadata as the Chinese edition |
 | `skills/<name>/references/` | Progressive-disclosure detail: command matrices, triage tables, templates |
-| `scripts/install.ps1` | One-command installer for all four roots |
-| `provider/` | Optional provider plugin (packaging/distribution demo, registered via `ctx.effect()`) |
-| `verify/verify-skill-pack.mts` | Headless verification against the official parser and the real `skill` tool |
+| `scripts/install.ps1` | One-command Windows installer for all four roots (both language editions); records a manifest, supports `-Uninstall`/`-DryRun`/`-Force` |
+| `scripts/install.sh` | The POSIX equivalent (`--uninstall`/`--dry-run`/`--force`) |
+| `provider/` | Optional npm-installable provider bundle (declares `dsh.bundle`; embeds both editions in `pack/` via `prepack`; `language: zh\|en`); registered via `ctx.effect()`, fails loud on a bad `skillsDir` |
+| `verify/verify-skill-pack.mts` | Headless verification against the official parser and the real `skill` tool — 19 checks across both editions |
+| `VERSION` | Single version source; every SKILL.md `metadata.version` and `provider/package.json` must match it (CI-enforced) |
 | `docs/ecosystem-conflict-check.md` | GitHub topic/name conflict snapshot of the `dsh-plugin` ecosystem |
-| `.github/workflows/verify.yml` | CI: installs the harness and runs all 9 checks on every push |
+| `docs/release-checklist.md` | Release flow: version sync points, language-edition rules, tagging |
+| `docs/improvement-plan.md` | The 1.2.0 improvement plan with per-item evidence and acceptance criteria |
+| `CHANGELOG.md` / `SECURITY.md` / `CONTRIBUTING.md` | Release history, vulnerability reporting policy, and contribution/verification rules |
+| `.github/workflows/verify.yml` | CI: 19-check verification + install.sh/install.ps1 exercise + provider build/pack smoke, on Ubuntu and Windows against a pinned harness commit |
+| `.github/dependabot.yml` | Weekly dependency updates for the provider and GitHub Actions |
 | `LICENSE` | Apache License 2.0 |
 
 ## Verification
 
-`verify/verify-skill-pack.mts` imports the **official** `dsh-skill-filesystem` parser and the **real** `skill` tool from a local `deepseek-harness` checkout and asserts 9 checks:
+`verify/verify-skill-pack.mts` imports the **official** `dsh-skill-filesystem` parser and the **real** `skill` tool from a local `deepseek-harness` checkout and asserts 19 checks over both language editions:
 
-1. Layout: 5 directory bundles, no stray flat skills, frontmatter `name` matches directory, ≤ 300 lines, `references/` wired
-2. No name conflicts with the 12 official `.agents/skills/` skills or known community skill packs
-3. All 5 skills discovered through the official provider
-4. `ctx.skills.get()` loads every body, metadata, and invocation policy
-5. The real `skill` tool returns `<skill_content>` for all 5 skills; unknown/invalid names are rejected
-6. The session catalog contains `name` + `description` only — `whenToUse` stays out of the model catalog (official design)
-7. 13 bad-frontmatter fixtures exercise the official fail-closed rules (missing fields, legacy camel-case keys, non-boolean values, non-kebab names, nested dirs, name mismatch)
-8. Flat-file skills load; nested `**/SKILL.md` is not discovered
-9. The optional provider plugin mounts via `ctx.effect()` and disposes cleanly
+1. Layout: both editions present, 5 directory bundles each, no stray flat skills, frontmatter `name` matches directory, ≤ 300 lines, `references/` wired, `metadata.version` synced to the `VERSION` file
+2. No name conflicts with the official `.agents/skills/` skills (derived from the checkout at run time) or known community skill packs
+3–6. Per edition (Chinese `skills/`, English `skills-en/`): registry discovery through the official provider, full `ctx.skills.get()` loads, the real `skill` tool returning `<skill_content>` (unknown/invalid names rejected), and the session catalog containing `name` + `description` only — `whenToUse` stays out of the model catalog (official design)
+7. 13 bad-frontmatter fixtures exercise the official fail-closed rules (missing fields, legacy camel-case keys, non-boolean values, non-kebab names, nested dirs, name mismatch); flat-file skills load and nested `**/SKILL.md` is not discovered
+8. The optional provider plugin mounts the Chinese and the English edition via `ctx.effect()`, disposes cleanly, and rejects misconfiguration (empty or nonexistent `skillsDir`)
+9–15. Self-hardening checks: zh↔en structural parity, references wiring (no dangling/orphan files), provider version sync, documented skill-root ranks vs the official constants, POSIX-portable `grep -E` patterns, secret self-check, UTF-8-safe release checklist
 
 ```powershell
 # local: auto-resolves the harness checkout beside the pack, or point it explicitly
 $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
-# All 9 checks passed for dsh-skill-pack-security.
+# All 19 checks passed for dsh-skill-pack-security.
 ```
 
-The same 9 checks also run on GitHub on every push via `.github/workflows/verify.yml` (badge above).
+The same 19 checks run on GitHub on every push via `.github/workflows/verify.yml` (badge above) — on Ubuntu and Windows — plus an `install.sh`/`install.ps1` exercise and a standalone provider build/pack smoke that asserts the tarball carries both embedded editions and the bundle patch (`provider` job). The harness checkout is pinned to a commit for reproducible verification.
 
 ## Roadmap
 
 - `dsh-skill-pack-data-engineering` — data pipelines, data quality, ETL checklists (same template)
 - `dsh-skill-pack-oss-collab` — PR etiquette, issue triage, maintainer workflows
 - `dsh-skill-pack-performance` — profiling methodology, benchmark criteria, regression checklists
-- Optional: package the pack as a bundled badge provider modeled on `dsh-skill-badge`
+- New skills inside this pack (same pure-skill boundary): `threat-model` (lightweight STRIDE/attack-tree modeling for new features), `vuln-intel` (NVD/CISA-KEV/GHSA lookup workflow; re-check the ecosystem snapshot for name clashes before shipping), `incident-response` (agent-environment response checklist)
+- Publish the provider bundle to the npm registry (the `dsh.bundle` manifest is already in place; publishing requires ownership of the `@dsh-skill-pack-security` scope or a rename)
 
 ## Topics
 

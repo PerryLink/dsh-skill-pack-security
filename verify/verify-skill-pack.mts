@@ -3,10 +3,13 @@
  *
  * Drives the OFFICIAL @deepseek-ai/dsh-skill-filesystem parser and the REAL
  * `skill` tool from @deepseek-ai/dsh-tool-skill (both imported from the local
- * deepseek-harness checkout) against this pack:
+ * deepseek-harness checkout) against this pack's two language editions
+ * (`skills/` Chinese and `skills-en/` English):
  *
- *   1. layout + kebab-case names + official/community name-conflict check
+ *   1. layout + kebab-case names + version/metadata sync + official/community
+ *      name-conflict check (both language editions)
  *   2. registry discovery of all 5 skills through the official provider
+ *      (per language edition)
  *   3. full-definition load via ctx.skills.get() (body, whenToUse, invocation,
  *      metadata, catalog-safe description length)
  *   4. the real `skill` tool via ctx.tools.execute() for all 5 skills
@@ -14,7 +17,21 @@
  *      whenToUse must NOT appear)
  *   6. 13 bad-frontmatter fixtures exercising the official fail-closed rules
  *   7. flat-file discovery, nested-dir exclusion, dir/frontmatter name mismatch
- *   8. the optional provider plugin (mount → list → dispose)
+ *   8. the optional provider plugin (mount zh → mount en → dispose cleanly,
+ *      misconfiguration fails loud)
+ *   9. zh↔en structural parity (heading levels, code-fence count, reference
+ *      file sets) so the editions cannot drift apart
+ *   10. references wiring: every `references/<file>.md` mentioned by a
+ *       SKILL.md exists, and every file under references/ is mentioned
+ *   11. provider/package.json version syncs to the VERSION file
+ *   12. installers/README document the official skill-root ranks (extracted
+ *       from the checkout's skill-filesystem source)
+ *   13. shell `grep -E` patterns stay POSIX-portable (no GNU-only escapes
+ *       such as \s/\d/\w — BSD grep on macOS misreads them)
+ *   14. the pack's own redaction grep finds no secret-looking text in its
+ *       shipped content (the intentional FAKE example is allowlisted)
+ *   15. the release-checklist batch command is UTF-8-safe on Windows
+ *       PowerShell 5.1 (bare Get-Content/Set-Content would corrupt Chinese)
  *
  * Run: <checkout>\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
  * Requires a local deepseek-harness checkout; the script resolves it relative
@@ -22,7 +39,8 @@
  */
 
 import assert from 'node:assert/strict'
-import { mkdir, mkdtemp, readFile, realpath, readdir, rm, symlink, writeFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { mkdir, mkdtemp, readFile, realpath, readdir, rm, rmdir, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -57,15 +75,23 @@ const { CallId } = await harnessImport('packages/llm/llm/src/index.ts')
 
 // ---------------------------------------------------------------------------
 const PACK_DIR = fileURLToPath(new URL('..', import.meta.url))
-const SKILLS_ROOT = join(PACK_DIR, 'skills')
 const SKILL_NAMES = ['dependency-audit', 'prompt-injection-review', 'secret-scan', 'security-audit', 'supply-chain-review']
 
-const OFFICIAL_SKILLS = [
-  'dsh-archive-agent-notes', 'dsh-code-review', 'dsh-doc-site-sync', 'dsh-doc-standards',
-  'dsh-find-simplifications', 'dsh-merging-stacked-prs', 'dsh-plugin-guide',
-  'dsh-pre-push-checks', 'dsh-prose-standard', 'dsh-translate-docs', 'dsh-trim-cot-leakage',
-  'record-browser-gif',
-]
+/** The pack's language editions: directory name and the language it holds. */
+const LANGUAGE_ROOTS = [
+  { dir: 'skills', language: 'zh' },
+  { dir: 'skills-en', language: 'en' },
+] as const
+
+/** The single version source: every SKILL.md metadata.version must equal it. */
+const VERSION = (await readFile(join(PACK_DIR, 'VERSION'), 'utf8')).trim()
+const PACK_NAME = 'dsh-skill-pack-security'
+
+// The official skill names are derived from the checkout itself (living
+// check: upstream additions cannot silently collide with this pack).
+const OFFICIAL_SKILLS = (await readdir(fileURLToPath(new URL('.agents/skills/', HARNESS)), { withFileTypes: true }))
+  .filter(entry => entry.isDirectory())
+  .map(entry => entry.name)
 const COMMUNITY_SKILLS = [
   'dsh-write-plugin', 'dsh-test-plugin', 'dsh-plugin-dev', 'make-dsh-plugin',
   'find-plugins', 'mainline-compat',
@@ -104,27 +130,67 @@ function agentForCwd(cwd: string) {
 const catalogMax = 500
 const normalized = (s: string) => s.replaceAll(/\s+/g, ' ').trim()
 
+/** Heading-level skeleton (h1-h3 markers) plus fenced-code-block count for one SKILL.md. */
+function structureOf(raw: string): { levels: string[]; fences: number } {
+  const levels = [...raw.matchAll(/^#{1,3} .*$/gm)].map(match => (match[0].match(/^#+/) ?? [''])[0])
+  const fences = (raw.match(/^```/gm) ?? []).length
+  return { levels, fences }
+}
+
+/** `references/<file>.md` tokens mentioned by a SKILL.md body. */
+function referencedFiles(raw: string): string[] {
+  return [...new Set([...raw.matchAll(/references\/([a-z0-9-]+\.md)/g)].map(match => match[1]))]
+}
+
+/** Single-quoted patterns of shell `grep -…E '…'` commands extracted from prose. */
+function grepPatterns(raw: string): string[] {
+  return [...raw.matchAll(/grep(?:\s+-\w+)*\s+-[A-Za-z]*E[A-Za-z]*\s+'([^']+)'/g)].map(match => match[1])
+}
+
+/** Concatenate every `.md` file under a directory (recursive). */
+async function readMdFilesUnder(root: string): Promise<string> {
+  const entries = await readdir(root, { recursive: true })
+  let text = ''
+  for (const entry of entries) {
+    if (typeof entry !== 'string' || !entry.endsWith('.md')) continue
+    text += await readFile(join(root, entry), 'utf8')
+  }
+  return text
+}
+
 async function main(): Promise<void> {
   const steps: Array<() => Promise<void>> = []
 
-  // --- 1. layout, kebab-case, name conflicts ---------------------------------
-  steps.push(check('layout: exactly 5 directory bundles, no stray flat skills', async () => {
-    const entries = await readdir(SKILLS_ROOT, { withFileTypes: true })
-    const dirs = entries.filter(e => e.isDirectory()).map(e => e.name)
-    const files = entries.filter(e => !e.isDirectory()).map(e => e.name)
-    assert.deepEqual(dirs.slice().sort(), [...SKILL_NAMES].sort())
-    assert.deepEqual(files, [], 'skills root must contain only skill directories')
-    for (const name of SKILL_NAMES) {
-      assert.ok(isSkillName(name), `${name} must be kebab-case`)
-      const skillMd = join(SKILLS_ROOT, name, 'SKILL.md')
-      const raw = await readFile(skillMd, 'utf8')
-      const lines = raw.split('\n').length
-      assert.ok(lines <= 300, `${name}/SKILL.md has ${lines} lines (> 300)`)
-      const nameMatch = /^name:\s*([a-z0-9-]+)\s*$/m.exec(raw)
-      assert.equal(nameMatch?.[1], name, `${name}/SKILL.md frontmatter name must match dir name`)
-      const refs = await readdir(join(SKILLS_ROOT, name, 'references')).catch(() => [])
-      assert.ok(refs.length >= 1, `${name} must have at least one references file`)
-      assert.match(raw, /references\//, `${name}/SKILL.md must point into references/`)
+  // --- 1. layout, kebab-case, version/metadata sync --------------------------
+  steps.push(check('layout: both language editions, 5 bundles each, versions synced to VERSION', async () => {
+    const baseEntries = await readdir(PACK_DIR, { withFileTypes: true })
+    const langDirs = baseEntries.filter(e => e.isDirectory() && (e.name === 'skills' || e.name === 'skills-en')).map(e => e.name)
+    assert.deepEqual(langDirs.slice().sort(), ['skills', 'skills-en'], 'pack root must carry both skills/ and skills-en/')
+    for (const { dir } of LANGUAGE_ROOTS) {
+      const root = join(PACK_DIR, dir)
+      const entries = await readdir(root, { withFileTypes: true })
+      const dirs = entries.filter(e => e.isDirectory()).map(e => e.name)
+      const files = entries.filter(e => !e.isDirectory()).map(e => e.name)
+      assert.deepEqual(dirs.slice().sort(), [...SKILL_NAMES].sort(), `${dir} must contain exactly the 5 skill bundles`)
+      assert.deepEqual(files, [], `${dir} root must contain only skill directories`)
+      for (const name of SKILL_NAMES) {
+        assert.ok(isSkillName(name), `${name} must be kebab-case`)
+        const skillMd = join(root, name, 'SKILL.md')
+        const buffer = await readFile(skillMd)
+        const raw = buffer.toString('utf8')
+        assert.deepEqual([...buffer.subarray(0, 3)], [0x2d, 0x2d, 0x2d], `${dir}/${name}/SKILL.md must start with --- and carry no BOM (a BOM makes the official parser drop the skill)`)
+        const lines = raw.split('\n').length
+        assert.ok(lines <= 300, `${dir}/${name}/SKILL.md has ${lines} lines (> 300)`)
+        const nameMatch = /^name:\s*([a-z0-9-]+)\s*$/m.exec(raw)
+        assert.equal(nameMatch?.[1], name, `${dir}/${name}/SKILL.md frontmatter name must match dir name`)
+        const refs = await readdir(join(root, name, 'references')).catch(() => [])
+        assert.ok(refs.length >= 1, `${dir}/${name} must have at least one references file`)
+        assert.match(raw, /references\//, `${dir}/${name}/SKILL.md must point into references/`)
+        const versionMatch = /^\s*version:\s*['"]?([0-9]+\.[0-9]+\.[0-9]+)['"]?\s*$/m.exec(raw)
+        assert.equal(versionMatch?.[1], VERSION, `${dir}/${name} metadata.version must equal the VERSION file (${VERSION})`)
+        const packMatch = /^\s*pack:\s*([A-Za-z0-9-]+)\s*$/m.exec(raw)
+        assert.equal(packMatch?.[1], PACK_NAME, `${dir}/${name} metadata.pack must be ${PACK_NAME}`)
+      }
     }
   }))
 
@@ -135,108 +201,129 @@ async function main(): Promise<void> {
     }
   }))
 
-  // --- 2/3. official provider discovery + full loads -------------------------
-  const ctx = new Context()
-  await ctx.plugin(SkillRegistry)
-  await ctx.plugin(skillFilesystem, {
-    includeDefaultRoots: false,
-    customSkillDirs: [SKILLS_ROOT],
-    watch: false,
-    providerName: 'verify-pack',
-  })
+  // --- 2/3. official provider discovery + full loads (per language) ----------
+  for (const { dir, language } of LANGUAGE_ROOTS) {
+    const root = join(PACK_DIR, dir)
 
-  steps.push(check('registry discovery: all 5 skills found via the official provider', async () => {
-    const listed = await ctx.skills.list()
-    assert.deepEqual(listed.map(s => s.name), [...SKILL_NAMES].sort())
-    for (const summary of listed) {
-      assert.equal(summary.provider, 'verify-pack')
-      assert.equal(summary.source, 'custom')
-      assert.deepEqual(summary.invocation, { modelInvocable: true, userInvocable: true })
-      assert.ok(summary.whenToUse && summary.whenToUse.length > 20, `${summary.name} whenToUse missing`)
-      assert.ok(summary.description.length <= catalogMax, `${summary.name} description would truncate in the catalog`)
-    }
-  }))
-
-  steps.push(check('full load: ctx.skills.get() returns bodies with metadata', async () => {
-    for (const name of SKILL_NAMES) {
-      const def = await ctx.skills.get(name)
-      assert.ok(def, `${name} must load`)
-      assert.equal(def.name, name)
-      assert.ok(def.content.length > 500, `${name} body too small`)
-      assert.deepEqual(def.metadata, { pack: 'dsh-skill-pack-security', version: '1.0.0' }, `${name} metadata`)
-      assert.ok(!normalized(def.description).includes(normalized(def.whenToUse!)), `${name}: description must not duplicate whenToUse`)
-    }
-  }))
-
-  // --- 4/5. the real `skill` tool + real session catalog ---------------------
-  const toolCtx = new Context()
-  await toolCtx.plugin(SystemPrompt)
-  await toolCtx.plugin(ToolRuntime)
-  await toolCtx.plugin(AgentRegistry)
-  await toolCtx.plugin(SkillRegistry)
-  await toolCtx.plugin(skillFilesystem, {
-    includeDefaultRoots: false,
-    customSkillDirs: [SKILLS_ROOT],
-    watch: false,
-    providerName: 'verify-tool',
-  })
-  await toolCtx.plugin(toolSkill)
-  const agent = agentForCwd(PACK_DIR)
-  const signal = new AbortController().signal
-
-  steps.push(check('skill tool: ctx.tools.execute loads all 5 skills', async () => {
-    assert.ok(toolCtx.tools.get('skill', agent), 'skill tool must be registered')
-    for (const name of SKILL_NAMES) {
-      const result = await toolCtx.tools.execute({
-        signal,
-        callId: CallId(`verify-${name}`),
-        name: 'skill',
-        arguments: { name },
-        agent,
+    steps.push(check(`registry discovery (${language}): all 5 skills found via the official provider`, async () => {
+      const ctx = new Context()
+      await ctx.plugin(SkillRegistry)
+      await ctx.plugin(skillFilesystem, {
+        includeDefaultRoots: false,
+        customSkillDirs: [root],
+        watch: false,
+        providerName: `verify-pack-${language}`,
       })
-      assert.equal(result.isError, false, `skill tool failed for ${name}`)
-      const text = (result.content[0] as { text?: string })?.text ?? ''
-      assert.ok(text.includes(`<skill_content name="${name}">`), `skill tool content missing ${name} frame`)
-      assert.ok(text.includes('<skill_instructions>'))
-      assert.ok(text.length > 500)
-    }
-  }))
+      const listed = await ctx.skills.list()
+      assert.deepEqual(listed.map(s => s.name), [...SKILL_NAMES].sort())
+      for (const summary of listed) {
+        assert.equal(summary.provider, `verify-pack-${language}`)
+        assert.equal(summary.source, 'custom')
+        assert.deepEqual(summary.invocation, { modelInvocable: true, userInvocable: true })
+        assert.ok(summary.whenToUse && summary.whenToUse.length > 20, `${summary.name} whenToUse missing`)
+        assert.ok(summary.description.length <= catalogMax, `${summary.name} description would truncate in the catalog`)
+      }
+    }))
 
-  steps.push(check('skill tool: unknown and invalid names are rejected', async () => {
-    const unknown = await toolCtx.tools.execute({
-      signal, callId: CallId('verify-unknown'), name: 'skill', arguments: { name: 'does-not-exist' }, agent,
-    })
-    assert.equal(unknown.isError, true)
-    const invalid = await toolCtx.tools.execute({
-      signal, callId: CallId('verify-invalid'), name: 'skill', arguments: { name: 'Bad_Name' }, agent,
-    })
-    assert.equal(invalid.isError, true)
-  }))
+    steps.push(check(`full load (${language}): ctx.skills.get() returns bodies with metadata`, async () => {
+      const ctx = new Context()
+      await ctx.plugin(SkillRegistry)
+      await ctx.plugin(skillFilesystem, {
+        includeDefaultRoots: false,
+        customSkillDirs: [root],
+        watch: false,
+        providerName: `verify-pack-${language}`,
+      })
+      for (const name of SKILL_NAMES) {
+        const def = await ctx.skills.get(name)
+        assert.ok(def, `${name} must load`)
+        assert.equal(def.name, name)
+        assert.ok(def.content.length > 500, `${name} body too small`)
+        assert.deepEqual(def.metadata, { pack: PACK_NAME, version: VERSION }, `${name} metadata`)
+        assert.ok(!normalized(def.description).includes(normalized(def.whenToUse!)), `${name}: description must not duplicate whenToUse`)
+      }
+    }))
 
-  steps.push(check('session catalog: name + description only, whenToUse excluded', async () => {
-    const decision = await agentEvents(toolCtx, agent).waterfall(
-      'agent/pre-step',
-      { messages: [], turn: 1, step: 1, signal },
-      () => Promise.resolve({ kind: 'enter', messages: [] }),
-    )
-    assert.equal(decision.kind, 'enter')
-    const catalog = decision.messages.find(m => m.source?.kind === 'skill-catalog')
-    assert.ok(catalog, 'catalog message must be published')
-    const entries = catalog.source.entries
-    assert.deepEqual(entries.map(e => e.name), [...SKILL_NAMES].sort())
-    const rendered = JSON.stringify(decision.messages)
-    for (const name of SKILL_NAMES) {
-      assert.ok(rendered.includes(`- \`${name}\`: `), `catalog line missing for ${name}`)
-    }
-    for (const entry of entries) {
-      assert.deepEqual(Object.keys(entry).sort(), ['description', 'name'])
-    }
-    for (const name of SKILL_NAMES) {
-      const def = await toolCtx.skills.get(name)
-      assert.ok(def?.whenToUse)
-      assert.ok(!rendered.includes(def.whenToUse), `whenToUse of ${name} leaked into the model catalog`)
-    }
-  }))
+    // --- 4/5. the real `skill` tool + real session catalog -------------------
+    steps.push(check(`skill tool (${language}): ctx.tools.execute loads all 5 skills`, async () => {
+      const toolCtx = new Context()
+      await toolCtx.plugin(SystemPrompt)
+      await toolCtx.plugin(ToolRuntime)
+      await toolCtx.plugin(AgentRegistry)
+      await toolCtx.plugin(SkillRegistry)
+      await toolCtx.plugin(skillFilesystem, {
+        includeDefaultRoots: false,
+        customSkillDirs: [root],
+        watch: false,
+        providerName: `verify-tool-${language}`,
+      })
+      await toolCtx.plugin(toolSkill)
+      const agent = agentForCwd(PACK_DIR)
+      const signal = new AbortController().signal
+      assert.ok(toolCtx.tools.get('skill', agent), 'skill tool must be registered')
+      for (const name of SKILL_NAMES) {
+        const result = await toolCtx.tools.execute({
+          signal,
+          callId: CallId(`verify-${language}-${name}`),
+          name: 'skill',
+          arguments: { name },
+          agent,
+        })
+        assert.equal(result.isError, false, `skill tool failed for ${name}`)
+        const text = (result.content[0] as { text?: string })?.text ?? ''
+        assert.ok(text.includes(`<skill_content name="${name}">`), `skill tool content missing ${name} frame`)
+        assert.ok(text.includes('<skill_instructions>'))
+        assert.ok(text.length > 500)
+      }
+      const unknown = await toolCtx.tools.execute({
+        signal, callId: CallId(`verify-${language}-unknown`), name: 'skill', arguments: { name: 'does-not-exist' }, agent,
+      })
+      assert.equal(unknown.isError, true)
+      const invalid = await toolCtx.tools.execute({
+        signal, callId: CallId(`verify-${language}-invalid`), name: 'skill', arguments: { name: 'Bad_Name' }, agent,
+      })
+      assert.equal(invalid.isError, true)
+    }))
+
+    steps.push(check(`session catalog (${language}): name + description only, whenToUse excluded`, async () => {
+      const toolCtx = new Context()
+      await toolCtx.plugin(SystemPrompt)
+      await toolCtx.plugin(ToolRuntime)
+      await toolCtx.plugin(AgentRegistry)
+      await toolCtx.plugin(SkillRegistry)
+      await toolCtx.plugin(skillFilesystem, {
+        includeDefaultRoots: false,
+        customSkillDirs: [root],
+        watch: false,
+        providerName: `verify-catalog-${language}`,
+      })
+      await toolCtx.plugin(toolSkill)
+      const agent = agentForCwd(PACK_DIR)
+      const signal = new AbortController().signal
+      const decision = await agentEvents(toolCtx, agent).waterfall(
+        'agent/pre-step',
+        { messages: [], turn: 1, step: 1, signal },
+        () => Promise.resolve({ kind: 'enter', messages: [] }),
+      )
+      assert.equal(decision.kind, 'enter')
+      const catalog = decision.messages.find(m => m.source?.kind === 'skill-catalog')
+      assert.ok(catalog, 'catalog message must be published')
+      const entries = catalog.source.entries
+      assert.deepEqual(entries.map(e => e.name), [...SKILL_NAMES].sort())
+      const rendered = JSON.stringify(decision.messages)
+      for (const name of SKILL_NAMES) {
+        assert.ok(rendered.includes(`- \`${name}\`: `), `catalog line missing for ${name}`)
+      }
+      for (const entry of entries) {
+        assert.deepEqual(Object.keys(entry).sort(), ['description', 'name'])
+      }
+      for (const name of SKILL_NAMES) {
+        const def = await toolCtx.skills.get(name)
+        assert.ok(def?.whenToUse)
+        assert.ok(!rendered.includes(def.whenToUse), `whenToUse of ${name} leaked into the model catalog`)
+      }
+    }))
+  }
 
   // --- 6/7. bad-frontmatter fixtures against the official parser -------------
   steps.push(check('bad frontmatter: 13 fixtures exercise the official fail-closed rules', async () => {
@@ -300,7 +387,7 @@ async function main(): Promise<void> {
   }))
 
   // --- 8. optional provider plugin -------------------------------------------
-  steps.push(check('provider plugin: mounts the pack via ctx.effect, disposes cleanly', async () => {
+  steps.push(check('provider plugin: mounts zh/en editions, disposes cleanly, misconfiguration fails loud', async () => {
     // The pack sits outside the pnpm workspace, so give the plugin's bare
     // imports a resolution shim (junctions into the harness packages).
     const shimBase = join(PACK_DIR, 'node_modules', '@deepseek-ai')
@@ -323,19 +410,167 @@ async function main(): Promise<void> {
       assert.equal(providerPlugin.name, 'skill-pack-security')
       assert.deepEqual(providerPlugin.inject, ['skills'])
 
-      const pctx = new Context()
-      await pctx.plugin(SkillRegistry)
-      const fiber = await pctx.plugin(providerPlugin)
-      const listed = await pctx.skills.list()
-      assert.deepEqual(listed.map(s => s.name), [...SKILL_NAMES].sort())
-      for (const s of listed) assert.equal(s.provider, 'skill-pack-security')
+      // Default mount publishes the Chinese edition.
+      const zhCtx = new Context()
+      await zhCtx.plugin(SkillRegistry)
+      const zhFiber = await zhCtx.plugin(providerPlugin)
+      const zhListed = await zhCtx.skills.list()
+      assert.deepEqual(zhListed.map(s => s.name), [...SKILL_NAMES].sort())
+      for (const s of zhListed) assert.equal(s.provider, 'skill-pack-security')
+      const zhSpec = await zhCtx.skills.get('security-audit')
+      assert.ok(zhSpec?.content.includes('安全审计总览'), 'default mount must publish the Chinese edition')
 
-      await fiber.dispose()
-      assert.deepEqual((await pctx.skills.list()).map(s => s.name), [])
+      await zhFiber.dispose()
+      assert.deepEqual((await zhCtx.skills.list()).map(s => s.name), [])
+
+      // `language: en` mounts the English edition instead.
+      const enCtx = new Context()
+      await enCtx.plugin(SkillRegistry)
+      const enFiber = await enCtx.plugin(providerPlugin, { language: 'en' })
+      const enListed = await enCtx.skills.list()
+      assert.deepEqual(enListed.map(s => s.name), [...SKILL_NAMES].sort())
+      for (const s of enListed) assert.equal(s.provider, 'skill-pack-security')
+      const enSpec = await enCtx.skills.get('security-audit')
+      assert.ok(enSpec?.content.includes('Security audit overview'), 'language: en must publish the English edition')
+
+      await enFiber.dispose()
+      assert.deepEqual((await enCtx.skills.list()).map(s => s.name), [])
+
+      // Misconfiguration fails loud: an empty or nonexistent skillsDir must
+      // reject at apply time instead of mounting zero skills.
+      await assert.rejects(
+        async () => { await zhCtx.plugin(providerPlugin, { skillsDir: '' }) },
+        /skill-pack-security|skillsDir/i,
+        'empty skillsDir must be rejected',
+      )
+      await assert.rejects(
+        async () => { await zhCtx.plugin(providerPlugin, { skillsDir: join(PACK_DIR, 'no-such-dir') }) },
+        /does not exist or contains no/,
+        'nonexistent skillsDir must be rejected with an actionable message',
+      )
+      // An explicit valid root still mounts.
+      const explicitCtx = new Context()
+      await explicitCtx.plugin(SkillRegistry)
+      const explicitFiber = await explicitCtx.plugin(providerPlugin, { skillsDir: join(PACK_DIR, 'skills-en') })
+      const explicitListed = await explicitCtx.skills.list()
+      assert.equal(explicitListed.length, SKILL_NAMES.length)
+      for (const s of explicitListed) assert.equal(s.provider, 'skill-pack-security')
+      const explicitSpec = await explicitCtx.skills.get('security-audit')
+      assert.ok(explicitSpec?.content.includes('Security audit overview'), 'explicit skillsDir must publish that root')
+      await explicitFiber.dispose()
     } finally {
+      // Remove only the shim links this run created; leave any real
+      // node_modules content in the pack directory untouched.
       for (const [pkg] of links) await rm(join(shimBase, pkg), { force: true })
-      await rm(join(PACK_DIR, 'node_modules'), { recursive: true, force: true })
+      await rmdir(shimBase).catch(() => {})
+      await rmdir(join(PACK_DIR, 'node_modules')).catch(() => {})
     }
+  }))
+
+  // --- 9. zh↔en structural parity ---------------------------------------------
+  steps.push(check('zh↔en parity: heading levels, fence counts, and reference sets match', async () => {
+    for (const name of SKILL_NAMES) {
+      const zh = await readFile(join(PACK_DIR, 'skills', name, 'SKILL.md'), 'utf8')
+      const en = await readFile(join(PACK_DIR, 'skills-en', name, 'SKILL.md'), 'utf8')
+      assert.deepEqual(structureOf(zh), structureOf(en), `${name}: zh/en structure diverged`)
+      assert.deepEqual(referencedFiles(zh).sort(), referencedFiles(en).sort(), `${name}: zh/en reference wiring diverged`)
+    }
+  }))
+
+  // --- 10. references wiring ---------------------------------------------------
+  steps.push(check('references wiring: every mentioned file exists, no orphan files', async () => {
+    for (const { dir } of LANGUAGE_ROOTS) {
+      for (const name of SKILL_NAMES) {
+        const raw = await readFile(join(PACK_DIR, dir, name, 'SKILL.md'), 'utf8')
+        const mentioned = referencedFiles(raw)
+        const present = await readdir(join(PACK_DIR, dir, name, 'references')).catch(() => [])
+        for (const file of mentioned) {
+          assert.ok(present.includes(file), `${dir}/${name} mentions missing references/${file}`)
+        }
+        for (const file of present) {
+          assert.ok(mentioned.includes(file), `${dir}/${name}/references/${file} is never mentioned by SKILL.md`)
+        }
+      }
+    }
+  }))
+
+  // --- 11. provider version sync -----------------------------------------------
+  steps.push(check('provider version: package.json syncs to the VERSION file', async () => {
+    const pkg = JSON.parse(await readFile(join(PACK_DIR, 'provider', 'package.json'), 'utf8'))
+    assert.equal(pkg.version, VERSION, `provider/package.json version ${pkg.version} must equal VERSION (${VERSION})`)
+  }))
+
+  // --- 12. documented ranks vs official constants -------------------------------
+  steps.push(check('rank docs: installers and README match the official skill-root ranks', async () => {
+    const fsSource = await readFile(fileURLToPath(new URL('packages/skill/skill-filesystem/src/index.ts', HARNESS)), 'utf8')
+    const ranks: Record<string, string> = {}
+    for (const match of fsSource.matchAll(/const ([A-Z_]+_RANK) = (\d+)/g)) {
+      ranks[match[1]] = match[2]
+    }
+    const expected = {
+      PROJECT_DSH_RANK: '100',
+      PROJECT_AGENTS_RANK: '200',
+      CUSTOM_RANK: '300',
+      USER_DSH_RANK: '400',
+      USER_AGENTS_RANK: '500',
+    } as const
+    for (const [key, value] of Object.entries(expected)) {
+      assert.equal(ranks[key], value, `upstream ${key} changed: update this pack's rank documentation`)
+    }
+    const readme = await readFile(join(PACK_DIR, 'README.md'), 'utf8')
+    const ps1 = await readFile(join(PACK_DIR, 'scripts', 'install.ps1'), 'utf8')
+    const sh = await readFile(join(PACK_DIR, 'scripts', 'install.sh'), 'utf8')
+    for (const value of [expected.PROJECT_DSH_RANK, expected.PROJECT_AGENTS_RANK, expected.USER_DSH_RANK, expected.USER_AGENTS_RANK]) {
+      for (const [label, text] of [['install.ps1', ps1], ['install.sh', sh]] as const) {
+        assert.ok(text.includes(`rank ${value}`), `${label} must document rank ${value}`)
+      }
+    }
+    assert.ok(ps1.includes('custom 300') && sh.includes('custom 300'), 'installers must note the custom rank 300')
+    assert.ok(
+      readme.includes(`project-dsh 100 < project-agents 200 < custom 300 < user-dsh 400 < user-agents 500`),
+      'README.md must document the full rank chain including custom 300',
+    )
+  }))
+
+  // --- 13. grep portability ------------------------------------------------------
+  steps.push(check('grep portability: no GNU-only escapes in shell grep -E patterns', async () => {
+    const ban = /\\[sSdDwWbB]|\(\?/
+    for (const { dir } of LANGUAGE_ROOTS) {
+      for (const name of SKILL_NAMES) {
+        const paths = [
+          join(PACK_DIR, dir, name, 'SKILL.md'),
+          ...(await readdir(join(PACK_DIR, dir, name, 'references'))).map(file => join(PACK_DIR, dir, name, 'references', file)),
+        ]
+        for (const path of paths) {
+          const raw = await readFile(path, 'utf8')
+          for (const pattern of grepPatterns(raw)) {
+            const where = path.replace(`${PACK_DIR}${sep}`, '')
+            assert.ok(!ban.test(pattern), `${where}: GNU-only escape in grep -E pattern '${pattern}' (BSD grep on macOS misreads it)`)
+          }
+        }
+      }
+    }
+  }))
+
+  // --- 14. secret self-check -------------------------------------------------------
+  steps.push(check('secret self-check: no secret-shaped text in shipped content', async () => {
+    const redaction = /ghp_[A-Za-z0-9]{36}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20}|-----BEGIN (RSA|OPENSSH|EC) /g
+    let text = await readFile(join(PACK_DIR, 'README.md'), 'utf8')
+    for (const root of [join(PACK_DIR, 'skills'), join(PACK_DIR, 'skills-en'), join(PACK_DIR, 'docs')]) {
+      text += await readMdFilesUnder(root)
+    }
+    for (const match of text.matchAll(redaction)) {
+      // The intentional gitleaks-gate example uses an obviously fake key.
+      assert.ok(match[0].includes('FAKE'), `secret-shaped text in shipped content: ${match[0].slice(0, 24)}…`)
+    }
+  }))
+
+  // --- 15. release-checklist UTF-8 safety ---------------------------------------------
+  steps.push(check('release-checklist: batch version command writes BOM-less UTF-8 for Windows PowerShell 5.1', async () => {
+    const text = await readFile(join(PACK_DIR, 'docs', 'release-checklist.md'), 'utf8')
+    assert.ok(text.includes('Get-Content $_.FullName -Raw -Encoding UTF8'), 'batch command must read with -Encoding UTF8')
+    assert.ok(text.includes('UTF8Encoding($false)'), 'batch command must construct a BOM-less UTF8 encoding')
+    assert.ok(text.includes('[System.IO.File]::WriteAllText'), 'batch command must write via .NET WriteAllText (Set-Content -Encoding UTF8 adds a BOM on PS 5.1)')
   }))
 
   // ---------------------------------------------------------------------------

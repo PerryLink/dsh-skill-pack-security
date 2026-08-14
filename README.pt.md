@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Tópico: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Tópico: dsh-plugin">
   <img src="https://img.shields.io/badge/skills-5-8257D0" alt="5 skills">
-  <img src="https://img.shields.io/badge/verified-9%2F9%20checks-brightgreen" alt="Verificado: 9/9 verificações">
+  <img src="https://img.shields.io/badge/verified-19%2F19%20checks-brightgreen" alt="Verificado: 19/19 verificações">
   <img src="https://img.shields.io/badge/languages-EN%2FZH%2FES%2FPT%2FHI-4D6BFE" alt="Idiomas: EN/ZH/ES/PT/HI">
 </p>
 

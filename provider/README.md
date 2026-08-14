@@ -1,32 +1,93 @@
-# 可选 provider 插件（打包分发示范）
+# 可选 provider 插件（npm bundle）/ Optional provider plugin (npm bundle)
 
-本目录是一个**可选的** DSH 插件：把包内 `skills/` 目录注册进 `ctx.skills`，免去把技能复制到扫描根目录的步骤。技能包本体不依赖它。
+[English](#english) | [中文](#中文)
 
-## 设计
+本目录是一个**可选的** DSH 插件：把包内技能目录注册进 `ctx.skills`，免去把技能复制到扫描根目录的步骤。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle`，发布后可用 `dsh plugin add @dsh-skill-pack-security/provider` 一键挂载。
 
-- 复用官方 `FileSystemSkillProvider`（`@deepseek-ai/dsh-skill-filesystem` 导出的 provider 类）：frontmatter 解析语义与官方本地提供方逐字节一致（同样的 fail-closed 规则、kebab-case 命名、invocation 策略），零复制解析逻辑。
-- 配置 `{ includeDefaultRoots: false, customSkillDirs: [包内 skills/], watch: false }`：只暴露本包技能，不与用户/项目技能根冲突；静态内容不启用 watcher。
-- 注册即 effect：`ctx.effect(function* () { yield ctx.skills.registerProvider(...) })`，返回的 disposer 就是注册表提供的 effect disposer；provider 生命周期（signal abort → dispose）由官方类接管。
+## English
 
-## 挂载方式（任选）
+This directory is an **optional** DSH plugin: it registers the pack's skill directory on `ctx.skills`, so the skills do not need to be copied into a scanned root. The pack itself does not depend on it. It publishes the Chinese edition `skills/` by default; `language: 'en'` publishes the English edition `skills-en/`. The package declares `dsh.bundle`, so once published it mounts with a single `dsh plugin add @dsh-skill-pack-security/provider`.
 
-1. 复制本目录进项目插件目录，在 `cordis.yml` 里以本地路径加载：
+### Design
+
+- Reuses the official `FileSystemSkillProvider` (the provider class exported by `@deepseek-ai/dsh-skill-filesystem`): frontmatter parsing semantics are byte-identical with the official local provider (same fail-closed rules, kebab-case naming, invocation policy) — zero copied parsing logic.
+- Configuration `{ includeDefaultRoots: false, customSkillDirs: [pack skills], watch: false }`: exposes only the pack's skills and never conflicts with user/project skill roots; static content needs no watcher.
+- Registration is an effect: `ctx.effect(function* () { yield ctx.skills.registerProvider(...) })` — the returned disposer is the registry's effect disposer; the provider lifecycle (signal abort → dispose) is owned by the official class.
+- Misconfiguration fails loud: an empty or nonexistent `skillsDir` (or a default resolution that finds neither layout) throws at `apply()` time instead of silently mounting zero skills.
+- Root resolution supports two layouts: the repository layout (`skills/` beside `provider/`) and the published layout (`pack/skills` embedded beside `lib/` by `prepack`).
+
+### Configuration
+
+| Key | Type | Default | Meaning |
+|---|---|---|---|
+| `language` | `'zh' \| 'en'` | `'zh'` | Which edition to publish: the Chinese `skills/` or the English `skills-en/`. Ignored when `skillsDir` is set. |
+| `skillsDir` | string | — | Explicit skills root; overrides the `language`-derived default. Must exist and contain at least one `<skill>/SKILL.md` bundle, otherwise the plugin refuses to load. |
+| `watch` | boolean | `false` | Whether to watch the packaged directory; packaged content is static. |
+
+### Mounting (any one)
+
+1. **npm bundle (recommended once published)**: publish this directory to the npm registry (or install from a tarball/git URL) and run `dsh plugin add @dsh-skill-pack-security/provider`. The `dsh.bundle` manifest applies `cordis.patch.yml`, which mounts the Chinese edition; edit the patch row's `config.language` for English.
+2. Copy this directory into a project plugin directory and load it by local path in `cordis.yml`:
 
 ```yaml
 plugins:
   - name: ./provider
 ```
 
-2. 发布为 npm/tarball 后按官方 publish 流程挂载（bundle/patch 见官方 docs）。
+3. During development, source-launch: the `dsh` CLI source launch runs through the tsx ESM hook, so point it directly at `provider/src/index.ts`.
+
+### Dependencies, build, and packaging
+
+- peerDependencies: `@deepseek-ai/cordis@^4.0.1`, `@deepseek-ai/dsh-skill-filesystem@0.1.0-rc.6`, `@deepseek-ai/schemastery@^3.18.1` (all published on the npm registry — the provider installs and builds standalone).
+- Build: `pnpm install --frozen-lockfile && pnpm run build` (`tsc` emits `lib/index.js` + `lib/types/index.d.ts`; the committed `pnpm-lock.yaml` keeps the build reproducible).
+- Packaging: `prepack` runs `scripts/copy-skills.mjs`, which embeds both editions into `pack/`; `files` then ships `lib/`, `pack/`, and `cordis.patch.yml`, so `pnpm pack` produces a self-contained tarball (npm `files` cannot reach outside the package directory, which is why the copy exists).
+- Contract notes: `name` + `inject: ['skills']` + `apply(ctx, config)`; the configuration is a Schemastery schema (no plain objects); `providerName` is unique within the registry layer (`'skill-pack-security'`).
+- Publishing checklist: the npm scope `@dsh-skill-pack-security` must be owned by the publisher — if not, rename the package and update the `name` row in `cordis.patch.yml` and the README references.
+
+### Verification
+
+Check 8 of `../verify/verify-skill-pack.mts` exercises this plugin: mounting the default config lists the 5 Chinese skills (`provider === 'skill-pack-security'`), `language: 'en'` lists the English edition, an explicit `skillsDir` mounts that root, empty/nonexistent `skillsDir` values are rejected, and after dispose the registries are empty. CI additionally builds the plugin standalone, packs it, and asserts the tarball carries `lib/`, both embedded editions in `pack/`, and `cordis.patch.yml` (`provider` job in `.github/workflows/verify.yml`).
+
+## 中文
+
+本目录是**可选**的 DSH 插件：把包内技能目录注册进 `ctx.skills`，免去复制技能到扫描根目录。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle`，发布后用 `dsh plugin add @dsh-skill-pack-security/provider` 一键挂载。
+
+### 设计
+
+- 复用官方 `FileSystemSkillProvider`（`@deepseek-ai/dsh-skill-filesystem` 导出的 provider 类）：frontmatter 解析语义与官方本地提供方逐字节一致（同样的 fail-closed 规则、kebab-case 命名、invocation 策略），零复制解析逻辑。
+- 配置 `{ includeDefaultRoots: false, customSkillDirs: [包内技能目录], watch: false }`：只暴露本包技能，不与用户/项目技能根冲突；静态内容不启用 watcher。
+- 注册即 effect：`ctx.effect(function* () { yield ctx.skills.registerProvider(...) })`，返回的 disposer 就是注册表提供的 effect disposer；provider 生命周期（signal abort → dispose）由官方类接管。
+- 错误配置响亮失败：`skillsDir` 为空、不存在或默认解析找不到任何布局时，`apply()` 直接抛错，绝不静默挂载零技能。
+- 根目录解析支持两种布局：仓库布局（`skills/` 与 `provider/` 并列）与发布布局（`prepack` 把双语言版嵌入包内 `pack/skills`，与 `lib/` 并列）。
+
+### 配置
+
+| 键 | 类型 | 默认 | 含义 |
+|---|---|---|---|
+| `language` | `'zh' \| 'en'` | `'zh'` | 发布哪个语言版：中文 `skills/` 或英文 `skills-en/`；设置了 `skillsDir` 时忽略 |
+| `skillsDir` | string | — | 显式指定技能根目录，覆盖 `language` 推导的默认值；必须存在且含至少一个 `<skill>/SKILL.md` 包，否则插件拒绝加载 |
+| `watch` | boolean | `false` | 是否监听包内技能目录；静态内容无需监听 |
+
+### 挂载方式（任选）
+
+1. **npm bundle（发布后推荐）**：把本目录发布到 npm registry（或从 tarball/git 安装），执行 `dsh plugin add @dsh-skill-pack-security/provider`。`dsh.bundle` 清单应用 `cordis.patch.yml`，默认挂载中文版；要英文版改 patch 行里的 `config.language`。
+2. 复制本目录进项目插件目录，在 `cordis.yml` 里以本地路径加载：
+
+```yaml
+plugins:
+  - name: ./provider
+```
+
 3. 开发期 source-launch：`dsh` CLI 源码启动走 tsx ESM hook，直接指到 `provider/src/index.ts`。
 
-## 依赖与构建
+### 依赖、构建与打包
 
-- peerDependencies：`@deepseek-ai/cordis`、`@deepseek-ai/dsh-skill-filesystem`、`@deepseek-ai/schemastery`（DSH 环境自带）。
-- 构建：`pnpm install && pnpm run build`（tsdown 输出 `lib/index.js`；src/ 与 lib/ 都在 provider/ 下一层，默认 `skillsDir` 两种布局下都解析到包的兄弟 `skills/` 目录）。
+- peerDependencies：`@deepseek-ai/cordis@^4.0.1`、`@deepseek-ai/dsh-skill-filesystem@0.1.0-rc.6`、`@deepseek-ai/schemastery@^3.18.1`（均已发布在 npm registry，插件可独立安装构建）。
+- 构建：`pnpm install --frozen-lockfile && pnpm run build`（`tsc` 输出 `lib/index.js` + `lib/types/index.d.ts`；提交的 `pnpm-lock.yaml` 保证构建可复现）。
+- 打包：`prepack` 执行 `scripts/copy-skills.mjs` 把双语言版嵌入 `pack/`；`files` 随包发布 `lib/`、`pack/` 与 `cordis.patch.yml`，因此 `pnpm pack` 产出即自包含 tarball（npm `files` 不能包含包外路径，这是拷贝步骤存在的原因）。
 - 契约要点：`name` + `inject: ['skills']` + `apply(ctx, config)`；配置为 Schemastery schema（禁止普通对象）；`providerName` 在注册表层内唯一（'skill-pack-security'）。
-- npm 打包注意：npm 的 `files` 不允许包含包外路径，因此发布为独立 npm 包时 `skills/` 不会进包——发布物需把 `skills/` 放到可解析的兄弟目录，或通过 `config.skillsDir` 显式指定技能根目录。
+- 发布清单：发布者必须拥有 npm scope `@dsh-skill-pack-security`；若不拥有则改名，并同步 `cordis.patch.yml` 的 `name` 行与 README 引用。
 
-## 验证
+### 验证
 
-`../verify/verify-skill-pack.mts` 的最后一步实测本插件：挂载后 `ctx.skills.list()` 返回 5 个技能且 `provider === 'skill-pack-security'`，dispose 后列表为空。
+`../verify/verify-skill-pack.mts` 第 8 项实测本插件：默认配置挂载列出 5 个中文技能（`provider === 'skill-pack-security'`），`language: 'en'` 列出英文版，显式 `skillsDir` 挂载指定根目录，空/不存在的 `skillsDir` 被拒绝，dispose 后注册表为空。CI 另有 `provider` job（`.github/workflows/verify.yml`）独立构建并打包，断言 tarball 含 `lib/`、`pack/` 双语言版与 `cordis.patch.yml`。

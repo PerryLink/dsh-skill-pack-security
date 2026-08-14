@@ -8,6 +8,8 @@
 |---|---|---|
 | 全历史扫描 | `gitleaks detect --source . --report-format json --report-path r.json --redact -v` | 0=未发现；1=有发现或配置错误（看 stderr 区分） |
 | 只看当前工作树 | `gitleaks detect --source . --no-git` | 同上；不含历史，报告注明 |
+| 有界历史扫描（超大仓库） | `gitleaks detect --source . --log-opts="--since=2.years" -v` | 同全量；报告注明只扫了最近 2 年 |
+| staged 门禁（pre-commit） | `gitleaks protect --staged` | 0=通过；非 0=暂存区含告警，拦截提交 |
 | 扫描到基线 | `gitleaks detect --source . --baseline-path baseline.json -v` | 基线内告警不再报；基线只记"已知"，不记"已修复" |
 | 生成基线 | `gitleaks detect --source . --report-format json --report-path r.json -v; gitleaks baseline --source . --report-path r.json --baseline-path baseline.json` | 只对已评审确认"已知且接受"的告警生成基线 |
 | 单文件快速查 | `gitleaks dir <路径>` | 输出告警行；不覆盖历史 |
@@ -59,11 +61,21 @@
 
 与 gitleaks 差异：trivy 不看 git 历史；trivy 的 `secret` 规则与 gitleaks 规则集不同源。两边都报 = 升级复核；只有一边报 = 级B 流程。
 
+## trufflehog 命令表
+
+| 目的 | 命令 | 判据 |
+|---|---|---|
+| 全历史 + 自动验证 | `trufflehog git file://. --only-verified` | `Verified` = 级A 的直接证据（工具已用只读请求验证）；`Unverified` = 级B |
+| 禁用验证 | `trufflehog git file://. --no-verification` | 组织禁止外发验证时用；告警一律按级B |
+| 仅当前目录 | `trufflehog filesystem .` | 不看历史，报告注明 |
+
+判据要点：trufflehog 的验证请求由工具以所发现的密钥发出（多为只读健康检查，如 `/user` 查询）；任何外发验证都必须在报告注明（哪些密钥被发往哪些厂商端点）。
+
 ## 四级误报判据（每级含复核命令）
 
 | 级 | 定义 | 复核命令 | 放行条件 |
 |---|---|---|---|
-| A 真实 | 密钥可验证有效 | 厂商控制台/API 查询（只输入已轮换旧值） | 不成立 → 立即轮换 |
+| A 真实 | 密钥可验证有效（trufflehog `Verified`，或厂商控制台/API 查询确认） | 厂商控制台/API 查询（只输入已轮换旧值） | 不成立 → 立即轮换 |
 | B 疑似 | 格式真实、无法确认 | `git log -p -S'<前6字符>' -- <文件>` 看引入上下文 | 无放行条件，按真实处理 |
 | C 测试/占位 | 测试夹具、文档示例 | 文件名与内容双查：路径含 test/fixture 且值含 example/xxx | 两者同时成立才允许列表登记 |
 | D 历史已轮换 | 已轮换且撤销完成 | 控制台撤销状态截图/记录 + 轮换时间 | 有记录可放行，不追历史 |

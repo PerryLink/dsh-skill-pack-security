@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /provider
+    schedule:
+      interval: weekly
+    groups:
+      dsh-provider:
+        patterns:
+          - '@deepseek-ai/*'
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

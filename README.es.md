@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Tema: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Tema: dsh-plugin">
   <img src="https://img.shields.io/badge/skills-5-8257D0" alt="5 skills">
-  <img src="https://img.shields.io/badge/verified-9%2F9%20checks-brightgreen" alt="Verificado: 9/9 comprobaciones">
+  <img src="https://img.shields.io/badge/verified-19%2F19%20checks-brightgreen" alt="Verificado: 19/19 comprobaciones">
   <img src="https://img.shields.io/badge/languages-EN%2FZH%2FES%2FPT%2FHI-4D6BFE" alt="Idiomas: EN/ZH/ES/PT/HI">
 </p>
 
@@ -61,6 +61,8 @@ Los 3000+ skills del ecosistema Claude Code demuestran el valor de distribución
 
 Cada bundle: archivo principal ≤ 300 líneas (divulgación progresiva; los detalles viven en `references/`), `description` autocontenida sobre «cuándo usarla / cuándo no», y `whenToUse` con disparadores precisos.
 
+**Dos ediciones de idioma.** Cada skill se distribuye con nombres y metadatos idénticos en dos ediciones: `skills/` (chino) y `skills-en/` (inglés). Instala un idioma por raíz — las skills con el mismo nombre en una raíz se resuelven por rango, de modo que solo una edición entra en el catálogo de sesión. Reglas de las ediciones de idioma en [docs/release-checklist.md](docs/release-checklist.md).
+
 ## Inicio rápido
 
 El proveedor local de skills de DSH escanea cuatro raíces por rango — el rango menor gana los conflictos de nombre dentro de una capa:
@@ -72,10 +74,16 @@ El proveedor local de skills de DSH escanea cuatro raíces por rango — el rang
 | 400 | `<dshHome>/skills` (`$DSH_HOME` o `~/.dsh`) | Por usuario, solo DSH |
 | 500 | `<agentsHome>/skills` (`$DSH_AGENTS_HOME` o `~/.agents`) | Por usuario, entre agentes |
 
-Instalación con un comando (PowerShell):
+Instalación con un comando (PowerShell, Windows):
 
 ```powershell
-./scripts/install.ps1 -Target user-agents   # o: project-dsh | project-agents | user-dsh
+./scripts/install.ps1 -Target user-agents -Language zh   # Target: project-dsh | project-agents | user-dsh | user-agents; Language: zh (defecto) | en
+```
+
+O con bash (macOS/Linux/CI):
+
+```sh
+bash ./scripts/install.sh --target user-agents --language en
 ```
 
 O copia manual (ejemplo con PowerShell de Windows; cualquier shell sirve):
@@ -86,43 +94,43 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 
 El catálogo aparece en la siguiente sesión de DSH. Los cuerpos de las skills se recargan en caliente — edita `SKILL.md` y la siguiente carga con `skill` leerá el nuevo cuerpo; sin reiniciar. Desinstalar = borrar los directorios copiados.
 
-Opcional: monta el paquete completo sin copiar mediante el plugin `provider/` (ver [provider/README.md](provider/README.md)).
+Opcional: monta el paquete completo sin copiar mediante el plugin `provider/` — `language: zh|en` elige la edición (ver [provider/README.md](provider/README.md)).
 
 ## Qué hay dentro
 
 | Ruta | Qué es |
 |---|---|
-| `skills/<nombre>/SKILL.md` | Las cinco skills; el frontmatter sigue el contrato oficial de `dsh-skill-filesystem` |
+| `skills/<nombre>/SKILL.md` | Las cinco skills (edición china); el frontmatter sigue el contrato oficial de `dsh-skill-filesystem` |
+| `skills-en/<nombre>/SKILL.md` | Las cinco skills (edición inglesa); mismos nombres y metadatos que la edición china |
 | `skills/<nombre>/references/` | Detalle con divulgación progresiva: matrices de comandos, tablas de triaje, plantillas |
-| `scripts/install.ps1` | Instalador de un comando para las cuatro raíces |
-| `provider/` | Plugin proveedor opcional (demo de empaquetado, registrado vía `ctx.effect()`) |
-| `verify/verify-skill-pack.mts` | Verificación headless contra el parser oficial y la herramienta `skill` real |
+| `scripts/install.ps1` | Instalador de un comando para las cuatro raíces (ambas ediciones de idioma) |
+| `scripts/install.sh` | El equivalente POSIX (macOS/Linux/CI) |
+| `provider/` | Plugin proveedor opcional (demo de empaquetado, registrado vía `ctx.effect()`; `language: zh\|en`) |
+| `verify/verify-skill-pack.mts` | Verificación headless contra el parser oficial y la herramienta `skill` real — 12 comprobaciones sobre ambas ediciones |
+| `VERSION` | Fuente única de versión; cada `metadata.version` de SKILL.md debe coincidir (aplicado por CI) |
 | `docs/ecosystem-conflict-check.md` | Instantánea de conflictos de temas/nombres de GitHub en el ecosistema `dsh-plugin` |
-| `.github/workflows/verify.yml` | CI: instala el harness y ejecuta las 9 comprobaciones en cada push |
+| `docs/release-checklist.md` | Flujo de publicación: puntos de sincronización de versión, reglas de ediciones, etiquetado |
+| `.github/workflows/verify.yml` | CI: 12 comprobaciones + ejercicio de install.sh + build/pack del provider en cada push |
 | `LICENSE` | Apache License 2.0 |
 
 ## Verificación
 
-`verify/verify-skill-pack.mts` importa el parser **oficial** `dsh-skill-filesystem` y la herramienta **real** `skill` desde un checkout local de `deepseek-harness` y comprueba 9 conjuntos de aserciones:
+`verify/verify-skill-pack.mts` importa el parser **oficial** `dsh-skill-filesystem` y la herramienta **real** `skill` desde un checkout local de `deepseek-harness` y comprueba 12 conjuntos de aserciones sobre ambas ediciones de idioma:
 
-1. Estructura: 5 bundles de directorio, sin md planos sueltos, `name` del frontmatter coincide con el directorio, ≤ 300 líneas, `references/` conectado
+1. Estructura: ambas ediciones presentes, 5 bundles por edición, sin md planos sueltos, `name` del frontmatter coincide con el directorio, ≤ 300 líneas, `references/` conectado, `metadata.version` sincronizado con el archivo `VERSION`
 2. Sin conflictos de nombre con las 12 skills oficiales de `.agents/skills/` ni con paquetes de skills comunitarios conocidos
-3. Las 5 skills descubiertas por el proveedor oficial
-4. `ctx.skills.get()` carga todos los cuerpos, metadatos y política de invocación
-5. La herramienta `skill` real devuelve `<skill_content>` para las 5 skills; nombres desconocidos/inválidos rechazados
-6. El catálogo de sesión contiene solo `name` + `description` — `whenToUse` queda fuera del catálogo del modelo (diseño oficial)
-7. 13 fixtures de frontmatter inválido ejercitan las reglas oficiales fail-closed (campos faltantes, claves camel-case heredadas, valores no booleanos, nombres no kebab, directorios anidados, desajuste de nombre)
-8. Las skills en archivo plano cargan; el anidado `**/SKILL.md` no se descubre
-9. El plugin proveedor opcional se monta vía `ctx.effect()` y se desmonta limpiamente
+3–6. Por edición (china `skills/`, inglesa `skills-en/`): descubrimiento por el proveedor oficial, cargas completas vía `ctx.skills.get()`, la herramienta `skill` real devolviendo `<skill_content>` (nombres desconocidos/inválidos rechazados), y el catálogo de sesión con solo `name` + `description` — `whenToUse` queda fuera del catálogo del modelo (diseño oficial)
+7. 13 fixtures de frontmatter inválido ejercitan las reglas oficiales fail-closed (campos faltantes, claves camel-case heredadas, valores no booleanos, nombres no kebab, directorios anidados, desajuste de nombre); las skills en archivo plano cargan y el anidado `**/SKILL.md` no se descubre
+8. El plugin proveedor opcional monta la edición china y la inglesa vía `ctx.effect()` y se desmonta limpiamente
 
 ```powershell
 # local: resuelve automáticamente el checkout del harness junto al pack, o apúntalo explícitamente
 $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
-# All 9 checks passed for dsh-skill-pack-security.
+# All 12 checks passed for dsh-skill-pack-security.
 ```
 
-Las mismas 9 comprobaciones también se ejecutan en GitHub en cada push mediante `.github/workflows/verify.yml` (insignia arriba).
+Las mismas 12 comprobaciones también se ejecutan en GitHub en cada push mediante `.github/workflows/verify.yml` (insignia arriba), más un ejercicio de `install.sh` y un build/pack independiente del provider (`provider` job).
 
 ## Hoja de ruta
 

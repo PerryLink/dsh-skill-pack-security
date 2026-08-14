@@ -1,5 +1,9 @@
-﻿node_modules/
+node_modules/
 .tmp/
 *.tmp
 .DS_Store
+
+provider/lib/
+provider/pack/
+provider/.tmp/
 

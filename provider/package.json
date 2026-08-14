@@ -1,14 +1,26 @@
 {
   "name": "@dsh-skill-pack-security/provider",
-  "version": "1.0.0",
-  "description": "Optional packaging-demo provider plugin for dsh-skill-pack-security: registers the pack's skills/ directory on ctx.skills.",
+  "version": "1.2.0",
+  "description": "Optional provider plugin for dsh-skill-pack-security: registers the pack's skills/ (zh) or skills-en/ (en) edition on ctx.skills. Ships both editions embedded in pack/.",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PerryLink/dsh-skill-pack-security.git",
+    "directory": "provider"
+  },
   "files": [
     "lib/index.js",
-    "lib/types/**/*.d.ts"
+    "lib/types/**/*.d.ts",
+    "pack/**",
+    "cordis.patch.yml"
   ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
   "license": "Apache-2.0",
   "keywords": [
     "dsh",
@@ -21,18 +33,20 @@
     "supply-chain"
   ],
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-skill-filesystem": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^"
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "^3.18.1"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-skill-filesystem": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^",
-    "tsdown": "^0.5.0",
-    "typescript": "^5.4.0"
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "^3.18.1",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.7.0"
   },
   "scripts": {
-    "build": "tsdown"
+    "build": "tsc --noEmitOnError",
+    "typecheck": "tsc --noEmit",
+    "prepack": "node scripts/copy-skills.mjs"
   }
 }

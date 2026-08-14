@@ -1,5 +1,5 @@
 /**
- * Optional packaging-demo provider plugin for dsh-skill-pack-security.
+ * Optional provider plugin for dsh-skill-pack-security.
  *
  * Registers one SkillProvider on `ctx.skills` whose candidates are this
  * package's own `skills/` directory, reusing the official
@@ -11,7 +11,8 @@
  * @module dsh-skill-pack-security/provider
  */
 
-import { dirname, join } from 'node:path'
+import { existsSync, readdirSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Context } from '@deepseek-ai/cordis'
 import { FileSystemSkillProvider } from '@deepseek-ai/dsh-skill-filesystem'
@@ -21,29 +22,80 @@ import type Schema from '@deepseek-ai/schemastery'
 export const name = 'skill-pack-security'
 export const inject = ['skills']
 
+/** The skill language the provider publishes. */
+export type PackLanguage = 'zh' | 'en'
+
 /** Configuration for the packaged skill provider. */
 export interface Config {
   /** Whether to watch the packaged skills directory; packaged content is static, so default false. */
   watch?: boolean
-  /** Explicit skills root; defaults to the pack's own skills/ directory beside this package. */
+  /** Language edition to publish: the Chinese `skills/` or the English `skills-en/`. Ignored when `skillsDir` is set. */
+  language?: PackLanguage
+  /** Explicit skills root; overrides the `language`-derived default. Must be a non-empty path to an existing root with `<skill>/SKILL.md` bundles. */
   skillsDir?: string
 }
 
 export const Config: Schema<Config> = z.object({
   watch: z.boolean().default(false),
-  skillsDir: z.string(),
+  language: z.union(['zh', 'en'] as const).default('zh'),
+  skillsDir: z.string().min(1),
 })
 
-/** The pack's own skills directory, resolved relative to this module (src/ and built lib/ are both one level under provider/). */
-const SKILLS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'skills')
+/** Directory of this module: `provider/src` under tsx or `provider/lib` when built. */
+const MODULE_DIR = dirname(fileURLToPath(import.meta.url))
+
+/**
+ * Candidate pack roots, in preference order. The repository layout keeps
+ * `skills/` and `skills-en/` beside `provider/`, two levels above this module;
+ * the published npm layout embeds both editions in `pack/` beside `lib/`.
+ */
+const PACK_ROOT_CANDIDATES = [join(MODULE_DIR, '..', '..'), join(MODULE_DIR, '..', 'pack')]
+
+/** Whether a directory contains at least one `<skill>/SKILL.md` bundle. */
+function hasSkillBundles(dir: string): boolean {
+  if (!existsSync(dir)) return false
+  let entries
+  try {
+    entries = readdirSync(dir, { withFileTypes: true })
+  } catch {
+    return false
+  }
+  return entries.some(entry => entry.isDirectory() && existsSync(join(dir, entry.name, 'SKILL.md')))
+}
+
+/**
+ * Resolve the skills root to publish and fail loud on misconfiguration:
+ * an explicit `skillsDir` must exist and hold bundles, and the derived
+ * default must find one of the supported layouts — never mount silently with
+ * zero skills.
+ * @param skillsDir - explicit config override, if any.
+ * @param language - edition to select for the derived default.
+ * @returns the validated skills root.
+ */
+function resolveSkillsRoot(skillsDir: string | undefined, language: PackLanguage): string {
+  if (skillsDir !== undefined) {
+    const root = resolve(skillsDir)
+    if (!hasSkillBundles(root)) {
+      throw new Error(`skill-pack-security: config.skillsDir "${skillsDir}" does not exist or contains no <skill>/SKILL.md bundles`)
+    }
+    return root
+  }
+  const edition = language === 'zh' ? 'skills' : 'skills-en'
+  for (const candidate of PACK_ROOT_CANDIDATES) {
+    const root = join(candidate, edition)
+    if (hasSkillBundles(root)) return root
+  }
+  throw new Error(`skill-pack-security: no ${language} edition found near ${MODULE_DIR}; expected the repository layout (${edition}/ beside provider/) or the published layout (pack/${edition}/ inside the package). Set config.skillsDir to an explicit root.`)
+}
 
 /** Register the packaged skills directory as a custom-root provider. */
 export function apply(ctx: Context, config: Config = {}): void {
+  const skillsRoot = resolveSkillsRoot(config.skillsDir, config.language ?? 'zh')
   ctx.effect(function* () {
     yield ctx.skills.registerProvider(control => new FileSystemSkillProvider(ctx, control, {
       providerName: 'skill-pack-security',
       includeDefaultRoots: false,
-      customSkillDirs: [config.skillsDir ?? SKILLS_DIR],
+      customSkillDirs: [skillsRoot],
       watch: config.watch ?? false,
     }))
   })

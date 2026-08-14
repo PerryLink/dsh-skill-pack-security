@@ -4,7 +4,7 @@ description: '凭据/密钥暴露审计：gitleaks、trivy 全历史扫描命令
 whenToUse: '用户要求扫描或检查仓库的密钥泄露、排查某提交或某文件中的 token、给扫描告警定真伪、写脱敏泄露报告或规划密钥轮换时使用；纯功能开发与常规代码审查不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.0.0'
+  version: '1.2.0'
 ---
 
 # 凭据扫描（secret-scan）
@@ -16,15 +16,16 @@ metadata:
 ```sh
 gitleaks --version
 trivy --version
+trufflehog --version
 ```
 
-样例输出（以本机实际输出为准）：`gitleaks version 8.24.3` / `Version: 0.61.0`。
+样例输出（以本机实际输出为准）：`gitleaks version 8.24.3` / `Version: 0.61.0` / `trufflehog 3.88.12`。
 判据：退出码 0 = 可用；非 0 或 `command not found` = 未安装。
 安装（装不上就跳过并走第 4 节降级 grep，报告注明）：
 
 ```sh
-# Windows: scoop install gitleaks trivy   （或 winget install Gitleaks.Gitleaks AquaSecurity.Trivy）
-# macOS/Linux: brew install gitleaks trivy
+# Windows: scoop install gitleaks trivy trufflehog   （或 winget install Gitleaks.Gitleaks AquaSecurity.Trivy TruffleSecurity.Trufflehog）
+# macOS/Linux: brew install gitleaks trivy trufflehog
 ```
 
 把实际版本号写进报告（可复现审计的前提）。
@@ -52,8 +53,10 @@ gitleaks detect --source . --report-format json --report-path .gitleaks-report.j
   - 级C 测试夹具/占位符/文档示例 → 允许列表登记；
   - 级D 已轮换的历史密钥 → 记录，可不追历史。
   判据要点：不能仅凭"这是测试文件"放行；级C 需要文件名与内容双重佐证（如文件路径含 `test`/`fixture` 且值含 `example`/`xxx`）。
+- 产物清理：`.gitleaks-report.json` 不得提交——扫描后删除或加入 `.gitignore`（`echo '.gitleaks-report.json' >> .gitignore`）。`--redact` 只打码密钥值，JSON 仍含文件路径、提交哈希等敏感元数据。
+- 超大仓库的有界历史扫描与 staged 门禁命令见 `references/tool-usage.md`（`--log-opts`、`gitleaks protect --staged`）。
 
-## 3. Trivy 交叉验证（降低误报，不做唯一依据）
+## 3. Trivy 与 Trufflehog 交叉验证（降低误报，不做唯一依据）
 
 ```sh
 trivy fs --scanners secret --severity HIGH,CRITICAL .
@@ -70,16 +73,32 @@ Total: 1 (HIGH: 1)
 判据：与 gitleaks **两边都报** → 大概率真实，升级复核；只有一边报 → 进级B 复核流程，勿直接定级。
 Trivy 按文件系统扫描（不含已删除历史），覆盖范围与 gitleaks 全历史不同——报告注明两者差异。
 
+Trufflehog（git 历史 + 自动验证，级A 判定最直接的工具证据）：
+
+```sh
+trufflehog git file://. --only-verified
+```
+
+样例输出行（以实际输出为准）：
+
+```
+Found verified result 🐷🔑
+Detector Type: GitHub
+```
+
+判据：`Verified` = 工具已用只读请求验证密钥有效 → 级A 的直接证据，立即轮换；`Unverified` 按级B 处理。注意：验证请求由 trufflehog 以该密钥发出（多为只读健康检查）；组织策略禁止任何外发验证时改用 `--no-verification`，告警一律按级B 走。trufflehog 与 gitleaks 都覆盖 git 历史，trivy 只看当前树——三者覆盖面差异照实写进报告。
+
 ## 4. 无工具降级 grep（有界执行，必须限制 rev-list 深度）
 
 ```sh
 git rev-list --all | head -n 500 | while read rev; do
-  git grep -nE 'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|sk-[A-Za-z0-9]{20,}' "$rev" -- '*.js' '*.ts' '*.json' '*.env' 2>/dev/null
+  git grep -nE 'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{22,}|sk-[A-Za-z0-9]{20,}|xox[bap]-[A-Za-z0-9-]{10,}|AZURE_STORAGE_[A-Za-z0-9]+=' "$rev" -- '*.js' '*.ts' '*.json' '*.env' 2>/dev/null
 done
 ```
 
 样例输出：`a1b2c3d:src/ci/deploy.sh:12:export GITHUB_TOKEN=ghp_...`
 判据：匹配行含 `example`/`placeholder`/`xxx` 或位于测试文件 → 级C（仍需在报告列出）；否则按级B 处理。
+JWT 的宽松形态（`eyJ… .… .…` 三段）命中量大、误报率高，只用于人工抽查：`git grep -nE 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}' "$rev" -- '*.json' '*.ts' '*.js'`，判定一律走四级判据。
 限制说明：grep 只能命中仍存在于某提交树中的内容，覆盖不了已删除历史——所以这只是降级路径，不是等价替代。
 
 ## 5. 脱敏报告规范

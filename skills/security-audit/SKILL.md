@@ -4,7 +4,7 @@ description: '仓库/软件安全审计总览：范围界定→资产清单→�
 whenToUse: '用户要求对代码仓库或项目做安全审计、制定审计计划、划分审计阶段、汇总多类发现成报告，或不确定该从哪个专项技能开始时使用；单一主题任务（只查密钥、只查依赖、只评审一个 PR、只查注入面）直接加载对应专项技能，不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.0.0'
+  version: '1.2.0'
 ---
 
 # 安全审计总览（security-audit）
@@ -33,10 +33,11 @@ a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0 2026-08-14T10:30:00+08:00
 
 ```sh
 gitleaks --version; trivy --version; pnpm --version
+checkov --version
 ```
 
-样例输出：`gitleaks version 8.24.3` / `Version: 0.61.0` / `10.9.0`。
-判据：每条命令退出码 0 = 可用；非 0 或 `command not found` = 不可用，报告中注明"未执行（工具不可用）"。
+样例输出：`gitleaks version 8.24.3` / `Version: 0.61.0` / `10.9.0` / `3.2.x`。
+判据：每条命令退出码 0 = 可用；非 0 或 `command not found` = 不可用，报告中注明"未执行（工具不可用）"。checkov 不可用不阻塞审计（IaC 面改用 `trivy config` 或降级人工审）。
 
 ## 阶段 1：范围界定
 
@@ -53,18 +54,19 @@ git ls-files -- 'package.json' 'pnpm-lock.yaml' 'package-lock.json' 'yarn.lock' 
 
 ## 阶段 2：资产清单
 
-按三个面列资产（命令输出直接进报告附录）：
+按四个面列资产（命令输出直接进报告附录）：
 
 ```sh
 git ls-files -- '.env*' '*.pem' '**/id_rsa' '**/id_ed25519' '**/*.key'
 git ls-files -- 'package.json' 'pnpm-lock.yaml' 'package-lock.json' 'yarn.lock'
 git submodule status
 git ls-files -- '.github/workflows/**' '.mcp.json' 'cordis.yml' '**/cordis.yml'
+git ls-files -- 'Dockerfile*' 'docker-compose*.yml' 'compose*.yml' '*.tf' '*.tfvars' '*.hcl' 'serverless.yml'
 ```
 
 样例输出：每行一个相对路径；无匹配时无输出。
 判据：空输出 = 该面无资产，报告写"未发现"。
-资产清单是后续所有阶段的输入：密钥面交给 `secret-scan`，依赖面交给 `dependency-audit`，CI/配置面在本报告内检查。
+资产清单是后续所有阶段的输入：密钥面交给 `secret-scan`，依赖面交给 `dependency-audit`，CI/配置面与 IaC/容器面在本报告内检查。
 
 ## 阶段 3：风险分级
 
@@ -86,6 +88,8 @@ git ls-files -- '.github/workflows/**' '.mcp.json' 'cordis.yml' '**/cordis.yml'
 - 依赖类：`pnpm why <包名>`、在 `pnpm audit --json` 输出中按 advisory id 检索（见 `dependency-audit`）
 - 新依赖类：`git log --oneline --follow -- <锁文件>` 定位引入提交（见 `supply-chain-review`）
 - 注入面类：被引文本的原文出处命令（见 `prompt-injection-review`）
+- CI/工作流类：`git grep -n 'pull_request_target' -- '.github/workflows/**'`（命中且该 workflow 检出 PR 代码后使用 secrets → 高危发现）；`git grep -nE 'uses: [A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@v[0-9]' -- '.github/workflows/**'`（action 未 pin commit SHA → 记录）
+- IaC/容器类：`trivy config .`（无 trivy 用 `checkov -d .`）；镜像扫描 `trivy image <镜像>`（镜像不可用或工具缺失 → 写"未执行"）
 
 误报处理规则：复核命令拿不到证据 → 降级为"观察"或删除；保留但无法复核的必须写明原因。
 

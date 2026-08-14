@@ -1,0 +1,10 @@
+# Bundle patch applied over the selected DSH profile when this package is
+# listed via `dsh plugin add`. The row id is deployment-local; the `name`
+# must match this package.json's `name`. The default publishes the Chinese
+# edition; set `config.language: en` for the English edition.
+
+- insert:
+    - id: skill-pack-security
+      name: '@dsh-skill-pack-security/provider'
+      config:
+        language: zh

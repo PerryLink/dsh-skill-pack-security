@@ -29,6 +29,7 @@ node -e "const lv=(a,b)=>{const m=a.length,n=b.length,d=Array.from({length:m+1},
 | `npm view <包> time.created` | 创建时间 | 无输出 = 包不存在/registry 不通，先确认包名拼写 |
 | `npm view <包> --json` 的 `downloads`/`weeklyDownloads` | 下载量 | 部分 registry 不返回 → 按"未知"记录，不据此定论 |
 | `npm view <包> repository.url` | 源码仓库 | 缺失/可疑 fork → 记录，转 dependency-audit 第 4 项 |
+| `npm view <包> dist.fileCount dist.tarball --json` | 包体规模与下载源 | fileCount 异常大（>1000）或 tarball 域名非 `registry.npmjs.org` → 记录并人工复核 |
 
 ## 可复现构建三要素与判据
 
@@ -43,6 +44,11 @@ node -e "const lv=(a,b)=>{const m=a.length,n=b.length,d=Array.from({length:m+1},
 - **通过**：三要素齐全 + 第 1、2 节无阻断项。
 - **要求修改**：缺任一要素，或第 2 节只中一条可疑条件。
 - **阻断**：第 1 节任一阻断模式；第 2 节两条同时成立；缺锁文件且新增直接依赖 > 20。
+
+## 附加复核（不改变三档门槛，但必须随结论记录）
+
+- **CI action pinning**：`git diff <base>...HEAD -- .github/workflows | grep -nE '^\+.*uses:'`。新增/改动的 `uses: <owner>/<repo>@v<数字>` 未 pin 到 commit SHA（`@<40位hex>`）→ 要求修改；只读、不触密钥的第三方 action 记录即可。
+- **锁文件新增量**：`git diff <base>...HEAD -- <锁文件> | grep -cE '^\+'` 与新增直接依赖数对照；声明 1 个依赖却 +500 行 → 记录并人工核对 diff。
 
 ## PR 评论模板
 

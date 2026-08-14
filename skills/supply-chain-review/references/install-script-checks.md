@@ -10,6 +10,7 @@
 | 混淆载荷 | `echo "aGVsbG8=" | base64 -d | sh`、hex 拼装后 `eval` | `grep -rnE '(base64|eval|child_process|os\.system|fromCharCode)' <解包目录>` | 阻断 |
 | 凭据文件访问 | 读/写 `~/.ssh`、`.npmrc`、`.gitconfig`、`credentials` | `grep -rnE '(\.ssh|npmrc|gitconfig|credential)' <解包目录>` | 阻断 |
 | 全局配置写入 | 写 `~/.bashrc`、`~/.zshrc`、`/etc/profile.d` | `grep -rnE '(bashrc|zshrc|profile\.d)' <解包目录>` | 阻断 |
+| git 依赖的 prepare/preinstall | 依赖为 `git+https://…` 且包声明 `prepare` 脚本（安装时执行，`npm view` 看不到） | `git grep -nE 'git\+https?://' -- package.json` 定位后 clone 并 `grep -nE '"(prepare|preinstall)"' .tmp/gitdep/package.json` | 与 postinstall 同级（阻断级候选） |
 | 外联到与用途无关域名 | 包是 markdown 解析器却请求 `telemetry.example.org` | `grep -rnE 'https?://' <解包目录> | grep -v 包主页域名` | 记录（转 dependency-audit 投毒第 4 项） |
 
 复核命令（解包后统一执行）：

