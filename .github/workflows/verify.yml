@@ -8,7 +8,7 @@ on:
 
 jobs:
   verify:
-    name: skill pack verification (12 checks, both language editions)
+    name: skill pack verification (19 checks, both language editions)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
