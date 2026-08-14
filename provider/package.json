@@ -42,7 +42,7 @@
     "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6",
     "@deepseek-ai/schemastery": "^3.18.1",
     "@types/node": "^22.15.0",
-    "typescript": "^5.7.0"
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "build": "tsc --noEmitOnError",
