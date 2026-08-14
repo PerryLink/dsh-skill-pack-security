@@ -13,10 +13,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout deepseek-harness
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump in the same PR as any
@@ -70,10 +70,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout deepseek-harness
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump with peer-dependency changes.
@@ -123,7 +123,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
