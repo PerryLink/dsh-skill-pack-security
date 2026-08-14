@@ -2,11 +2,11 @@
 
 [English](#english) | [中文](#中文)
 
-本目录是一个**可选的** DSH 插件：把包内技能目录注册进 `ctx.skills`，免去把技能复制到扫描根目录的步骤。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle`，发布后可用 `dsh plugin add @dsh-skill-pack-security/provider` 一键挂载。
+本目录是一个**可选的** DSH 插件：把包内技能目录注册进 `ctx.skills`，免去把技能复制到扫描根目录的步骤。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle` 并发布在 npm：`dsh plugin add @perrylink/dsh-skill-pack-security-provider` 一键挂载。
 
 ## English
 
-This directory is an **optional** DSH plugin: it registers the pack's skill directory on `ctx.skills`, so the skills do not need to be copied into a scanned root. The pack itself does not depend on it. It publishes the Chinese edition `skills/` by default; `language: 'en'` publishes the English edition `skills-en/`. The package declares `dsh.bundle`, so once published it mounts with a single `dsh plugin add @dsh-skill-pack-security/provider`.
+This directory is an **optional** DSH plugin: it registers the pack's skill directory on `ctx.skills`, so the skills do not need to be copied into a scanned root. The pack itself does not depend on it. It publishes the Chinese edition `skills/` by default; `language: 'en'` publishes the English edition `skills-en/`. The package declares `dsh.bundle` and is published on npm: `dsh plugin add @perrylink/dsh-skill-pack-security-provider` mounts it in one command.
 
 ### Design
 
@@ -26,7 +26,7 @@ This directory is an **optional** DSH plugin: it registers the pack's skill dire
 
 ### Mounting (any one)
 
-1. **npm bundle (recommended once published)**: publish this directory to the npm registry (or install from a tarball/git URL) and run `dsh plugin add @dsh-skill-pack-security/provider`. The `dsh.bundle` manifest applies `cordis.patch.yml`, which mounts the Chinese edition; edit the patch row's `config.language` for English.
+1. **npm bundle (recommended)**: `dsh plugin add @perrylink/dsh-skill-pack-security-provider`. The `dsh.bundle` manifest applies `cordis.patch.yml`, which mounts the Chinese edition; edit the patch row's `config.language` for English.
 2. Copy this directory into a project plugin directory and load it by local path in `cordis.yml`:
 
 ```yaml
@@ -42,15 +42,15 @@ plugins:
 - Build: `pnpm install --frozen-lockfile && pnpm run build` (`tsc` emits `lib/index.js` + `lib/types/index.d.ts`; the committed `pnpm-lock.yaml` keeps the build reproducible).
 - Packaging: `prepack` runs `scripts/copy-skills.mjs`, which embeds both editions into `pack/`; `files` then ships `lib/`, `pack/`, and `cordis.patch.yml`, so `pnpm pack` produces a self-contained tarball (npm `files` cannot reach outside the package directory, which is why the copy exists).
 - Contract notes: `name` + `inject: ['skills']` + `apply(ctx, config)`; the configuration is a Schemastery schema (no plain objects); `providerName` is unique within the registry layer (`'skill-pack-security'`).
-- Publishing checklist: the npm scope `@dsh-skill-pack-security` must be owned by the publisher — if not, rename the package and update the `name` row in `cordis.patch.yml` and the README references.
+- Publishing: published on npm as `@perrylink/dsh-skill-pack-security-provider` — the `@dsh-skill-pack-security` scope was not owned by this publisher, so the package was renamed; `cordis.patch.yml`'s `name` row and every README reference carry the published name. Publish new versions with `npm publish --access public` (see `docs/release-checklist.md` step 9).
 
 ### Verification
 
-Check 8 of `../verify/verify-skill-pack.mts` exercises this plugin: mounting the default config lists the 5 Chinese skills (`provider === 'skill-pack-security'`), `language: 'en'` lists the English edition, an explicit `skillsDir` mounts that root, empty/nonexistent `skillsDir` values are rejected, and after dispose the registries are empty. CI additionally builds the plugin standalone, packs it, and asserts the tarball carries `lib/`, both embedded editions in `pack/`, and `cordis.patch.yml` (`provider` job in `.github/workflows/verify.yml`).
+Check 8 of `../verify/verify-skill-pack.mts` exercises this plugin: mounting the default config lists the 8 Chinese skills (`provider === 'skill-pack-security'`), `language: 'en'` lists the English edition, an explicit `skillsDir` mounts that root, empty/nonexistent `skillsDir` values are rejected, and after dispose the registries are empty. CI additionally builds the plugin standalone, packs it, and asserts the tarball carries `lib/`, both embedded editions in `pack/`, and `cordis.patch.yml` (`provider` job in `.github/workflows/verify.yml`).
 
 ## 中文
 
-本目录是**可选**的 DSH 插件：把包内技能目录注册进 `ctx.skills`，免去复制技能到扫描根目录。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle`，发布后用 `dsh plugin add @dsh-skill-pack-security/provider` 一键挂载。
+本目录是**可选**的 DSH 插件：把包内技能目录注册进 `ctx.skills`，免去复制技能到扫描根目录。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle` 并发布在 npm：`dsh plugin add @perrylink/dsh-skill-pack-security-provider` 一键挂载。
 
 ### 设计
 
@@ -70,7 +70,7 @@ Check 8 of `../verify/verify-skill-pack.mts` exercises this plugin: mounting the
 
 ### 挂载方式（任选）
 
-1. **npm bundle（发布后推荐）**：把本目录发布到 npm registry（或从 tarball/git 安装），执行 `dsh plugin add @dsh-skill-pack-security/provider`。`dsh.bundle` 清单应用 `cordis.patch.yml`，默认挂载中文版；要英文版改 patch 行里的 `config.language`。
+1. **npm bundle（推荐）**：执行 `dsh plugin add @perrylink/dsh-skill-pack-security-provider`。`dsh.bundle` 清单应用 `cordis.patch.yml`，默认挂载中文版；要英文版改 patch 行里的 `config.language`。
 2. 复制本目录进项目插件目录，在 `cordis.yml` 里以本地路径加载：
 
 ```yaml
@@ -86,8 +86,8 @@ plugins:
 - 构建：`pnpm install --frozen-lockfile && pnpm run build`（`tsc` 输出 `lib/index.js` + `lib/types/index.d.ts`；提交的 `pnpm-lock.yaml` 保证构建可复现）。
 - 打包：`prepack` 执行 `scripts/copy-skills.mjs` 把双语言版嵌入 `pack/`；`files` 随包发布 `lib/`、`pack/` 与 `cordis.patch.yml`，因此 `pnpm pack` 产出即自包含 tarball（npm `files` 不能包含包外路径，这是拷贝步骤存在的原因）。
 - 契约要点：`name` + `inject: ['skills']` + `apply(ctx, config)`；配置为 Schemastery schema（禁止普通对象）；`providerName` 在注册表层内唯一（'skill-pack-security'）。
-- 发布清单：发布者必须拥有 npm scope `@dsh-skill-pack-security`；若不拥有则改名，并同步 `cordis.patch.yml` 的 `name` 行与 README 引用。
+- 发布：已发布在 npm，包名 `@perrylink/dsh-skill-pack-security-provider`——scope `@dsh-skill-pack-security` 不为本发布者所有，故改名；`cordis.patch.yml` 的 `name` 行与全部 README 引用均已同步为发布名。新版本用 `npm publish --access public` 发布（见 `docs/release-checklist.md` 第 9 步）。
 
 ### 验证
 
-`../verify/verify-skill-pack.mts` 第 8 项实测本插件：默认配置挂载列出 5 个中文技能（`provider === 'skill-pack-security'`），`language: 'en'` 列出英文版，显式 `skillsDir` 挂载指定根目录，空/不存在的 `skillsDir` 被拒绝，dispose 后注册表为空。CI 另有 `provider` job（`.github/workflows/verify.yml`）独立构建并打包，断言 tarball 含 `lib/`、`pack/` 双语言版与 `cordis.patch.yml`。
+`../verify/verify-skill-pack.mts` 第 8 项实测本插件：默认配置挂载列出 8 个中文技能（`provider === 'skill-pack-security'`），`language: 'en'` 列出英文版，显式 `skillsDir` 挂载指定根目录，空/不存在的 `skillsDir` 被拒绝，dispose 后注册表为空。CI 另有 `provider` job（`.github/workflows/verify.yml`）独立构建并打包，断言 tarball 含 `lib/`、`pack/` 双语言版与 `cordis.patch.yml`。

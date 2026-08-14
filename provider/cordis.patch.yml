@@ -5,6 +5,6 @@
 
 - insert:
     - id: skill-pack-security
-      name: '@dsh-skill-pack-security/provider'
+      name: '@perrylink/dsh-skill-pack-security-provider'
       config:
         language: zh

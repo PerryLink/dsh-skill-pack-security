@@ -4,7 +4,7 @@ description: '面向 agent 项目的提示注入面审查：AGENTS.md、技能�
 whenToUse: '审查 agent 项目的上下文注入面（AGENTS.md/CLAUDE.md、.agents/skills、工具描述、MCP server 来源、web 抓取链路）、评估间接注入风险或对 agent 项目做安全评审时使用；与模型上下文无关的普通代码评审不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # 提示注入面审查（prompt-injection-review）
@@ -41,7 +41,7 @@ DSH 中每个 `SKILL.md` 的 `name`/`description` 会进入模型会话目录。
 grep -rnE '^[[:space:]]*(name|description|whenToUse):' .agents/skills/*/SKILL.md
 ```
 
-判据：description 应描述"何时用"，不应命令模型"你必须先做什么"；出现后者 = 记录（来源是仓库内受信文件，风险低于远程内容，但仍是注入面）。参考本包 5 个技能的 description 写法作为"正常样貌"。
+判据：description 应描述"何时用"，不应命令模型"你必须先做什么"；出现后者 = 记录（来源是仓库内受信文件，风险低于远程内容，但仍是注入面）。参考本包 8 个技能的 description 写法作为"正常样貌"。
 
 ### 2.3 工具描述与参数 schema
 

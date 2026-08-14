@@ -8,11 +8,11 @@
  *
  *   1. layout + kebab-case names + version/metadata sync + official/community
  *      name-conflict check (both language editions)
- *   2. registry discovery of all 5 skills through the official provider
+ *   2. registry discovery of all 8 skills through the official provider
  *      (per language edition)
  *   3. full-definition load via ctx.skills.get() (body, whenToUse, invocation,
  *      metadata, catalog-safe description length)
- *   4. the real `skill` tool via ctx.tools.execute() for all 5 skills
+ *   4. the real `skill` tool via ctx.tools.execute() for all 8 skills
  *   5. the real model-facing session catalog (name + description only;
  *      whenToUse must NOT appear)
  *   6. 13 bad-frontmatter fixtures exercising the official fail-closed rules
@@ -75,7 +75,7 @@ const { CallId } = await harnessImport('packages/llm/llm/src/index.ts')
 
 // ---------------------------------------------------------------------------
 const PACK_DIR = fileURLToPath(new URL('..', import.meta.url))
-const SKILL_NAMES = ['dependency-audit', 'prompt-injection-review', 'secret-scan', 'security-audit', 'supply-chain-review']
+const SKILL_NAMES = ['dependency-audit', 'incident-response', 'prompt-injection-review', 'secret-scan', 'security-audit', 'supply-chain-review', 'threat-model', 'vuln-intel']
 
 /** The pack's language editions: directory name and the language it holds. */
 const LANGUAGE_ROOTS = [
@@ -162,7 +162,7 @@ async function main(): Promise<void> {
   const steps: Array<() => Promise<void>> = []
 
   // --- 1. layout, kebab-case, version/metadata sync --------------------------
-  steps.push(check('layout: both language editions, 5 bundles each, versions synced to VERSION', async () => {
+  steps.push(check('layout: both language editions, 8 bundles each, versions synced to VERSION', async () => {
     const baseEntries = await readdir(PACK_DIR, { withFileTypes: true })
     const langDirs = baseEntries.filter(e => e.isDirectory() && (e.name === 'skills' || e.name === 'skills-en')).map(e => e.name)
     assert.deepEqual(langDirs.slice().sort(), ['skills', 'skills-en'], 'pack root must carry both skills/ and skills-en/')
@@ -171,7 +171,7 @@ async function main(): Promise<void> {
       const entries = await readdir(root, { withFileTypes: true })
       const dirs = entries.filter(e => e.isDirectory()).map(e => e.name)
       const files = entries.filter(e => !e.isDirectory()).map(e => e.name)
-      assert.deepEqual(dirs.slice().sort(), [...SKILL_NAMES].sort(), `${dir} must contain exactly the 5 skill bundles`)
+      assert.deepEqual(dirs.slice().sort(), [...SKILL_NAMES].sort(), `${dir} must contain exactly the ${SKILL_NAMES.length} skill bundles`)
       assert.deepEqual(files, [], `${dir} root must contain only skill directories`)
       for (const name of SKILL_NAMES) {
         assert.ok(isSkillName(name), `${name} must be kebab-case`)
@@ -205,7 +205,7 @@ async function main(): Promise<void> {
   for (const { dir, language } of LANGUAGE_ROOTS) {
     const root = join(PACK_DIR, dir)
 
-    steps.push(check(`registry discovery (${language}): all 5 skills found via the official provider`, async () => {
+    steps.push(check(`registry discovery (${language}): all ${SKILL_NAMES.length} skills found via the official provider`, async () => {
       const ctx = new Context()
       await ctx.plugin(SkillRegistry)
       await ctx.plugin(skillFilesystem, {
@@ -245,7 +245,7 @@ async function main(): Promise<void> {
     }))
 
     // --- 4/5. the real `skill` tool + real session catalog -------------------
-    steps.push(check(`skill tool (${language}): ctx.tools.execute loads all 5 skills`, async () => {
+    steps.push(check(`skill tool (${language}): ctx.tools.execute loads all ${SKILL_NAMES.length} skills`, async () => {
       const toolCtx = new Context()
       await toolCtx.plugin(SystemPrompt)
       await toolCtx.plugin(ToolRuntime)

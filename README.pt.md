@@ -1,8 +1,8 @@
 <h1 align="center">dsh-skill-pack-security</h1>
 
 <p align="center">
-  <b>Metodologia de auditoria de segurança para o DeepSeek Harness — cinco agent skills, zero código em tempo de execução.</b><br/>
-  varredura de segredos · auditoria de dependências · revisão de cadeia de suprimentos · revisão de injeção de prompt · orquestração de auditoria
+  <b>Metodologia de auditoria de segurança para o DeepSeek Harness — oito agent skills, zero código em tempo de execução.</b><br/>
+  varredura de segredos · auditoria de dependências · revisão de cadeia de suprimentos · revisão de injeção de prompt · orquestração de auditoria · modelagem de ameaças · inteligência de vulnerabilidades · resposta a incidentes
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="Licença: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Tópico: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Tópico: dsh-plugin">
-  <img src="https://img.shields.io/badge/skills-5-8257D0" alt="5 skills">
+  <img src="https://img.shields.io/badge/skills-8-8257D0" alt="8 skills">
   <img src="https://img.shields.io/badge/verified-19%2F19%20checks-brightgreen" alt="Verificado: 19/19 verificações">
   <img src="https://img.shields.io/badge/languages-EN%2FZH%2FES%2FPT%2FHI-4D6BFE" alt="Idiomas: EN/ZH/ES/PT/HI">
 </p>
@@ -29,7 +29,7 @@
 
 ## O que é isto?
 
-Um **pacote de skills puro** para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) — o harness de agentes "tudo é um plugin" construído sobre o [Cordis](https://github.com/cordiverse/cordis). Ele distribui cinco metodologias de auditoria de segurança como bundles `SKILL.md`: o modelo as descobre no catálogo da sessão e carrega o corpo sob demanda com a ferramenta `skill`.
+Um **pacote de skills puro** para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) — o harness de agentes "tudo é um plugin" construído sobre o [Cordis](https://github.com/cordiverse/cordis). Ele distribui oito metodologias de segurança como bundles `SKILL.md`: o modelo as descobre no catálogo da sessão e carrega o corpo sob demanda com a ferramenta `skill`.
 
 > Repositório: https://github.com/PerryLink/dsh-skill-pack-security
 
@@ -49,7 +49,7 @@ Instalado junto com um plugin de segurança do tipo ferramenta, os dois se comp�
 
 As 3000+ skills do ecossistema Claude Code provam o valor de distribuição dessa forma. O frontmatter `SKILL.md` do DSH (`name`, `description`, `whenToUse`) é compatível com o formato de skills do CC; este pacote usa apenas o subconjunto comum e seu conteúdo é totalmente original.
 
-## As cinco skills
+## As oito skills
 
 | Skill | Propósito em uma linha | Quando usar |
 |---|---|---|
@@ -58,8 +58,13 @@ As 3000+ skills do ecossistema Claude Code provam o valor de distribuição dess
 | `dependency-audit` | Auditoria de cadeia de suprimentos: leitura de pnpm/npm audit, licenças, risco de typosquat, deriva do lockfile | Revisão de dependências, interpretação de relatórios de auditoria |
 | `supply-chain-review` | Revisão rápida de PR/novas dependências: scripts de instalação perigosos, typosquat, builds reproduzíveis | Revisar PRs que adicionam dependências |
 | `prompt-injection-review` | Revisão de superfícies de injeção em projetos de agentes: AGENTS.md, skills, descrições de ferramentas, MCP, web | Revisar superfícies de injeção do contexto do modelo |
+| `threat-model` | Modelagem de ameaças na fase de design: limites de confiança, tabela STRIDE, árvores de ataque, mitigações | Modelar novos recursos, revisão de segurança na fase de design |
+| `vuln-intel` | Inteligência de vulnerabilidades: consultas a NVD/CISA-KEV/GHSA/OSV com critérios de veredito | Dado um id de CVE/GHSA, verificar impacto e exploração |
+| `incident-response` | Resposta a incidentes em ambiente de agentes: conter → evidência → recuperar → post-mortem | Incidentes de segurança suspeitos em configurações de DSH/agentes |
 
 Cada bundle: arquivo principal ≤ 300 linhas (divulgação progressiva; detalhes vivem em `references/`), `description` autocontida sobre "quando usar / quando não usar" e `whenToUse` com gatilhos precisos.
+
+**Duas edições de idioma.** Cada skill é distribuída com nomes e metadados idênticos em duas edições: `skills/` (chinês) e `skills-en/` (inglês). Instale um idioma por raiz — skills de mesmo nome em uma raiz são resolvidas por rank, então apenas uma edição entra no catálogo da sessão. Veja [docs/release-checklist.md](docs/release-checklist.md) para as regras das edições de idioma.
 
 ## Início rápido
 
@@ -72,64 +77,77 @@ O provedor local de skills do DSH varre quatro raízes por rank — o rank menor
 | 400 | `<dshHome>/skills` (`$DSH_HOME` ou `~/.dsh`) | Por usuário, somente DSH |
 | 500 | `<agentsHome>/skills` (`$DSH_AGENTS_HOME` ou `~/.agents`) | Por usuário, entre agentes |
 
-Instalação com um comando (PowerShell):
+Ranks (o menor vence conflitos de mesmo nome dentro de uma camada): `project-dsh 100 < project-agents 200 < custom 300 < user-dsh 400 < user-agents 500`. O rank custom 300 é registrado por plugin (como o `provider/` opcional deste pacote), não é uma raiz de disco.
+
+Instalação com um comando (PowerShell, Windows):
 
 ```powershell
-./scripts/install.ps1 -Target user-agents   # ou: project-dsh | project-agents | user-dsh
+./scripts/install.ps1 -Target user-agents -Language zh   # Target: project-dsh | project-agents | user-dsh | user-agents; Language: zh (default) | en
 ```
 
-Ou cópia manual (exemplo em PowerShell do Windows; qualquer shell serve):
+Ou bash (macOS/Linux/CI):
+
+```sh
+bash ./scripts/install.sh --target user-agents --language en
+```
+
+Ou copie manualmente (exemplo em PowerShell do Windows; qualquer shell serve — use `skills-en\` para a edição em inglês):
 
 ```powershell
 Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 ```
 
-O catálogo aparece na próxima sessão do DSH. Os corpos das skills recarregam a quente — edite `SKILL.md` e o próximo carregamento com `skill` lê o novo corpo; sem reiniciar. Desinstalar = apagar os diretórios copiados.
+O catálogo aparece na próxima sessão do DSH. Os corpos das skills recarregam a quente — edite `SKILL.md` e o próximo carregamento com `skill` lê o novo corpo; sem reiniciar. Desinstalar = executar o instalador com `-Uninstall` / `--uninstall` (ele remove exatamente o que seu manifesto registrou) ou apagar os diretórios copiados manualmente.
 
-Opcional: monte o pacote inteiro sem copiar usando o plugin `provider/` (veja [provider/README.md](provider/README.md)).
+Opcional: monte o pacote inteiro sem copiar via o plugin `provider/` — `language: zh|en` escolhe a edição (veja [provider/README.md](provider/README.md)). O provedor é publicado no npm como [`@perrylink/dsh-skill-pack-security-provider`](https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider): `dsh plugin add @perrylink/dsh-skill-pack-security-provider` o monta com um comando.
 
 ## O que há dentro
 
 | Caminho | O que é |
 |---|---|
-| `skills/<nome>/SKILL.md` | As cinco skills; o frontmatter segue o contrato oficial do `dsh-skill-filesystem` |
+| `skills/<nome>/SKILL.md` | As oito skills (edição em chinês); o frontmatter segue o contrato oficial do `dsh-skill-filesystem` |
+| `skills-en/<nome>/SKILL.md` | As oito skills (edição em inglês); mesmos nomes e metadados da edição em chinês |
 | `skills/<nome>/references/` | Detalhes com divulgação progressiva: matrizes de comandos, tabelas de triagem, modelos |
-| `scripts/install.ps1` | Instalador de um comando para as quatro raízes |
-| `provider/` | Plugin provedor opcional (demonstração de empacotamento, registrado via `ctx.effect()`) |
-| `verify/verify-skill-pack.mts` | Verificação headless contra o parser oficial e a ferramenta `skill` real |
+| `scripts/install.ps1` | Instalador de um comando para Windows para as quatro raízes (ambas as edições de idioma); registra um manifesto, suporta `-Uninstall`/`-DryRun`/`-Force` |
+| `scripts/install.sh` | O equivalente POSIX (`--uninstall`/`--dry-run`/`--force`) |
+| `provider/` | Bundle de provedor opcional instalável via npm (declara `dsh.bundle`; embute ambas as edições em `pack/` via `prepack`; `language: zh\|en`); registrado via `ctx.effect()`, falha de forma explícita em um `skillsDir` inválido |
+| `verify/verify-skill-pack.mts` | Verificação headless contra o parser oficial e a ferramenta `skill` real — 19 verificações nas duas edições |
+| `VERSION` | Fonte única de versão; todo `metadata.version` de SKILL.md e `provider/package.json` deve corresponder a ela (aplicado por CI) |
 | `docs/ecosystem-conflict-check.md` | Instantâneo de conflitos de tópicos/nomes do GitHub no ecossistema `dsh-plugin` |
-| `.github/workflows/verify.yml` | CI: instala o harness e executa as 9 verificações a cada push |
+| `docs/release-checklist.md` | Fluxo de release: pontos de sincronização de versão, regras de edição de idioma, tagging |
+| `docs/improvement-plan.md` | O plano de melhoria 1.2.0 com evidência por item e critérios de aceitação |
+| `CHANGELOG.md` / `SECURITY.md` / `CONTRIBUTING.md` | Histórico de releases, política de relato de vulnerabilidades e regras de contribuição/verificação |
+| `.github/workflows/verify.yml` | CI: as 19 verificações + exercício de install.sh/install.ps1 + smoke de build/pack do provider, no Ubuntu e no Windows contra um commit fixado do harness |
+| `.github/dependabot.yml` | Atualizações semanais de dependências para o provider e GitHub Actions |
 | `LICENSE` | Apache License 2.0 |
 
 ## Verificação
 
-`verify/verify-skill-pack.mts` importa o parser **oficial** `dsh-skill-filesystem` e a ferramenta **real** `skill` de um checkout local do `deepseek-harness` e verifica 9 conjuntos de asserções:
+`verify/verify-skill-pack.mts` importa o parser **oficial** `dsh-skill-filesystem` e a ferramenta **real** `skill` de um checkout local do `deepseek-harness` e aplica 19 verificações sobre ambas as edições de idioma:
 
-1. Estrutura: 5 bundles de diretório, sem md planos soltos, `name` do frontmatter coincide com o diretório, ≤ 300 linhas, `references/` conectado
-2. Sem conflito de nomes com as 12 skills oficiais de `.agents/skills/` nem com pacotes de skills comunitários conhecidos
-3. As 5 skills descobertas pelo provedor oficial
-4. `ctx.skills.get()` carrega todos os corpos, metadados e política de invocação
-5. A ferramenta `skill` real devolve `<skill_content>` para as 5 skills; nomes desconhecidos/inválidos são rejeitados
-6. O catálogo da sessão contém apenas `name` + `description` — `whenToUse` fica fora do catálogo do modelo (design oficial)
-7. 13 fixtures de frontmatter inválido exercitam as regras oficiais fail-closed (campos ausentes, chaves camel-case legadas, valores não booleanos, nomes não kebab, diretórios aninhados, divergência de nome)
-8. Skills em arquivo plano carregam; `**/SKILL.md` aninhado não é descoberto
-9. O plugin provedor opcional monta via `ctx.effect()` e descarta de forma limpa
+1. Layout: ambas as edições presentes, 8 bundles de diretório cada, sem skills planas soltas, `name` do frontmatter coincide com o diretório, ≤ 300 linhas, `references/` conectado, `metadata.version` sincronizado com o arquivo `VERSION`
+2. Sem conflito de nomes com as skills oficiais de `.agents/skills/` (derivadas do checkout em tempo de execução) nem com pacotes de skills comunitários conhecidos
+3–6. Por edição (chinês `skills/`, inglês `skills-en/`): descoberta de registro pelo provedor oficial, carregamentos completos de `ctx.skills.get()`, a ferramenta `skill` real devolvendo `<skill_content>` (nomes desconhecidos/inválidos rejeitados), e o catálogo da sessão contendo apenas `name` + `description` — `whenToUse` fica fora do catálogo do modelo (design oficial)
+7. 13 fixtures de frontmatter inválido exercitam as regras oficiais fail-closed (campos ausentes, chaves camel-case legadas, valores não booleanos, nomes não kebab, diretórios aninhados, divergência de nome); skills em arquivo plano carregam e `**/SKILL.md` aninhado não é descoberto
+8. O plugin provedor opcional monta a edição em chinês e a em inglês via `ctx.effect()`, descarta de forma limpa e rejeita configuração incorreta (`skillsDir` vazio ou inexistente)
+9–15. Verificações de auto-endurecimento: paridade estrutural zh↔en, fiação de referências (sem arquivos órfãos/pendurados), sincronização de versão do provider, ranks documentados de raiz de skills vs as constantes oficiais, padrões `grep -E` portáveis em POSIX, auto-verificação de segredos, checklist de release seguro em UTF-8
 
 ```powershell
-# local: resolve automaticamente o checkout do harness ao lado do pack, ou aponte explicitamente
+# local: auto-resolves the harness checkout beside the pack, or point it explicitly
 $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
-# All 9 checks passed for dsh-skill-pack-security.
+# All 19 checks passed for dsh-skill-pack-security.
 ```
 
-As mesmas 9 verificações também rodam no GitHub a cada push via `.github/workflows/verify.yml` (badge acima).
+As mesmas 19 verificações rodam no GitHub a cada push via `.github/workflows/verify.yml` (badge acima) — no Ubuntu e no Windows — além de um exercício de `install.sh`/`install.ps1` e um smoke independente de build/pack do provider que verifica que o tarball carrega ambas as edições embutidas e o patch do bundle (job `provider`). O checkout do harness é fixado em um commit para verificação reproduzível.
 
 ## Roadmap
 
 - `dsh-skill-pack-data-engineering` — pipelines de dados, qualidade de dados, checklists de ETL (mesmo modelo)
 - `dsh-skill-pack-oss-collab` — etiqueta de PR, triagem de issues, fluxos de mantenedor
 - `dsh-skill-pack-performance` — metodologia de profiling, critérios de benchmark, checklists de regressão
-- Opcional: empacotar o pack como provedor de badge integrado nos moldes de `dsh-skill-badge`
+- Mais skills dentro deste pacote (mesmo limite de skill pura): `sbom-lifecycle` (fluxos de geração/envelhecimento/importação de SBOM), `pen-test-review` (escopo de engajamento autorizado e revisão de relatórios; verifique novamente o instantâneo do ecossistema para conflitos de nome antes de publicar), `compliance-audit` (walkthroughs ASVS/NIST-CSF)
+- Bundle de provedor publicado no npm como `@perrylink/dsh-skill-pack-security-provider` (pronto para `dsh plugin add`); mantenha-o em sincronia com cada release via `docs/release-checklist.md`
 
 ## Tópicos (Topics)
 

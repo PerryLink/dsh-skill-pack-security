@@ -3,6 +3,22 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-08-14
+
+### Added
+
+- Three new skills in both language editions (8 skills total), each following the pack's executable-command invariant:
+  - `threat-model`: design-stage threat modeling — fix the target, trust boundaries, asset inventory, STRIDE per-asset table, optional graphviz attack trees, mitigation directions, deliverable self-check.
+  - `vuln-intel`: vulnerability intelligence — NVD / CISA-KEV / GHSA / OSV query commands with response interpretation, rate-limit and misjudgment criteria, dependency-tree landing verdicts, and a brief template (`references/advisory-sources.md` carries the source-comparison table, jq quick reference, EPSS note, and offline paths).
+  - `incident-response`: agent-environment incident response — classify → contain → evidence → recover → postmortem for secret leaks, prompt-injection triggers, dependency poisoning, and unauthorized actions (`references/runbook-and-postmortem.md` carries the per-type handling tables, timeline template, evidence-pack checklist, and hardening acceptance table).
+- Ecosystem snapshot refreshed (2026-08-14): the three new skill names have no DSH name clashes; newly sighted community packs (`dhicoc/dsh-reverse-skill`, `cyzlmh/dsh-cyber-sec`, `ChenLaoshiYF/dsh-mcpguard`) were checked name-by-name.
+
+### Changed
+
+- Provider package renamed to `@perrylink/dsh-skill-pack-security-provider` and published to the npm registry — the unowned `@dsh-skill-pack-security` scope is not available to this publisher, so the bundle name, `cordis.patch.yml` name row, and all documentation now use the published name; `dsh plugin add @perrylink/dsh-skill-pack-security-provider` mounts the pack in one command.
+- Verification suite now drives 8 skills per edition through the official provider, the real `skill` tool, and the session catalog (still 19 checks — they are per-catalog, not per-skill).
+- Version sync points, skill counts, and the cross-skill references updated across README, localized READMEs, CONTRIBUTING, and the release checklist.
+
 ## [1.2.0] - 2026-08-14
 
 ### Fixed

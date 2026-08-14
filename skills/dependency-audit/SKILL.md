@@ -4,7 +4,7 @@ description: '依赖供应链审计：pnpm/npm audit 输出与退出码解读、
 whenToUse: '用户要求审计或盘点项目依赖安全（漏洞、license、投毒、锁文件漂移）、解读 audit 报告、判断某个依赖能否引入，或写依赖审计结论时使用；单个依赖的普通升级与纯功能开发不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # 依赖审计（dependency-audit）

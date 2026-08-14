@@ -4,7 +4,7 @@ description: 'Injection-surface review for agent projects: a checklist covering 
 whenToUse: 'Use when reviewing the context injection surfaces of an agent project (AGENTS.md/CLAUDE.md, .agents/skills, tool descriptions, MCP server sources, web-fetch chains), assessing indirect-injection risk, or doing a security review of an agent project. Ordinary code review unrelated to model context does not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 # Prompt-injection surface review (prompt-injection-review)
 
@@ -40,7 +40,7 @@ In DSH every `SKILL.md`'s `name`/`description` enters the model's session catalo
 grep -rnE '^[[:space:]]*(name|description|whenToUse):' .agents/skills/*/SKILL.md
 ```
 
-Criterion: a description should state "when to use"; it must not order the model "you must first do X"; the latter = record (the source is a trusted in-repo file, lower risk than remote content, but still an injection surface). Compare with the descriptions of this pack's 5 skills as the "normal shape".
+Criterion: a description should state "when to use"; it must not order the model "you must first do X"; the latter = record (the source is a trusted in-repo file, lower risk than remote content, but still an injection surface). Compare with the descriptions of this pack's 8 skills as the "normal shape".
 
 ### 2.3 Tool descriptions and parameter schemas
 

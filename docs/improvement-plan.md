@@ -1,8 +1,18 @@
 # dsh-skill-pack-security 完善与提升方案
 
-> 状态：**已全部实施（1.2.0，2026-08-14）**。P0 A1–A5、P1 B1–B9 与 C1–C4、P2 D1–D5、P3 E1–E4 全部落地；验证套件由 12 项增至 19 项并全绿，provider 构建/打包与两个安装脚本实测通过。下文保留问题证据与验收方式，作为实施记录与后续回归对照。
+> 状态：**1.3.0 已全部实施（2026-08-14）**。下文"1.3.0 完善记录"为最新一轮；"1.2.0 实施记录"保留作为历史对照。验证套件 19 项全绿，provider 已发布 npm。
 
-## 实施记录速查
+## 1.3.0 完善记录（2026-08-14）
+
+| 项 | 结果 |
+|---|---|
+| 新增技能 ×3 | ✅ `threat-model`（设计期威胁建模：信任边界/STRIDE/攻击树）、`vuln-intel`（NVD/KEV/GHSA/OSV 四源检索与判定）、`incident-response`（agent 环境事件响应：控制→取证→恢复→复盘），双语言版同步，8 技能全部通过 19 项验证 |
+| 生态冲突复查 | ✅ 三个新名与官方 12 技能、社区包（dsh-reverse-skill 85 技能、dsh-cyber-sec 21 技能、dsh-mcpguard）逐一核对零重名；最近名仅主题相近（`threat-hunting`、`component-vuln-intel`） |
+| provider npm 发布 | ✅ scope `@dsh-skill-pack-security` 不为维护者所有（org API 403），按发布清单改名 `@perrylink/dsh-skill-pack-security-provider` 并发布；`cordis.patch.yml` name 行与全部文档同步 |
+| 版本同步 | ✅ 1.3.0：VERSION + 16 个 SKILL.md + provider/package.json |
+| 文档同步 | ✅ README（8 技能表/徽章/roadmap/npm 路径）、CHANGELOG、CONTRIBUTING（16 处版本点）、release-checklist（新增 npm 发布步骤）、ecosystem 快照刷新（2026-08-14）、provider README、prompt-injection 内引用计数 |
+
+## 1.2.0 实施记录（2026-08-14）
 
 | 项 | 结果 |
 |---|---|

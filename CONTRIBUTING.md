@@ -6,7 +6,7 @@
 2. A `SKILL.md` stays at or under 300 lines; details go into `references/`, and the main file must mention every reference file it ships (no dangling or orphan files — CI enforces this too).
 3. Every step stays a real command with an expected-output sample, an exit-code criterion, and false-positive criteria — no unverifiable assertions.
 4. Shell `grep -E` patterns stay POSIX-portable: use `[[:space:]]` and friends, never GNU-only escapes such as `\s`/`\d`/`\w` (macOS BSD grep misreads them; CI lints every shipped pattern).
-5. Versioning: bump `VERSION` first, then sync the 10 `SKILL.md` `metadata.version` values and `provider/package.json` with the release-checklist batch command (keeping `-Encoding UTF8`).
+5. Versioning: bump `VERSION` first, then sync the 16 `SKILL.md` `metadata.version` values and `provider/package.json` with the release-checklist batch command (keeping `-Encoding UTF8`).
 
 ## Verification
 

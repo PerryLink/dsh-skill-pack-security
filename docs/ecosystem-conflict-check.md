@@ -1,7 +1,7 @@
 # 生态冲突排查（Ecosystem conflict check）
 
-> 快照时间：2026-08-13（UTC）。查询方式：GitHub Search API（`/search/repositories`，按 stars 排序取前 10）。
-> Snapshot: 2026-08-13 (UTC). Method: GitHub Search API (`/search/repositories`, top 10 by stars).
+> 快照时间：2026-08-14（UTC）。查询方式：GitHub Search API（`/search/repositories`，按 stars 排序取前 10）+ 社区仓库技能名逐一核对（git trees API）。
+> Snapshot: 2026-08-14 (UTC). Method: GitHub Search API (`/search/repositories`, top 10 by stars) + per-name skill checks in community repos (git trees API).
 
 ## 查询与结果 / Queries and results
 
@@ -32,13 +32,27 @@
 
 仅 `PerryLink/dsh-skill-pack-security` —— **仓库名全局唯一**。
 
+### 1.3.0 新增技能命名核对 / New-skill name checks (2026-08-14)
+
+对 `threat-model`、`vuln-intel`、`incident-response` 三个新技能名：
+
+| 查询 | 结果 |
+|---|---|
+| `<name> in:name`（GitHub 全站） | 同名仓库均存在但与 DSH 技能分发无关（如 awesome-threat-modelling、PagerDuty/incident-response-docs 等通用资料仓库）；DSH 技能名冲突看的是"同根同层重名技能"，跨生态同名仓库不构成冲突 |
+| `topic:dsh <name>` | 三个查询均 **total = 0** —— DSH 话题下无同名仓库 |
+| 社区技能包逐名核对 | `dhicoc/dsh-reverse-skill`（85 个技能）：无 `threat-model`/`vuln-intel`/`incident-response`（最近名 `threat-hunting`）；`cyzlmh/dsh-cyber-sec`（21 个技能）：无重名（最近名 `component-vuln-intel`）；`ChenLaoshiYF/dsh-mcpguard`：工具型，无 SKILL.md |
+| 官方 `.agents/skills/`（12 个，2026-08 快照） | 零交集 |
+
+结论：三个新名与官方及已知社区技能名零交集；`vuln-intel` 与 `component-vuln-intel`、`threat-model` 与 `threat-hunting` 仅主题相近、名字不同，不构成同层冲突，但后续同名新包出现时需复查。
+
 ## 与官方/社区技能名核对 / Skill-name collision check
 
-- 官方 `.agents/skills/`（12 个，2026-08 快照）：`dsh-archive-agent-notes`、`dsh-code-review`、`dsh-doc-site-sync`、`dsh-doc-standards`、`dsh-find-simplifications`、`dsh-merging-stacked-prs`、`dsh-plugin-guide`、`dsh-pre-push-checks`、`dsh-prose-standard`、`dsh-translate-docs`、`dsh-trim-cot-leakage`、`record-browser-gif` —— 与 5 个技能名零交集。
+- 官方 `.agents/skills/`（12 个，2026-08 快照）：`dsh-archive-agent-notes`、`dsh-code-review`、`dsh-doc-site-sync`、`dsh-doc-standards`、`dsh-find-simplifications`、`dsh-merging-stacked-prs`、`dsh-plugin-guide`、`dsh-pre-push-checks`、`dsh-prose-standard`、`dsh-translate-docs`、`dsh-trim-cot-leakage`、`record-browser-gif` —— 与 8 个技能名零交集。
 - 社区技能包已知名：`dsh-write-plugin`、`dsh-test-plugin`、`dsh-plugin-dev`、`make-dsh-plugin`、`find-plugins`、`mainline-compat` —— 零交集。
-- 机器校验：`verify/verify-skill-pack.mts` 第 2 项断言（9/9 通过）。
+- 机器校验：`verify/verify-skill-pack.mts` 第 2 项断言。
 
 ## 备注 / Notes
 
 - 任务简报提及的 `unknowbug/anchorlaw`（协议型）未出现在本次话题搜索结果中；本包定位（纯技能包、零代码）不依赖该仓库的当前状态，README 的形态对照表按"工具型 / 协议型 / 技能型"三类独立成立。
 - 话题身份：本仓库已设置 `dsh`、`dsh-plugin`、`skill-pack`、`security-audit`、`supply-chain-security`、`prompt-injection`，与 `provider/package.json` 的 `keywords` 一致。
+- npm 侧核对（2026-08-14）：`@dsh-skill-pack-security/provider` 在 npm 不存在，但 scope `@dsh-skill-pack-security` 不为本仓库维护者所有（npm org API 403）——按 `provider/README.md` 发布清单规则改名发布为 `@perrylink/dsh-skill-pack-security-provider`；该名在发布时为空闲状态。

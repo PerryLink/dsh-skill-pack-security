@@ -7,8 +7,8 @@
 单一事实来源是仓库根目录的 `VERSION` 文件；以下位置必须与它一致（CI 断言）：
 
 1. `VERSION`（先改这里）
-2. `skills/<skill>/SKILL.md` 的 `metadata.version`（5 个中文技能）
-3. `skills-en/<skill>/SKILL.md` 的 `metadata.version`（5 个英文技能）
+2. `skills/<skill>/SKILL.md` 的 `metadata.version`（8 个中文技能）
+3. `skills-en/<skill>/SKILL.md` 的 `metadata.version`（8 个英文技能）
 4. `provider/package.json` 的 `version`（与包同步）
 
 批量命令（PowerShell；必须写**无 BOM** 的 UTF-8——Windows PowerShell 5.1 的 `Set-Content -Encoding UTF8` 会加 BOM，官方解析器要求首行恰好是 `---`，BOM 会让全部技能静默失效）：
@@ -32,7 +32,8 @@ Get-ChildItem skills,skills-en -Recurse -Filter SKILL.md | ForEach-Object {
 6. 提交并推送 `main`，等待 CI 各 job（verify + windows + provider）全绿。
 7. 打 tag：`git tag -a v$v -m "dsh-skill-pack-security v$v"`；`git push origin v$v`。
 8. 在 GitHub Releases 按 tag 发布；发布说明取自 CHANGELOG 对应段。
-9. 若该版本新增/改名技能：重跑生态冲突排查并更新 README 的技能表与 verify 内的社区技能名对照（`COMMUNITY_SKILLS`）。
+9. 发布 provider 到 npm：`cd provider && npm publish --access public`（包名 `@perrylink/dsh-skill-pack-security-provider`；`prepack` 自动嵌入双语言版，发布后用 `npm view` 复核 tarball 内容）。
+10. 若该版本新增/改名技能：重跑生态冲突排查并更新 README 的技能表与 verify 内的社区技能名对照（`COMMUNITY_SKILLS`）。
 
 ## 语言版规则 / Language-edition rules
 
