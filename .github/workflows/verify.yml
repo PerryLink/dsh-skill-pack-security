@@ -13,10 +13,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout deepseek-harness
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump in the same PR as any
@@ -25,12 +25,12 @@ jobs:
           path: harness
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11.7.0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -70,10 +70,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout deepseek-harness
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump with peer-dependency changes.
@@ -81,12 +81,12 @@ jobs:
           path: harness
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11.7.0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -123,15 +123,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11.7.0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
