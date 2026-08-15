@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❓ Questions & usage help
+    url: https://github.com/PerryLink/dsh-skill-pack-security/discussions/categories/q-a
+    about: Ask questions and get help in the Q&A discussion category (Chinese and English both welcome).
+  - name: 🔒 Security vulnerability
+    url: https://github.com/PerryLink/dsh-skill-pack-security/security/advisories/new
+    about: Report a vulnerability privately — see SECURITY.md before reporting (redact secrets first).

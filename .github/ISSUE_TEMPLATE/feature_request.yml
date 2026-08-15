@@ -1,0 +1,37 @@
+name: 💡 Feature request
+description: Suggest an idea or improvement for the skill pack.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. Please check the existing issues and [Discussions](https://github.com/PerryLink/dsh-skill-pack-security/discussions) first to avoid duplicates.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What problem are you trying to solve? What gap does the pack leave today?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should the pack provide, or how should it behave?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds or alternatives you already considered.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else — links, references, related discussions.
+    validations:
+      required: false

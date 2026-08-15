@@ -1,0 +1,74 @@
+name: 🐞 Bug report
+description: Report a bug in the skill pack, the installers, or the provider plugin.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please check the existing issues and [Discussions](https://github.com/PerryLink/dsh-skill-pack-security/discussions) first to avoid duplicates.
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version
+      description: The skill pack version from the `VERSION` file, or the provider version from `npm list @perrylink/dsh-skill-pack-security-provider`.
+      placeholder: e.g. 1.3.0
+    validations:
+      required: true
+  - type: input
+    id: harness-version
+    attributes:
+      label: DeepSeek Harness version
+      description: The harness (dsh) version or commit you run the pack with.
+      placeholder: e.g. 47f9438 or a release tag
+    validations:
+      required: true
+  - type: input
+    id: os-node
+    attributes:
+      label: OS and Node version
+      description: Operating system and Node.js version (run `node --version`).
+      placeholder: e.g. Windows 11, Node v22.22.3
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands and steps that reproduce the bug.
+      placeholder: |
+        1. Run ...
+        2. Observe ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened — include error messages.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (optional)
+      description: "**⚠️ Redact everything sensitive BEFORE pasting: this report must not contain tokens, secrets, API keys, credentials, or request headers.**"
+      render: text
+      placeholder: Paste any relevant logs or command output here.
+    validations:
+      required: false
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: Redaction confirmation
+      options:
+        - label: I confirm this report contains no tokens, secrets, keys, credentials, or request headers.
+          required: true
