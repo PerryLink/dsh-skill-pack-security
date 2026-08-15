@@ -16,6 +16,8 @@
 <p align="center">
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/v/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=cb3837" alt="versión npm"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/dw/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=blue" alt="descargas npm (semanal)"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="Licencia: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Tema: dsh">
@@ -151,11 +153,21 @@ Las mismas 19 comprobaciones se ejecutan en GitHub en cada push mediante `.githu
 
 ## Temas (Topics)
 
-Si alojas este paquete en GitHub, configura los temas del repositorio: **`dsh`**, **`dsh-plugin`** — más `skill-pack`, `security-audit`, `supply-chain-security`, `prompt-injection`. Las insignias `dsh` / `dsh-plugin` de arriba reflejan esa identidad, y `provider/package.json` lleva los mismos valores en `keywords`.
+Si alojas este paquete en GitHub, configura los temas del repositorio: **`dsh`**, **`dsh-plugin`**, **`deepseek-harness`**, **`skill-pack`**, **`skills`**, **`security`**, **`security-audit`**, **`supply-chain`**, **`supply-chain-security`**, **`prompt-injection`**. Las insignias `dsh` / `dsh-plugin` de arriba reflejan esa identidad, y `provider/package.json` lleva los mismos valores en `keywords`.
 
 ## Límites
 
 Sin plugin de auditoría de seguridad tipo herramienta (deliberadamente complementario a los escáneres), sin marketplace de skills, sin contenido copiado de skills de CC — formato compatible, contenido original.
+
+## Contribuyentes
+
+Gracias a todas las personas que han contribuido a este proyecto.
+
+| Contribuyente | Contribuciones |
+|---|---|
+| [@PerryLink](https://github.com/PerryLink) | Autor y mantenedor — las ocho skills en ambas ediciones de idioma, instaladores, la suite de verificación, el bundle del proveedor, CI y documentación |
+
+Tu nombre podría estar aquí — consulta [CONTRIBUTING.md](CONTRIBUTING.md) y abre un issue o un PR. Los nuevos contribuyentes se añaden a esta lista.
 
 ## Licencia
 

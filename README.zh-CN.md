@@ -16,6 +16,8 @@
 <p align="center">
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/v/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=cb3837" alt="npm 版本"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/dw/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=blue" alt="npm 周下载量"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Topic: dsh">
@@ -151,11 +153,21 @@ $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 
 ## 话题（Topics）
 
-在 GitHub 托管本包时，请设置仓库话题：**`dsh`**、**`dsh-plugin`**——外加 `skill-pack`、`security-audit`、`supply-chain-security`、`prompt-injection`。上方 `dsh` / `dsh-plugin` 徽章即该身份标识，`provider/package.json` 的 `keywords` 同步携带同样取值。
+在 GitHub 托管本包时，请设置仓库话题：**`dsh`**、**`dsh-plugin`**、**`deepseek-harness`**、**`skill-pack`**、**`skills`**、**`security`**、**`security-audit`**、**`supply-chain`**、**`supply-chain-security`**、**`prompt-injection`**。上方 `dsh` / `dsh-plugin` 徽章即该身份标识，`provider/package.json` 的 `keywords` 同步携带同样取值。
 
 ## 边界
 
 不做工具型安全审计插件（与扫描器插件刻意互补）、不做技能市场、不复制 CC 技能内容——格式兼容、内容原创。
+
+## 贡献者
+
+感谢所有为本项目做出贡献的人。
+
+| 贡献者 | 贡献内容 |
+|---|---|
+| [@PerryLink](https://github.com/PerryLink) | 作者与维护者 —— 双语版 8 个技能、安装脚本、验证套件、provider 包、CI 与文档 |
+
+你的名字也可以出现在这里 —— 参见 [CONTRIBUTING.md](CONTRIBUTING.md) 并提交 issue 或 PR。新贡献者会加入此名单。
 
 ## 协议
 

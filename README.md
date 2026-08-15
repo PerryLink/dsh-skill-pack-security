@@ -16,6 +16,8 @@
 <p align="center">
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/v/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=cb3837" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/dw/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=blue" alt="npm downloads (weekly)"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Topic: dsh">
@@ -151,11 +153,21 @@ The same 19 checks run on GitHub on every push via `.github/workflows/verify.yml
 
 ## Topics
 
-If you host this pack on GitHub, set the repository topics: **`dsh`**, **`dsh-plugin`** — plus `skill-pack`, `security-audit`, `supply-chain-security`, `prompt-injection`. The `dsh` / `dsh-plugin` badges above reflect that identity, and `provider/package.json` carries the same values in `keywords`.
+If you host this pack on GitHub, set the repository topics: **`dsh`**, **`dsh-plugin`**, **`deepseek-harness`**, **`skill-pack`**, **`skills`**, **`security`**, **`security-audit`**, **`supply-chain`**, **`supply-chain-security`**, **`prompt-injection`**. The `dsh` / `dsh-plugin` badges above reflect that identity, and `provider/package.json` carries the same values in `keywords`.
 
 ## Boundaries
 
 No tool-type security-audit plugin (deliberately complementary to scanner plugins), no skill marketplace, no copied CC skill content — format-compatible, content-original.
+
+## Contributors
+
+Thanks to everyone who has contributed to this project.
+
+| Contributor | Contributions |
+|---|---|
+| [@PerryLink](https://github.com/PerryLink) | Author and maintainer — the eight skills in both language editions, installers, the verification suite, the provider bundle, CI, and documentation |
+
+Your name could be here — see [CONTRIBUTING.md](CONTRIBUTING.md) and open an issue or PR. New contributors are added to this list.
 
 ## License
 

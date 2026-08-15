@@ -16,6 +16,8 @@
 <p align="center">
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/stargazers"><img src="https://img.shields.io/github/stars/PerryLink/dsh-skill-pack-security?style=flat-square&color=yellow" alt="Stars"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/network/members"><img src="https://img.shields.io/github/forks/PerryLink/dsh-skill-pack-security?style=flat-square&color=blue" alt="Forks"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/v/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=cb3837" alt="npm संस्करण"></a>
+  <a href="https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider"><img src="https://img.shields.io/npm/dw/@perrylink/dsh-skill-pack-security-provider?style=flat-square&color=blue" alt="npm डाउनलोड (साप्ताहिक)"></a>
   <a href="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml"><img src="https://github.com/PerryLink/dsh-skill-pack-security/actions/workflows/verify.yml/badge.svg" alt="Verify"></a>
   <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="लाइसेंस: Apache-2.0">
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="टॉपिक: dsh">
@@ -151,11 +153,21 @@ $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 
 ## टॉपिक्स
 
-यदि आप इस पैक को GitHub पर होस्ट करते हैं, तो रिपॉज़िटरी टॉपिक सेट करें: **`dsh`**, **`dsh-plugin`** — साथ में `skill-pack`, `security-audit`, `supply-chain-security`, `prompt-injection`। ऊपर के `dsh` / `dsh-plugin` बैज उसी पहचान को दर्शाते हैं, और `provider/package.json` के `keywords` में वही मान हैं।
+यदि आप इस पैक को GitHub पर होस्ट करते हैं, तो रिपॉज़िटरी टॉपिक सेट करें: **`dsh`**, **`dsh-plugin`**, **`deepseek-harness`**, **`skill-pack`**, **`skills`**, **`security`**, **`security-audit`**, **`supply-chain`**, **`supply-chain-security`**, **`prompt-injection`**। ऊपर के `dsh` / `dsh-plugin` बैज उसी पहचान को दर्शाते हैं, और `provider/package.json` के `keywords` में वही मान हैं।
 
 ## सीमाएँ
 
 टूल-प्रकार का सुरक्षा-ऑडिट प्लगइन नहीं (स्कैनर प्लगइनों का जानबूझकर पूरक), कोई स्किल मार्केटप्लेस नहीं, CC स्किल की कोई कॉपी नहीं — प्रारूप-अनुकूल, सामग्री-मौलिक।
+
+## योगदानकर्ता
+
+इस परियोजना में योगदान देने वाले सभी लोगों का धन्यवाद।
+
+| योगदानकर्ता | योगदान |
+|---|---|
+| [@PerryLink](https://github.com/PerryLink) | लेखक और अनुरक्षक — दोनों भाषा संस्करणों में आठ स्किलें, इंस्टॉलर, सत्यापन सुइट, प्रदाता बंडल, CI और दस्तावेज़ीकरण |
+
+आपका नाम भी यहाँ हो सकता है — [CONTRIBUTING.md](CONTRIBUTING.md) देखें और कोई issue या PR खोलें। नए योगदानकर्ता इस सूची में जोड़े जाते हैं।
 
 ## लाइसेंस
 
