@@ -6,15 +6,24 @@
 
 ## Reporting a vulnerability
 
-- **Skill-content issues**: a command in any SKILL.md/references file that could damage a user's repository or leak data (for example, a missing redaction step or an unsafe cleanup order) is a security issue for this pack. Open a private security report or an issue containing the offending command and a reproduction.
-- **Provider/installer issues**: anything that writes outside the selected target root, executes remote content, or mishandles the manifest is a vulnerability. Use GitHub's private vulnerability reporting where available; otherwise contact the maintainers listed in the repository.
-- **Redaction applies to reports about this repository too**: do not include live secrets in any report — follow the pack's own `secret-scan` redaction spec (type marker + first 6 characters at most).
+- **Report privately.** Use GitHub's private vulnerability reporting at <https://github.com/PerryLink/dsh-skill-pack-security/security/advisories/new> (Security → Advisories → Report a vulnerability). If private reporting is unavailable, contact the maintainers listed in the repository directly — do not open a public issue for a suspected vulnerability.
+- **⚠️ Redact before reporting.** Never include live secrets in a report — no tokens, API keys, credentials, cookies, or request headers. Follow the pack's own `secret-scan` redaction spec (type marker + first 6 characters at most). If you must prove a credential leaked, say where it was found, not what it is.
+- Include: affected version, steps to reproduce, and expected versus observed behavior.
+
+- **Skill-content issues**: a command in any SKILL.md/references file that could damage a user's repository or leak data (for example, a missing redaction step or an unsafe cleanup order) is a security issue for this pack.
+- **Provider/installer issues**: anything that writes outside the selected target root, executes remote content, or mishandles the manifest is a vulnerability.
 
 ## Supported versions
 
 Only the latest release is supported. Fixes are released as patch/minor versions following `docs/release-checklist.md`; verify that the fix is mechanically checkable, and prefer adding a check to `verify/verify-skill-pack.mts` so it cannot regress.
 
-## Disclosure expectations
+## Response expectations
 
-- Provide: affected version, steps to reproduce, expected versus observed behavior.
-- Maintainers acknowledge within 7 days and land the fix with a CHANGELOG entry.
+- Maintainers acknowledge a private report within 7 days and provide a status update within 30 days.
+- Fixes land with a CHANGELOG entry and a verification check where the fix is checkable.
+
+## Credits and disclosure
+
+- Reporters are credited by name or handle in the advisory, the release notes, and the CHANGELOG — unless they prefer to stay anonymous.
+- Coordinated disclosure: the fix ships first (patch/minor per `docs/release-checklist.md`), and the advisory publishes together with the release. If no fix has landed 90 days after acknowledgement, the reporter may disclose the details publicly.
+- This is a volunteer project: there is no bounty program, and reporting is never compensated.
