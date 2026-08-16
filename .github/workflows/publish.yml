@@ -3,6 +3,9 @@ name: Publish
 on:
   push:
     tags: ['v*']
+  # Manual re-run after adding the NPM_TOKEN secret: Actions → Publish →
+  # Run workflow, no new tag required.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,7 +30,8 @@ jobs:
           cache: pnpm
           cache-dependency-path: provider/pnpm-lock.yaml
 
-      - name: Verify the tag matches the VERSION file
+      - name: Verify the tag matches the VERSION file (tag pushes)
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           tag="v$(cat VERSION)"
           if [ "${GITHUB_REF_NAME}" != "${tag}" ]; then
@@ -66,6 +70,7 @@ jobs:
 
   release:
     needs: publish-provider
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
