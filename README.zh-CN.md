@@ -113,6 +113,7 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 | `scripts/install.ps1` | Windows 一键安装（四种根目录、两种语言版）；记录清单，支持 `-Uninstall`/`-DryRun`/`-Force` |
 | `scripts/install.sh` | POSIX 等价安装器（`--uninstall`/`--dry-run`/`--force`） |
 | `provider/` | 可选 npm 可安装的 provider bundle（声明 `dsh.bundle`；`prepack` 把双语言版嵌入 `pack/`；`language: zh\|en`）；经 `ctx.effect()` 注册，`skillsDir` 配错响亮失败 |
+| `package.json` | 根 bundle manifest：声明 `dsh.bundle.patch`（→ `provider/cordis.patch.yml`）与 `dshWorkshop` intake 事实，`dsh plugin add github:PerryLink/dsh-skill-pack-security` 即可经已发布的 provider 挂载本包 |
 | `verify/verify-skill-pack.mts` | 官方解析器 + 真实 `skill` 工具 headless 校验——双语共 19 项检查 |
 | `VERSION` | 版本单一来源；每个 SKILL.md 的 `metadata.version` 与 `provider/package.json` 必须与其一致（CI 强制） |
 | `docs/ecosystem-conflict-check.md` | `dsh-plugin` 生态的 GitHub 话题/命名冲突排查快照 |

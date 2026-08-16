@@ -113,6 +113,7 @@ Optional: mount the whole pack without copying via the `provider/` plugin — `l
 | `scripts/install.ps1` | One-command Windows installer for all four roots (both language editions); records a manifest, supports `-Uninstall`/`-DryRun`/`-Force` |
 | `scripts/install.sh` | The POSIX equivalent (`--uninstall`/`--dry-run`/`--force`) |
 | `provider/` | Optional npm-installable provider bundle (declares `dsh.bundle`; embeds both editions in `pack/` via `prepack`; `language: zh\|en`); registered via `ctx.effect()`, fails loud on a bad `skillsDir` |
+| `package.json` | Root bundle manifest: declares `dsh.bundle.patch` (→ `provider/cordis.patch.yml`) and `dshWorkshop` intake facts, so `dsh plugin add github:PerryLink/dsh-skill-pack-security` mounts the pack through the published provider |
 | `verify/verify-skill-pack.mts` | Headless verification against the official parser and the real `skill` tool — 19 checks across both editions |
 | `VERSION` | Single version source; every SKILL.md `metadata.version` and `provider/package.json` must match it (CI-enforced) |
 | `docs/ecosystem-conflict-check.md` | GitHub topic/name conflict snapshot of the `dsh-plugin` ecosystem |

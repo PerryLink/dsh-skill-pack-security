@@ -113,6 +113,7 @@ Opcional: monte o pacote inteiro sem copiar via o plugin `provider/` — `langua
 | `scripts/install.ps1` | Instalador de um comando para Windows para as quatro raízes (ambas as edições de idioma); registra um manifesto, suporta `-Uninstall`/`-DryRun`/`-Force` |
 | `scripts/install.sh` | O equivalente POSIX (`--uninstall`/`--dry-run`/`--force`) |
 | `provider/` | Bundle de provedor opcional instalável via npm (declara `dsh.bundle`; embute ambas as edições em `pack/` via `prepack`; `language: zh\|en`); registrado via `ctx.effect()`, falha de forma explícita em um `skillsDir` inválido |
+| `package.json` | Manifesto do bundle raiz: declara `dsh.bundle.patch` (→ `provider/cordis.patch.yml`) e os fatos de intake `dshWorkshop`, para que `dsh plugin add github:PerryLink/dsh-skill-pack-security` monte o pacote pelo provedor publicado |
 | `verify/verify-skill-pack.mts` | Verificação headless contra o parser oficial e a ferramenta `skill` real — 19 verificações nas duas edições |
 | `VERSION` | Fonte única de versão; todo `metadata.version` de SKILL.md e `provider/package.json` deve corresponder a ela (aplicado por CI) |
 | `docs/ecosystem-conflict-check.md` | Instantâneo de conflitos de tópicos/nomes do GitHub no ecossistema `dsh-plugin` |

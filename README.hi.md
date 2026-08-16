@@ -113,6 +113,7 @@ Copy-Item -Recurse .\skills\* "$HOME\.agents\skills\"
 | `scripts/install.ps1` | चारों रूट के लिए एक-कमांड Windows इंस्टॉलर (दोनों भाषा संस्करण); मैनिफ़ेस्ट दर्ज करता है, `-Uninstall`/`-DryRun`/`-Force` समर्थित |
 | `scripts/install.sh` | POSIX समकक्ष (`--uninstall`/`--dry-run`/`--force`) |
 | `provider/` | वैकल्पिक npm-इंस्टॉल-योग्य प्रदाता बंडल (`dsh.bundle` घोषित करता है; `prepack` से दोनों संस्करण `pack/` में एम्बेड करता है; `language: zh\|en`); `ctx.effect()` से पंजीकृत, गलत `skillsDir` पर ज़ोर से विफल |
+| `package.json` | रूट बंडल manifest: `dsh.bundle.patch` (→ `provider/cordis.patch.yml`) और `dshWorkshop` intake तथ्य घोषित करता है, ताकि `dsh plugin add github:PerryLink/dsh-skill-pack-security` प्रकाशित प्रदाता के ज़रिए पैक माउंट करे |
 | `verify/verify-skill-pack.mts` | आधिकारिक पार्सर और वास्तविक `skill` टूल के विरुद्ध हेडलेस सत्यापन — दोनों संस्करणों में 19 जाँचें |
 | `VERSION` | एकल संस्करण स्रोत; हर SKILL.md `metadata.version` और `provider/package.json` को उससे मेल खाना चाहिए (CI-प्रवर्तित) |
 | `docs/ecosystem-conflict-check.md` | `dsh-plugin` इकोसिस्टम के GitHub टॉपिक/नाम संघर्षों का स्नैपशॉट |
