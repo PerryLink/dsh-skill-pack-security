@@ -21,6 +21,44 @@
       "patch": "./cordis.patch.yml"
     }
   },
+  "dshWorkshop": {
+    "schema": "omdsh-workshop-package/v1",
+    "type": "plugin",
+    "integration": {
+      "protocol": "harness-profile",
+      "artifact": "cordis.patch.yml"
+    },
+    "install": {
+      "mode": "transactional",
+      "adapter": "profile-bundle",
+      "failurePolicy": "generation-rollback",
+      "touchesCurrentBeforeActivation": false
+    },
+    "lifecycle": {
+      "activation": "restart-profile",
+      "dispose": "supported"
+    },
+    "permissions": [
+      "files:read"
+    ],
+    "compatibility": {
+      "dshVersions": [
+        "0.1.0-rc.6"
+      ]
+    },
+    "capability": {
+      "id": "skill-pack-security",
+      "kind": "provider",
+      "invocation": "boot the RC.6 candidate Profile with the bundle mounted (config.language zh|en) and load a skill from the session catalog",
+      "expected": "ctx.skills.get('security-audit') resolves an entry named 'security-audit' whose description matches the mounted edition"
+    },
+    "evidence": {
+      "install": null,
+      "failureIsolation": null,
+      "hotReload": null,
+      "remove": null
+    }
+  },
   "license": "Apache-2.0",
   "keywords": [
     "dsh",
