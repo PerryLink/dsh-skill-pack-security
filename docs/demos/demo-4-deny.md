@@ -7,7 +7,7 @@
 🛑 **Gate DENY: this plugin failed the supply-chain checks; installation is blocked by policy**
 Load the supply-chain-review / dependency-audit skills for a manual deep-dive, or have a trusted maintainer change the gate policy and retry.
 
-Target: ali-meoo/meoo-cli@main · 2026-08-16T12:54:53.721Z
+Target: ali-meoo/meoo-cli@main · 2026-08-16T12:58:00.976Z
 
 - 🔴 [FAIL] License scan — deep-dive skill: `dependency-audit §3`
   - 🔴 No license at all: no LICENSE file and no license field — Evidence: `no LICENSE* file; no package.json license field; GitHub detected no license`

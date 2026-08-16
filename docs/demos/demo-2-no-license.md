@@ -7,7 +7,7 @@
 ⚠️ **Gate warning: plugin_vet returned FAIL — installation is strongly discouraged**
 The default policy is warn (non-blocking). Before continuing the install, follow the skill references below for a manual review and confirm the risk is acceptable.
 
-Target: ali-meoo/meoo-cli@main · 2026-08-16T12:54:46.610Z
+Target: ali-meoo/meoo-cli@main · 2026-08-16T12:57:51.813Z
 
 - 🔴 [FAIL] License scan — deep-dive skill: `dependency-audit §3`
   - 🔴 No license at all: no LICENSE file and no license field — Evidence: `no LICENSE* file; no package.json license field; GitHub detected no license`

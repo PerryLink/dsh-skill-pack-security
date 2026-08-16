@@ -4,7 +4,7 @@
 
 🟢 **Verdict: PASS** — License 75/100 · Source 90/100 · Dependencies 90/100 · Build scripts 94/100 · Maintenance 92/100 · overall 88/100
 
-Target: frida/frida-node@main · 2026-08-16T12:54:49.569Z
+Target: frida/frida-node@main · 2026-08-16T12:57:53.892Z
 
 - 🟡 [WARN] License scan — deep-dive skill: `dependency-audit §3`
   - 🟡 No LICENSE file found (a license field exists but no license text is committed)

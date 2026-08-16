@@ -22,38 +22,33 @@ body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei',
   <div class="head"><span class="tool">plugin_vet</span> PerryLink/dsh-skill-pack-security <span class="pill pass">PASS</span></div>
   <div class="body"><h4>plugin_vet PerryLink/dsh-skill-pack-security</h4>
 <div class="gap"></div>
-<div>🟢 <b>Verdict: PASS</b> — License 100/100 · Source 50/100 · Dependencies 90/100 · Build scripts 100/100 · Maintenance 92/100 · overall 87/100</div>
+<div>🟢 <b>Verdict: PASS</b> — License 100/100 · Source 100/100 · Dependencies 100/100 · Build scripts 89/100 · Maintenance 92/100 · overall 96/100</div>
 <div class="gap"></div>
-<div>Target: PerryLink/dsh-skill-pack-security@main · 2026-08-16T12:54:32.261Z</div>
+<div>Target: PerryLink/dsh-skill-pack-security@main · 2026-08-16T12:57:45.482Z</div>
 <div class="gap"></div>
 <div class="li">🟢 [PASS] License scan — deep-dive skill: <code>dependency-audit §3</code></div>
 <div class="li">⚪ license Apache-2.0 is a common SPDX id — Evidence: <code>Apache-2.0</code></div>
-<div class="li">⚪ license file present: LICENSE</div>
-<div class="li">🟡 [WARN] SBOM dependency tree — deep-dive skill: <code>dependency-audit §7</code></div>
-<div class="li">🟡 1 direct dependencies are not pinned to exact versions: @perrylink/dsh-skill-pack-security-provider@^1.3.0</div>
+<div class="li">⚪ license file present: LICENSE, verify/fixtures/vet/clean/LICENSE</div>
+<div class="li">🟢 [PASS] SBOM dependency tree — deep-dive skill: <code>dependency-audit §7</code></div>
 <div class="li">⚪ dependency tree: 1 unique packages (direct 1 + dev 0), lockfile pnpm-lock.yaml v9.0</div>
-<div class="li">🟡 [WARN] Commit lock verification — deep-dive skill: <code>supply-chain-review §3</code></div>
-<div class="li">🟡 workflow action "v7" is not a pinned 40-hex commit (tags/branches are mutable) <code>.github/workflows/verify.yml:16</code></div>
-<div class="li">🟡 workflow action "v7" is not a pinned 40-hex commit (tags/branches are mutable) <code>.github/workflows/verify.yml:19</code></div>
-<div class="li">🟡 workflow action "v6" is not a pinned 40-hex commit (tags/branches are mutable) <code>.github/workflows/verify.yml:28</code></div>
-<div class="li">🟡 workflow action "v7" is not a pinned 40-hex commit (tags/branches are mutable) <code>.github/workflows/verify.yml:33</code></div>
-<div class="li">🟡 workflow action "v7" is not a pinned 40-hex commit (tags/branches are mutable) <code>.github/workflows/verify.yml:73</code></div>
-<div class="li">🟡 workflow action "v7" is not a pinned 40-hex commit (tags/branches are mutable) <code>.github/workflows/verify.yml:76</code></div>
+<div class="li">🟢 [PASS] Commit lock verification — deep-dive skill: <code>supply-chain-review §3</code></div>
+<div class="li">⚪ this scan fetched "main" (not a commit); pin the install to a 40-hex commit (DSH git installs run prepare scripts)</div>
 <div class="li">🟢 [PASS] Install script checks — deep-dive skill: <code>supply-chain-review §1</code></div>
 <div class="li">⚪ no preinstall/install/postinstall/prepare lifecycle scripts</div>
-<div class="li">🟢 [PASS] Network exfiltration scan — deep-dive skill: <code>dependency-audit §4.4</code></div>
-<div class="li">⚪ scanned 16 script/manifest files, no exfiltration-domain indicators</div>
-<div class="li">🟢 [PASS] Obfuscation scan — deep-dive skill: <code>supply-chain-review §1</code></div>
-<div class="li">⚪ scanned 5 code files, no obfuscation indicators</div>
+<div class="li">🟡 [WARN] Network exfiltration scan — deep-dive skill: <code>dependency-audit §4.4</code></div>
+<div class="li">🟡 exfil/receiver domain (data-exfiltration indicator): webhook.site <code>verify/fixtures/vet/postinstall/package.json:17</code> — Evidence: <code>https://webhook.site/FAKE-FIXTURE-ID</code></div>
+<div class="li">🟡 [WARN] Obfuscation scan — deep-dive skill: <code>supply-chain-review §1</code></div>
+<div class="li">⚪ possibly minified/obfuscated code (1 very long dense lines) <code>provider/src/vet/tool.ts</code></div>
+<div class="li">🟡 dynamic eval + encoded payload (eval/Function ×1, encoded blobs ×1) <code>verify/fixtures/vet/postinstall/src/payload.js</code></div>
 <div class="li">🟢 [PASS] Source trust signals — deep-dive skill: <code>dependency-audit §4.3</code></div>
 <div class="li">⚪ carries a DSH mount manifest (cordis patch)</div>
 <div class="li">🟢 [PASS] Maintenance status — deep-dive skill: <code>security-audit §3</code></div>
 <div class="li">⚪ pushed within the last 0 days: actively maintained</div>
 <div class="gap"></div>
 <div><b>SBOM</b> (pnpm-lock.yaml) — direct 1 + dev 0, unique packages 1</div>
-<pre>@perrylink/dsh-skill-pack-security-provider@1.3.0</pre>
+<pre>@perrylink/dsh-skill-pack-security-provider@2.0.0</pre>
 <div class="gap"></div>
-<div>Scan budget: 71 files · 432101 bytes · 0 skipped</div>
+<div>Scan budget: 114 files · 712138 bytes · 0 skipped</div>
 <div class="gap"></div>
 <div><b>Manual deep-dive (load these skills to continue)</b>: <code>security-audit</code>, <code>dependency-audit</code>, <code>supply-chain-review</code></div></div>
 </div></body></html>
