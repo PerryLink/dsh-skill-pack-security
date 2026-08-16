@@ -49,9 +49,9 @@
     },
     "capability": {
       "id": "skill-pack-security",
-      "kind": "tool-bundle+provider",
-      "invocation": "boot the RC.6 candidate Profile with the bundle mounted (config.language zh|en), call ctx.skills.get('security-audit') through the @deepseek-ai/dsh-skill-filesystem provider contract, and execute the plugin_vet tool against a GitHub owner/repo target",
-      "expected": "ctx.skills.get('security-audit') resolves the mounted edition AND ctx.tools has plugin_vet, whose report cites skill sections for manual follow-up"
+      "kind": "tool",
+      "invocation": "execute the plugin_vet tool against a GitHub owner/repo target",
+      "expected": "ctx.tools has plugin_vet and its report lists license/SBOM/commit-lock/malicious findings with skill-section citations for manual follow-up"
     },
     "evidence": {
       "install": null,
