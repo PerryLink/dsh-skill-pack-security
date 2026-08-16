@@ -1,0 +1,84 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish-provider:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout skill pack
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
+        with:
+          version: 11.7.0
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+          cache: pnpm
+          cache-dependency-path: provider/pnpm-lock.yaml
+
+      - name: Verify the tag matches the VERSION file
+        run: |
+          tag="v$(cat VERSION)"
+          if [ "${GITHUB_REF_NAME}" != "${tag}" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match VERSION ${tag}"
+            exit 1
+          fi
+
+      - name: Install provider (standalone)
+        working-directory: provider
+        run: pnpm install --frozen-lockfile
+
+      - name: Build provider
+        working-directory: provider
+        run: pnpm run build
+
+      # npm publish runs the provider's prepack (skills copy into pack/).
+      # Requires the NPM_TOKEN repository secret; a tag push without the
+      # secret, or for a version already on the registry, skips the publish
+      # instead of failing the release tag.
+      - name: Publish provider to npm
+        working-directory: provider
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "NPM_TOKEN secret is not set; skipping npm publish"
+            exit 0
+          fi
+          if npm view "@perrylink/dsh-skill-pack-security-provider@${version}" version >/dev/null 2>&1; then
+            echo "@perrylink/dsh-skill-pack-security-provider@${version} is already published; skipping npm publish"
+          else
+            npm publish --access public
+          fi
+
+  release:
+    needs: publish-provider
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout skill pack
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+            echo "release ${{ github.ref_name }} already exists; skipping"
+            exit 0
+          fi
+          gh release create "${{ github.ref_name }}" --title "${{ github.ref_name }}" --generate-notes

@@ -4,7 +4,7 @@ description: 'Credential/secret exposure audit: gitleaks and trivy full-history 
 whenToUse: 'Use when the user asks to scan or inspect a repository for secret leaks, to hunt tokens in a commit or file, to tier scan alerts as real or false, to write a redacted leak report, or to plan secret rotation. Plain feature development and ordinary code review do not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 # Secret scanning (secret-scan)
 

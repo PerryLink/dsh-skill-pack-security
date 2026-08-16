@@ -1,0 +1,17 @@
+{
+  "name": "dsh-fixture-no-license",
+  "version": "1.0.0",
+  "description": "verify fixture: a plugin target with NO license and unpinned refs (plugin_vet must yield FAIL on license).",
+  "type": "module",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fixture/dsh-fixture-no-license.git"
+  },
+  "dependencies": {
+    "left-pad": "^1.3.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}

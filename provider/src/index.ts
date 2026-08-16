@@ -1,12 +1,19 @@
 /**
- * Optional provider plugin for dsh-skill-pack-security.
+ * Provider plugin for dsh-skill-pack-security — "skill 教流程，插件自动执行".
  *
- * Registers one SkillProvider on `ctx.skills` whose candidates are this
- * package's own `skills/` directory, reusing the official
- * `FileSystemSkillProvider` so frontmatter parsing semantics are byte-identical
- * with the built-in local provider (same fail-closed rules, same kebab-case
- * names, same invocation policy). The pack itself works without this plugin —
- * installing it only avoids copying skills into a scanned root.
+ * Registers two capabilities:
+ *  1. a SkillProvider on `ctx.skills` whose candidates are this package's own
+ *     `skills/` directory (reusing the official `FileSystemSkillProvider`, so
+ *     frontmatter parsing semantics are byte-identical with the built-in
+ *     provider), and
+ *  2. the `plugin_vet` supply-chain gate tool on `ctx.tools`: an automated
+ *     pre-install scanner (license / SBOM / commit pinning / malicious
+ *     patterns / five-dimension risk score) whose every finding cites the
+ *     pack skill section to continue as a manual audit.
+ *
+ * The scan engine is zero-dependency (Node built-ins only) and the plugin
+ * injects no prompt paragraphs: the gate lives entirely in the tool result,
+ * keeping the session persona untouched.
  *
  * @module dsh-skill-pack-security/provider
  */
@@ -18,12 +25,17 @@ import type { Context } from '@deepseek-ai/cordis'
 import { FileSystemSkillProvider } from '@deepseek-ai/dsh-skill-filesystem'
 import z from '@deepseek-ai/schemastery'
 import type Schema from '@deepseek-ai/schemastery'
+import { resolveVetConfig, type VetConfigInput } from './vet/config.js'
+import { buildVetTool } from './vet/tool.js'
 
 export const name = 'skill-pack-security'
-export const inject = ['skills']
+export const inject = ['skills', 'tools']
 
-/** The skill language the provider publishes. */
+/** The skill language the provider publishes (and the plugin_vet report language). */
 export type PackLanguage = 'zh' | 'en'
+
+/** plugin_vet gate policy: warn (default, non-blocking) or deny (blocks install on FAIL). */
+export type GatePolicy = 'warn' | 'deny'
 
 /** Configuration for the packaged skill provider. */
 export interface Config {
@@ -33,12 +45,27 @@ export interface Config {
   language?: PackLanguage
   /** Explicit skills root; overrides the `language`-derived default. Must be a non-empty path to an existing root with `<skill>/SKILL.md` bundles. */
   skillsDir?: string
+  /** plugin_vet scanner + installation-gate configuration. */
+  vet?: VetConfigInput
 }
 
 export const Config: Schema<Config> = z.object({
   watch: z.boolean().default(false),
   language: z.union(['zh', 'en'] as const).default('zh'),
   skillsDir: z.string().min(1),
+  vet: z.object({
+    enable: z.boolean().default(true),
+    timeoutMs: z.natural().min(1000).max(300000).default(15000),
+    maxFiles: z.natural().min(1).max(20000).default(800),
+    maxFileBytes: z.natural().min(1024).max(16 * 1024 * 1024).default(256 * 1024),
+    maxExtractBytes: z.natural().min(1024).max(512 * 1024 * 1024).default(64 * 1024 * 1024),
+    maxDepNodes: z.natural().min(1).max(10000).default(600),
+    maxFindingsPerCheck: z.natural().min(1).max(100).default(12),
+    userAgent: z.string().max(200).default('dsh-skill-pack-security/2.0.0 (+https://github.com/PerryLink/dsh-skill-pack-security)'),
+    gate: z.object({
+      policy: z.union(['warn', 'deny'] as const).default('warn'),
+    }),
+  }),
 })
 
 /** Directory of this module: `provider/src` under tsx or `provider/lib` when built. */
@@ -99,4 +126,11 @@ export function apply(ctx: Context, config: Config = {}): void {
       watch: config.watch ?? false,
     }))
   })
+
+  const vet = resolveVetConfig(config.vet)
+  if (vet.enable) {
+    ctx.effect(function* () {
+      yield ctx.tools.register(buildVetTool(vet, config.language ?? 'zh'))
+    })
+  }
 }

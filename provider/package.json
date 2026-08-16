@@ -1,7 +1,7 @@
 {
   "name": "@perrylink/dsh-skill-pack-security-provider",
-  "version": "1.3.0",
-  "description": "Optional provider plugin for dsh-skill-pack-security: registers the pack's skills/ (zh) or skills-en/ (en) edition on ctx.skills. Ships both editions embedded in pack/.",
+  "version": "2.0.0",
+  "description": "Provider plugin for dsh-skill-pack-security: registers the pack's skills/ (zh) or skills-en/ (en) edition on ctx.skills AND the plugin_vet supply-chain gate tool on ctx.tools (license/SBOM/commit-lock/malware scans + five-dimension risk card). Ships both skill editions embedded in pack/.",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -39,7 +39,8 @@
       "dispose": "supported"
     },
     "permissions": [
-      "files:read"
+      "files:read",
+      "network:fetch"
     ],
     "compatibility": {
       "dshVersions": [
@@ -48,9 +49,9 @@
     },
     "capability": {
       "id": "skill-pack-security",
-      "kind": "provider",
-      "invocation": "boot the RC.6 candidate Profile with the bundle mounted (config.language zh|en) and load a skill from the session catalog",
-      "expected": "ctx.skills.get('security-audit') resolves an entry named 'security-audit' whose description matches the mounted edition"
+      "kind": "tool-bundle+provider",
+      "invocation": "boot the RC.6 candidate Profile with the bundle mounted (config.language zh|en), call ctx.skills.get('security-audit') through the @deepseek-ai/dsh-skill-filesystem provider contract, and execute the plugin_vet tool against a GitHub owner/repo target",
+      "expected": "ctx.skills.get('security-audit') resolves the mounted edition AND ctx.tools has plugin_vet, whose report cites skill sections for manual follow-up"
     },
     "evidence": {
       "install": null,
@@ -73,11 +74,14 @@
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
     "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1 <0.2.0",
     "@deepseek-ai/schemastery": "^3.18.1"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-tools": "0.1.0-rc.6",
     "@deepseek-ai/schemastery": "^3.18.1",
     "@types/node": "^26.2.0",
     "typescript": "^7.0.2"

@@ -1,0 +1,253 @@
+{
+  "kind": "vet-report",
+  "target": {
+    "raw": "PerryLink/dsh-skill-pack-security",
+    "kind": "github-repo",
+    "resolved": "PerryLink/dsh-skill-pack-security",
+    "ref": "main"
+  },
+  "fetchedAt": "2026-08-16T12:54:32.261Z",
+  "checks": [
+    {
+      "id": "license",
+      "name": "License scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "license Apache-2.0 is a common SPDX id",
+          "skill": "dependency-audit §3",
+          "evidence": "Apache-2.0"
+        },
+        {
+          "level": "info",
+          "message": "license file present: LICENSE",
+          "skill": "dependency-audit §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §3"
+    },
+    {
+      "id": "sbom",
+      "name": "SBOM dependency tree",
+      "verdict": "warn",
+      "score": 90,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "1 direct dependencies are not pinned to exact versions: @perrylink/dsh-skill-pack-security-provider@^1.3.0",
+          "skill": "dependency-audit §7"
+        },
+        {
+          "level": "info",
+          "message": "dependency tree: 1 unique packages (direct 1 + dev 0), lockfile pnpm-lock.yaml v9.0",
+          "skill": "dependency-audit §7"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §7"
+    },
+    {
+      "id": "commit-lock",
+      "name": "Commit lock verification",
+      "verdict": "warn",
+      "score": 0,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:16",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:19",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v6\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:28",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:33",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:73",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:76",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v6\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:84",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:89",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:126",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v6\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:129",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v7\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/verify.yml:134",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "info",
+          "message": "this scan fetched \"main\" (not a commit); pin the install to a 40-hex commit (DSH git installs run prepare scripts)",
+          "skill": "supply-chain-review §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §3"
+    },
+    {
+      "id": "install-scripts",
+      "name": "Install script checks",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "no preinstall/install/postinstall/prepare lifecycle scripts",
+          "skill": "supply-chain-review §1"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §1"
+    },
+    {
+      "id": "network-exfil",
+      "name": "Network exfiltration scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "scanned 16 script/manifest files, no exfiltration-domain indicators",
+          "skill": "dependency-audit §4.4"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §4.4"
+    },
+    {
+      "id": "obfuscation",
+      "name": "Obfuscation scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "scanned 5 code files, no obfuscation indicators",
+          "skill": "supply-chain-review §1"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §1"
+    },
+    {
+      "id": "source",
+      "name": "Source trust signals",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "carries a DSH mount manifest (cordis patch)",
+          "skill": "dependency-audit §4.3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §4.3"
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintenance status",
+      "verdict": "pass",
+      "score": 92,
+      "findings": [
+        {
+          "level": "info",
+          "message": "pushed within the last 0 days: actively maintained",
+          "skill": "security-audit §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "security-audit §3"
+    }
+  ],
+  "scores": {
+    "license": 100,
+    "source": 50,
+    "dependencies": 90,
+    "build-scripts": 100,
+    "maintenance": 92,
+    "overall": 87
+  },
+  "verdict": "pass",
+  "gate": {
+    "policy": "warn",
+    "applied": false,
+    "blocked": false
+  },
+  "sbom": {
+    "lockfile": "pnpm-lock.yaml",
+    "lockfileVersion": "9.0",
+    "directDependencies": 1,
+    "directDevDependencies": 0,
+    "packages": [
+      {
+        "name": "@perrylink/dsh-skill-pack-security-provider",
+        "version": "1.3.0",
+        "depth": 0,
+        "dev": false
+      }
+    ],
+    "truncated": false,
+    "totalPackages": 1,
+    "unpinned": [
+      "@perrylink/dsh-skill-pack-security-provider@^1.3.0"
+    ]
+  },
+  "budget": {
+    "filesScanned": 71,
+    "filesSkipped": 0,
+    "bytesScanned": 432101,
+    "truncated": false
+  },
+  "followupSkills": [
+    "security-audit",
+    "dependency-audit",
+    "supply-chain-review"
+  ]
+}

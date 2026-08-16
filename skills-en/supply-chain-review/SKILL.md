@@ -4,11 +4,15 @@ description: 'Quick PR/new-dependency supply-chain review: dangerous install/pos
 whenToUse: 'Use when reviewing a PR that adds new dependencies (package.json/lockfile changes), inspecting a package install-script behavior, judging a suspected typosquat package, or verifying build reproducibility. Plain business-code PR reviews unrelated to new dependencies do not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 # New-dependency quick review (supply-chain-review)
 
 Goal: within PR-review time (minutes), give each new dependency a **pass / request changes / block** verdict; every verdict must carry command evidence and a false-positive exclusion note.
+
+## Automated pre-check: the plugin_vet tool
+
+`plugin_vet` already runs the static parts of sections 1/2/3 (dangerous install scripts, network exfiltration, obfuscated payloads, commit/action pinning), and its findings cite those section numbers. After an automated hit, apply each section's false-positive and allowlist criteria manually before giving the three-tier verdict.
 
 ## 0. Confirm the scope
 

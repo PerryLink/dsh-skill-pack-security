@@ -1,0 +1,1133 @@
+{
+  "kind": "vet-report",
+  "target": {
+    "raw": "frida/frida-node",
+    "kind": "github-repo",
+    "resolved": "frida/frida-node",
+    "ref": "main"
+  },
+  "fetchedAt": "2026-08-16T12:54:49.569Z",
+  "checks": [
+    {
+      "id": "license",
+      "name": "License scan",
+      "verdict": "warn",
+      "score": 75,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "No LICENSE file found (a license field exists but no license text is committed)",
+          "skill": "dependency-audit §3"
+        },
+        {
+          "level": "warn",
+          "message": "license field \"LGPL-2.0 WITH WxWindows-exception-3.1\" is not a common SPDX id — verify manually",
+          "skill": "dependency-audit §3",
+          "evidence": "LGPL-2.0 WITH WxWindows-exception-3.1"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §3"
+    },
+    {
+      "id": "sbom",
+      "name": "SBOM dependency tree",
+      "verdict": "warn",
+      "score": 90,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "3 direct dependencies are not pinned to exact versions: bindings@^1.5.0, minimatch@^10.0.1, prebuild-install@^7.1.3",
+          "skill": "dependency-audit §7"
+        },
+        {
+          "level": "info",
+          "message": "dependency tree: 156 unique packages (direct 3 + dev 8), lockfile package-lock.json v3",
+          "skill": "dependency-audit §7"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §7"
+    },
+    {
+      "id": "commit-lock",
+      "name": "Commit lock verification",
+      "verdict": "warn",
+      "score": 80,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "workflow action \"v4\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/publish.yml:37",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "warn",
+          "message": "workflow action \"v6\" is not a pinned 40-hex commit (tags/branches are mutable)",
+          "location": ".github/workflows/publish.yml:42",
+          "skill": "supply-chain-review §3"
+        },
+        {
+          "level": "info",
+          "message": "this scan fetched \"main\" (not a commit); pin the install to a 40-hex commit (DSH git installs run prepare scripts)",
+          "skill": "supply-chain-review §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §3"
+    },
+    {
+      "id": "install-scripts",
+      "name": "Install script checks",
+      "verdict": "warn",
+      "score": 85,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "install: the invoked scripts/install.js downloads content and executes it (build-tool install script, an ecosystem convention — confirm with the supply-chain-review §1 allowlist criteria)",
+          "location": "scripts/install.js",
+          "skill": "supply-chain-review §1",
+          "evidence": "import { execSync } from 'child_process'; import fs from 'fs'; import path from 'path'; import { fileURLToPath } from 'url'; const pkgRoot = path.dirname(path.…"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §1"
+    },
+    {
+      "id": "network-exfil",
+      "name": "Network exfiltration scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "scanned 71 script/manifest files, no exfiltration-domain indicators",
+          "skill": "dependency-audit §4.4"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §4.4"
+    },
+    {
+      "id": "obfuscation",
+      "name": "Obfuscation scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "scanned 65 code files, no obfuscation indicators",
+          "skill": "supply-chain-review §1"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §1"
+    },
+    {
+      "id": "source",
+      "name": "Source trust signals",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "source signals complete (repository/README/CI verifiable)",
+          "skill": "dependency-audit §4.3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §4.3"
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintenance status",
+      "verdict": "pass",
+      "score": 92,
+      "findings": [
+        {
+          "level": "info",
+          "message": "pushed within the last 2 days: actively maintained",
+          "skill": "security-audit §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "security-audit §3"
+    }
+  ],
+  "scores": {
+    "license": 75,
+    "source": 90,
+    "dependencies": 90,
+    "build-scripts": 94,
+    "maintenance": 92,
+    "overall": 88
+  },
+  "verdict": "pass",
+  "gate": {
+    "policy": "warn",
+    "applied": false,
+    "blocked": false
+  },
+  "sbom": {
+    "lockfile": "package-lock.json",
+    "lockfileVersion": "3",
+    "directDependencies": 3,
+    "directDevDependencies": 8,
+    "packages": [
+      {
+        "name": "bindings",
+        "version": "1.5.0",
+        "depth": 0,
+        "dev": false
+      },
+      {
+        "name": "minimatch",
+        "version": "10.0.1",
+        "depth": 0,
+        "dev": false
+      },
+      {
+        "name": "prebuild-install",
+        "version": "7.1.3",
+        "depth": 0,
+        "dev": false
+      },
+      {
+        "name": "@types/bindings",
+        "version": "1.5.5",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "@types/chai",
+        "version": "5.2.1",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "@types/mocha",
+        "version": "10.0.10",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "@types/node",
+        "version": "22.13.16",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "chai",
+        "version": "5.2.0",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "mocha",
+        "version": "11.1.0",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "ts-node",
+        "version": "10.9.2",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "typescript",
+        "version": "5.8.2",
+        "depth": 0,
+        "dev": true
+      },
+      {
+        "name": "file-uri-to-path",
+        "version": "1.0.0",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "brace-expansion",
+        "version": "2.0.2",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "detect-libc",
+        "version": "2.0.2",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "expand-template",
+        "version": "2.0.3",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "github-from-package",
+        "version": "0.0.0",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "minimist",
+        "version": "1.2.8",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "mkdirp-classic",
+        "version": "0.5.3",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "napi-build-utils",
+        "version": "2.0.0",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "node-abi",
+        "version": "3.51.0",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "pump",
+        "version": "3.0.0",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "rc",
+        "version": "1.2.8",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "simple-get",
+        "version": "4.0.1",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "tar-fs",
+        "version": "2.1.4",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "tunnel-agent",
+        "version": "0.6.0",
+        "depth": 1,
+        "dev": false
+      },
+      {
+        "name": "@types/deep-eql",
+        "version": "4.0.2",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "undici-types",
+        "version": "6.20.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "assertion-error",
+        "version": "2.0.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "check-error",
+        "version": "2.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "deep-eql",
+        "version": "5.0.2",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "loupe",
+        "version": "3.1.3",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "pathval",
+        "version": "2.0.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "ansi-colors",
+        "version": "4.1.3",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "browser-stdout",
+        "version": "1.3.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "chokidar",
+        "version": "3.5.3",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "debug",
+        "version": "4.4.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "diff",
+        "version": "5.2.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "escape-string-regexp",
+        "version": "4.0.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "find-up",
+        "version": "5.0.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "glob",
+        "version": "10.5.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "he",
+        "version": "1.2.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "js-yaml",
+        "version": "4.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "log-symbols",
+        "version": "4.1.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "minimatch",
+        "version": "5.1.6",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "ms",
+        "version": "2.1.3",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "serialize-javascript",
+        "version": "6.0.2",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "strip-json-comments",
+        "version": "3.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "supports-color",
+        "version": "8.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "workerpool",
+        "version": "6.5.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "yargs",
+        "version": "17.7.2",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "yargs-parser",
+        "version": "21.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "yargs-unparser",
+        "version": "2.0.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "@cspotcode/source-map-support",
+        "version": "0.8.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "@tsconfig/node10",
+        "version": "1.0.9",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "@tsconfig/node12",
+        "version": "1.0.11",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "@tsconfig/node14",
+        "version": "1.0.3",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "@tsconfig/node16",
+        "version": "1.0.4",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "acorn",
+        "version": "8.10.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "acorn-walk",
+        "version": "8.2.0",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "arg",
+        "version": "4.1.3",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "create-require",
+        "version": "1.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "make-error",
+        "version": "1.3.6",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "v8-compile-cache-lib",
+        "version": "3.0.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "yn",
+        "version": "3.1.1",
+        "depth": 1,
+        "dev": true
+      },
+      {
+        "name": "balanced-match",
+        "version": "1.0.2",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "semver",
+        "version": "7.5.4",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "end-of-stream",
+        "version": "1.4.4",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "once",
+        "version": "1.4.0",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "deep-extend",
+        "version": "0.6.0",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "ini",
+        "version": "1.3.8",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "strip-json-comments",
+        "version": "2.0.1",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "decompress-response",
+        "version": "6.0.0",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "simple-concat",
+        "version": "1.0.1",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "chownr",
+        "version": "1.1.4",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "tar-stream",
+        "version": "2.2.0",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "safe-buffer",
+        "version": "5.2.1",
+        "depth": 2,
+        "dev": false
+      },
+      {
+        "name": "anymatch",
+        "version": "3.1.3",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "braces",
+        "version": "3.0.3",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "glob-parent",
+        "version": "5.1.2",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "is-binary-path",
+        "version": "2.1.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "is-glob",
+        "version": "4.0.3",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "normalize-path",
+        "version": "3.0.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "readdirp",
+        "version": "3.6.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "locate-path",
+        "version": "6.0.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "path-exists",
+        "version": "4.0.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "foreground-child",
+        "version": "3.3.1",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "jackspeak",
+        "version": "3.4.3",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "minimatch",
+        "version": "9.0.5",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "minipass",
+        "version": "7.1.2",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "package-json-from-dist",
+        "version": "1.0.1",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "path-scurry",
+        "version": "1.11.1",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "argparse",
+        "version": "2.0.1",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "chalk",
+        "version": "4.1.2",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "is-unicode-supported",
+        "version": "0.1.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "randombytes",
+        "version": "2.1.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "has-flag",
+        "version": "4.0.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "cliui",
+        "version": "8.0.1",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "escalade",
+        "version": "3.2.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "get-caller-file",
+        "version": "2.0.5",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "require-directory",
+        "version": "2.1.1",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "string-width",
+        "version": "4.2.3",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "y18n",
+        "version": "5.0.8",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "camelcase",
+        "version": "6.3.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "decamelize",
+        "version": "4.0.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "flat",
+        "version": "5.0.2",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "is-plain-obj",
+        "version": "2.1.0",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "@jridgewell/trace-mapping",
+        "version": "0.3.9",
+        "depth": 2,
+        "dev": true
+      },
+      {
+        "name": "lru-cache",
+        "version": "6.0.0",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "wrappy",
+        "version": "1.0.2",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "mimic-response",
+        "version": "3.1.0",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "bl",
+        "version": "4.1.0",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "fs-constants",
+        "version": "1.0.0",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "inherits",
+        "version": "2.0.4",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "readable-stream",
+        "version": "3.6.2",
+        "depth": 3,
+        "dev": false
+      },
+      {
+        "name": "picomatch",
+        "version": "2.3.1",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "fill-range",
+        "version": "7.1.1",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "binary-extensions",
+        "version": "2.2.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "is-extglob",
+        "version": "2.1.1",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "p-locate",
+        "version": "5.0.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "cross-spawn",
+        "version": "7.0.6",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "signal-exit",
+        "version": "4.1.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "@isaacs/cliui",
+        "version": "8.0.2",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "lru-cache",
+        "version": "10.4.3",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "ansi-styles",
+        "version": "4.3.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "supports-color",
+        "version": "7.2.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "strip-ansi",
+        "version": "6.0.1",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "wrap-ansi",
+        "version": "7.0.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "emoji-regex",
+        "version": "8.0.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "is-fullwidth-code-point",
+        "version": "3.0.0",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "@jridgewell/resolve-uri",
+        "version": "3.1.1",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "@jridgewell/sourcemap-codec",
+        "version": "1.4.15",
+        "depth": 3,
+        "dev": true
+      },
+      {
+        "name": "yallist",
+        "version": "4.0.0",
+        "depth": 4,
+        "dev": false
+      },
+      {
+        "name": "buffer",
+        "version": "5.7.1",
+        "depth": 4,
+        "dev": false
+      },
+      {
+        "name": "string_decoder",
+        "version": "1.3.0",
+        "depth": 4,
+        "dev": false
+      },
+      {
+        "name": "util-deprecate",
+        "version": "1.0.2",
+        "depth": 4,
+        "dev": false
+      },
+      {
+        "name": "to-regex-range",
+        "version": "5.0.1",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "p-limit",
+        "version": "3.1.0",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "path-key",
+        "version": "3.1.1",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "shebang-command",
+        "version": "2.0.0",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "which",
+        "version": "2.0.2",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "string-width",
+        "version": "5.1.2",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "string-width-cjs",
+        "version": "string-width@^4.2.0",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "strip-ansi-cjs",
+        "version": "strip-ansi@^6.0.1",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "wrap-ansi",
+        "version": "8.1.0",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "wrap-ansi-cjs",
+        "version": "wrap-ansi@^7.0.0",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "color-convert",
+        "version": "2.0.1",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "ansi-regex",
+        "version": "5.0.1",
+        "depth": 4,
+        "dev": true
+      },
+      {
+        "name": "base64-js",
+        "version": "1.5.1",
+        "depth": 5,
+        "dev": false
+      },
+      {
+        "name": "ieee754",
+        "version": "1.2.1",
+        "depth": 5,
+        "dev": false
+      },
+      {
+        "name": "is-number",
+        "version": "7.0.0",
+        "depth": 5,
+        "dev": true
+      },
+      {
+        "name": "yocto-queue",
+        "version": "0.1.0",
+        "depth": 5,
+        "dev": true
+      },
+      {
+        "name": "shebang-regex",
+        "version": "3.0.0",
+        "depth": 5,
+        "dev": true
+      },
+      {
+        "name": "isexe",
+        "version": "2.0.0",
+        "depth": 5,
+        "dev": true
+      },
+      {
+        "name": "eastasianwidth",
+        "version": "0.2.0",
+        "depth": 5,
+        "dev": true
+      },
+      {
+        "name": "emoji-regex",
+        "version": "9.2.2",
+        "depth": 5,
+        "dev": true
+      },
+      {
+        "name": "color-name",
+        "version": "1.1.4",
+        "depth": 5,
+        "dev": true
+      }
+    ],
+    "truncated": false,
+    "totalPackages": 188,
+    "unpinned": [
+      "bindings@^1.5.0",
+      "minimatch@^10.0.1",
+      "prebuild-install@^7.1.3"
+    ]
+  },
+  "budget": {
+    "filesScanned": 95,
+    "filesSkipped": 3,
+    "bytesScanned": 370985,
+    "truncated": false
+  },
+  "followupSkills": [
+    "security-audit",
+    "dependency-audit",
+    "supply-chain-review"
+  ]
+}

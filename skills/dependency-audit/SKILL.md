@@ -4,12 +4,16 @@ description: '依赖供应链审计：pnpm/npm audit 输出与退出码解读、
 whenToUse: '用户要求审计或盘点项目依赖安全（漏洞、license、投毒、锁文件漂移）、解读 audit 报告、判断某个依赖能否引入，或写依赖审计结论时使用；单个依赖的普通升级与纯功能开发不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 
 # 依赖审计（dependency-audit）
 
 目标：对仓库依赖面给出**每条结论都附命令证据**的审计结果。输出分七块：已知漏洞、license、投毒风险、锁文件漂移、多生态漏洞、SBOM 清单、provenance/签名。
+
+## 自动化预检：plugin_vet 工具
+
+`plugin_vet` 已自动执行本技能第 3/4/7 节的静态部分（license 判定、投毒清单、SBOM 依赖树），其结果逐条引用本技能小节编号。自动化命中后，按各节命令复核证据并排除误报。
 
 ## 1. 定位包管理器与锁文件
 

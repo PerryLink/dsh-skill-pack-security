@@ -1,8 +1,8 @@
 <h1 align="center">dsh-skill-pack-security</h1>
 
 <p align="center">
-  <b>Security-audit methodology for DeepSeek Harness — eight agent skills, zero runtime code.</b><br/>
-  secret scanning · dependency audit · supply-chain review · prompt-injection review · audit orchestration · threat modeling · vuln intel · incident response
+  <b>Supply-chain security gate + audit methodology for DeepSeek Harness — eight agent skills, one automated pre-install scanner.</b><br/>
+  plugin_vet · license / SBOM / commit-pin / malware scans · five-dimension risk card · secret scanning · dependency audit · supply-chain review · prompt-injection review · audit orchestration · threat modeling · vuln intel · incident response
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@
   <img src="https://img.shields.io/badge/topic-dsh-4D6BFE" alt="Topic: dsh">
   <img src="https://img.shields.io/badge/topic-dsh--plugin-4D6BFE" alt="Topic: dsh-plugin">
   <img src="https://img.shields.io/badge/skills-8-8257D0" alt="8 skills">
-  <img src="https://img.shields.io/badge/verified-19%2F19%20checks-brightgreen" alt="Verified: 19/19 checks">
+  <img src="https://img.shields.io/badge/verified-25%2F25%20checks-brightgreen" alt="Verified: 25/25 checks">
   <img src="https://img.shields.io/badge/languages-EN%2FZH%2FES%2FPT%2FHI-4D6BFE" alt="Languages: EN/ZH/ES/PT/HI">
 </p>
 
@@ -31,11 +31,11 @@
 
 ## What is this?
 
-A **pure skill pack** for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) — the "everything is a plugin" agent harness built on [Cordis](https://github.com/cordiverse/cordis). It ships eight security methodologies as `SKILL.md` bundles that the model discovers in its session catalog and loads on demand with the `skill` tool.
+A **skill pack + supply-chain gate** for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) — the "everything is a plugin" agent harness built on [Cordis](https://github.com/cordiverse/cordis). It ships eight security methodologies as `SKILL.md` bundles that the model discovers in its session catalog and loads on demand with the `skill` tool, plus the automated `plugin_vet` pre-install scanner: the skills teach the audit methodology, the plugin executes the static checks.
 
 > Repository: https://github.com/PerryLink/dsh-skill-pack-security
 
-**Zero runtime code.** No tools are registered, no services are registered, no session behavior changes. The only executable is the optional `provider/` plugin — a packaging demo — and the pack works identically without it.
+**Skills teach, the plugin executes.** The optional `provider/` plugin registers the automated `plugin_vet` gate on `ctx.tools` — a zero-dependency scanner (license / SBOM / commit pinning / malicious patterns / five-dimension risk card) whose findings cite the skill sections for the manual deep-dive. Installed as pure skills without the provider, the pack works exactly as before.
 
 Every skill is **executable by a model**: each step is a real command (`gitleaks`, `trivy`, `pnpm audit`, `npm view`, `git …`) with an expected-output sample, an exit-code criterion, and false-positive criteria. No unverifiable assertions.
 
@@ -45,9 +45,9 @@ Every skill is **executable by a model**: each step is a real command (`gitleaks
 |---|---|---|
 | Tool plugin (e.g. security scanners) | *Executes* scans, returns findings | Interpret alerts, tier false positives, write redacted reports |
 | Protocol layer | *Constrains* a protocol | Generalize across repos and agents |
-| **Skill pack (this repo)** | *Teaches methodology*: triage, reporting, remediation order | Execute scans itself |
+| **Skill pack (this repo)** | *Teaches methodology*: triage, reporting, remediation order — **and** automates the static pre-install checks via `plugin_vet` | Replace a manual audit end to end |
 
-Installed together with a tool-type security plugin, the two compose: the tool runs the scan, the skill drives interpretation, triage, and the report — the model follows this pack's methodology while calling the tool plugin's tools.
+Installed together with a tool-type security plugin, the two compose: the tool runs the scan, the skill drives interpretation, triage, and the report — the model follows this pack's methodology while calling the tool plugin's tools. This pack now combines both shapes: the skills teach the methodology, and `plugin_vet` runs the mechanical static subset automatically, with every finding pointing back into the skills.
 
 The Claude Code ecosystem's 3000+ skills prove the distribution value of this shape. DSH's `SKILL.md` frontmatter (`name`, `description`, `whenToUse`) is format-compatible with CC skills; this pack uses only the common subset and its content is entirely original.
 
@@ -67,6 +67,44 @@ The Claude Code ecosystem's 3000+ skills prove the distribution value of this sh
 Each bundle: main file ≤ 300 lines (progressive disclosure; details live in `references/`), `description` self-contained about "when to use / when not to use", and `whenToUse` with precise triggers.
 
 **Two language editions.** Every skill ships with identical names and metadata in two editions: `skills/` (Chinese) and `skills-en/` (English). Install one language per root — same-name skills in one root resolve by rank, so only one edition enters the session catalog. See [docs/release-checklist.md](docs/release-checklist.md) for the language-edition rules.
+
+## plugin_vet — the automated pre-install gate
+
+`plugin_vet` is the pack's automated complement: a zero-dependency scanner registered by the `provider/` plugin on `ctx.tools`. Point it at a GitHub `owner/repo` or a local package path — it downloads the tarball once (timeout + `AbortSignal` respected), scans within budget limits, and returns a render card.
+
+What it checks:
+
+- **License scan** — finds the LICENSE file and the `license` field; `NOASSERTION`/`UNKNOWN`/`SEE LICENSE IN <file>`, a missing file, or a missing field is flagged; common SPDX ids are recognized.
+- **SBOM** — extracts the dependency tree with versions from the lockfile (pnpm/npm/yarn).
+- **Commit locking** — install-manifest refs and workflow actions must be immutable 40-hex commit SHAs; `@tag`/branch refs are flagged as mutable.
+- **Malicious patterns** — lifecycle scripts (`preinstall`/`install`/`postinstall`), network-exfiltration domains, and obfuscated/encoded payloads in shipped code.
+- **Five-dimension risk report** — license / source / dependencies / build scripts / maintenance, each 0–100, folded into an overall verdict: PASS, WARN, or FAIL.
+
+Every finding cites the matching skill section (for example `supply-chain-review §1`) so the agent can load that skill and continue the manual audit.
+
+**Install gate.** The verdict feeds an installation gate — `gate.policy: warn` (default, non-blocking) prints a warning on FAIL; `gate.policy: deny` blocks the installation. Configure it in `cordis.yml`:
+
+```yaml
+- id: skill-pack-security
+  name: '@perrylink/dsh-skill-pack-security-provider'
+  config:
+    language: en
+    vet:
+      gate:
+        policy: deny   # block installs that fail plugin_vet
+```
+
+**Live demos** (three real repositories, regenerated per release): [compliant PASS](docs/demos/demo-1-compliant.md) · [no license FAIL](docs/demos/demo-2-no-license.md) · [postinstall WARN](docs/demos/demo-3-postinstall.md) · [deny gate BLOCKED](docs/demos/demo-4-deny.md).
+
+**Complementary to `dsh-plugin-check`.** The official plugin validator's 36 checks verify a plugin's *contract and quality* (config schema, effect registration, tool JSON shape); `plugin_vet` verifies the *supply chain* of where a plugin comes from. Run both:
+
+| | `dsh-plugin-check` (36 checks) | `plugin_vet` (this repo) |
+|---|---|---|
+| Question answered | Is this plugin well-formed and contract-compliant? | Is this package safe to install? |
+| Looks at | Plugin code, schema, registrations, tool contracts | LICENSE, lockfile, install refs/actions, lifecycle scripts, exfil/obfuscation, maintenance |
+| Verdict | Pass/fail per check | PASS / WARN / FAIL + gate |
+| When | Plugin development or review | Before `dsh plugin add`, PR review, CI supply-chain gate |
+| Blocking | CI gate (non-zero on violations) | Configurable: `warn` (default) or `deny` |
 
 ## Quick start
 
@@ -112,21 +150,23 @@ Optional: mount the whole pack without copying via the `provider/` plugin — `l
 | `skills/<name>/references/` | Progressive-disclosure detail: command matrices, triage tables, templates |
 | `scripts/install.ps1` | One-command Windows installer for all four roots (both language editions); records a manifest, supports `-Uninstall`/`-DryRun`/`-Force` |
 | `scripts/install.sh` | The POSIX equivalent (`--uninstall`/`--dry-run`/`--force`) |
-| `provider/` | Optional npm-installable provider bundle (declares `dsh.bundle`; embeds both editions in `pack/` via `prepack`; `language: zh\|en`); registered via `ctx.effect()`, fails loud on a bad `skillsDir` |
+| `provider/` | npm-installable provider bundle (declares `dsh.bundle`; embeds both editions in `pack/` via `prepack`; `language: zh\|en`); registers the skills provider AND the `plugin_vet` gate tool via `ctx.effect()`, fails loud on a bad `skillsDir` |
+| `provider/src/vet/` | The zero-dependency `plugin_vet` scan engine (license / SBOM / commit lock / malicious patterns / risk report) |
 | `package.json` | Root bundle manifest: declares `dsh.bundle.patch` (→ `provider/cordis.patch.yml`) and `dshWorkshop` intake facts, so `dsh plugin add github:PerryLink/dsh-skill-pack-security` mounts the pack through the published provider |
-| `verify/verify-skill-pack.mts` | Headless verification against the official parser and the real `skill` tool — 19 checks across both editions |
+| `verify/verify-skill-pack.mts` | Headless verification against the official parser, the real `skill` tool, and the real tools runtime — 25 checks across both editions |
 | `VERSION` | Single version source; every SKILL.md `metadata.version` and `provider/package.json` must match it (CI-enforced) |
 | `docs/ecosystem-conflict-check.md` | GitHub topic/name conflict snapshot of the `dsh-plugin` ecosystem |
 | `docs/release-checklist.md` | Release flow: version sync points, language-edition rules, tagging |
 | `docs/improvement-plan.md` | Improvement plans with per-item evidence and acceptance criteria (1.2.0 record + 1.3.0 record) |
+| `docs/demos/` | `plugin_vet` demos against three real repositories (compliant / no license / postinstall) plus the deny-gate replay — regenerated with `docs/demos/run-demos.mjs` |
 | `CHANGELOG.md` / `SECURITY.md` / `CONTRIBUTING.md` | Release history, vulnerability reporting policy, and contribution/verification rules |
-| `.github/workflows/verify.yml` | CI: 19-check verification + install.sh/install.ps1 exercise + provider build/pack smoke, on Ubuntu and Windows against a pinned harness commit |
+| `.github/workflows/verify.yml` | CI: 25-check verification + install.sh/install.ps1 exercise + provider build/pack smoke, on Ubuntu and Windows against a pinned harness commit; every action pinned to an immutable SHA |
 | `.github/dependabot.yml` | Weekly dependency updates for the provider and GitHub Actions |
 | `LICENSE` | Apache License 2.0 |
 
 ## Verification
 
-`verify/verify-skill-pack.mts` imports the **official** `dsh-skill-filesystem` parser and the **real** `skill` tool from a local `deepseek-harness` checkout and asserts 19 checks over both language editions:
+`verify/verify-skill-pack.mts` imports the **official** `dsh-skill-filesystem` parser, the **real** `skill` tool, and the **real** tools runtime from a local `deepseek-harness` checkout and asserts 25 checks over both language editions:
 
 1. Layout: both editions present, 8 directory bundles each, no stray flat skills, frontmatter `name` matches directory, ≤ 300 lines, `references/` wired, `metadata.version` synced to the `VERSION` file
 2. No name conflicts with the official `.agents/skills/` skills (derived from the checkout at run time) or known community skill packs
@@ -134,15 +174,18 @@ Optional: mount the whole pack without copying via the `provider/` plugin — `l
 7. 13 bad-frontmatter fixtures exercise the official fail-closed rules (missing fields, legacy camel-case keys, non-boolean values, non-kebab names, nested dirs, name mismatch); flat-file skills load and nested `**/SKILL.md` is not discovered
 8. The optional provider plugin mounts the Chinese and the English edition via `ctx.effect()`, disposes cleanly, and rejects misconfiguration (empty or nonexistent `skillsDir`)
 9–15. Self-hardening checks: zh↔en structural parity, references wiring (no dangling/orphan files), provider version sync, documented skill-root ranks vs the official constants, POSIX-portable `grep -E` patterns, secret self-check, UTF-8-safe release checklist
+16–19. `plugin_vet` through the real tools runtime: it registers on `ctx.tools`; the compliant fixture passes; the no-license fixture fails and cites `dependency-audit §3`; the malicious postinstall fixture fails (scripts/exfil/obfuscation, citing `supply-chain-review §1`); the gate blocks installation under `policy: deny`
+20. The scan engine is zero-dependency (`node:` builtins and relative imports only)
+21. Report redaction keeps secret-shaped text out of rendered output
 
 ```powershell
 # local: auto-resolves the harness checkout beside the pack, or point it explicitly
 $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 & D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
-# All 19 checks passed for dsh-skill-pack-security.
+# All 25 checks passed for dsh-skill-pack-security.
 ```
 
-The same 19 checks run on GitHub on every push via `.github/workflows/verify.yml` (badge above) — on Ubuntu and Windows — plus an `install.sh`/`install.ps1` exercise and a standalone provider build/pack smoke that asserts the tarball carries both embedded editions and the bundle patch (`provider` job). The harness checkout is pinned to a commit for reproducible verification.
+The same 25 checks run on GitHub on every push via `.github/workflows/verify.yml` (badge above) — on Ubuntu and Windows — plus an `install.sh`/`install.ps1` exercise and a standalone provider build/pack smoke that asserts the tarball carries both embedded editions and the bundle patch (`provider` job). The harness checkout is pinned to a commit for reproducible verification, and every workflow action is pinned to an immutable SHA.
 
 ## Roadmap
 
@@ -150,7 +193,7 @@ The same 19 checks run on GitHub on every push via `.github/workflows/verify.yml
 - `dsh-skill-pack-oss-collab` — PR etiquette, issue triage, maintainer workflows
 - `dsh-skill-pack-performance` — profiling methodology, benchmark criteria, regression checklists
 - More skills inside this pack (same pure-skill boundary): `sbom-lifecycle` (SBOM generation/aging/import workflows), `pen-test-review` (authorized-engagement scoping and report review; re-check the ecosystem snapshot for name clashes before shipping), `compliance-audit` (ASVS/NIST-CSF walkthroughs)
-- Provider bundle published on npm as `@perrylink/dsh-skill-pack-security-provider` (`dsh plugin add` ready); keep it in sync with each release via `docs/release-checklist.md`
+- Keep the `plugin_vet` demo artifacts fresh (`docs/demos/run-demos.mjs`) and the `dsh-plugin-check` complement table accurate as the official checker adds checks
 
 ## Topics
 
@@ -158,7 +201,7 @@ If you host this pack on GitHub, set the repository topics: **`dsh`**, **`dsh-pl
 
 ## Boundaries
 
-No tool-type security-audit plugin (deliberately complementary to scanner plugins), no skill marketplace, no copied CC skill content — format-compatible, content-original.
+No general-purpose security-audit tool — `plugin_vet` is a narrow pre-install trust gate, deliberately complementary to scanner plugins and to the official `dsh-plugin-check` contract validator. No skill marketplace, no copied CC skill content — format-compatible, content-original.
 
 ## Contributors
 

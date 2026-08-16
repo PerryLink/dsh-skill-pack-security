@@ -10,7 +10,7 @@
 
 ## Verification
 
-- `verify/verify-skill-pack.mts` runs 19 checks against the official `dsh-skill-filesystem` parser and the real `skill` tool from a local deepseek-harness checkout (auto-resolved beside the pack, or set `DSH_HARNESS_CHECKOUT`).
+- `verify/verify-skill-pack.mts` runs 25 checks against the official `dsh-skill-filesystem` parser, the real `skill` tool, and the real tools runtime from a local deepseek-harness checkout (auto-resolved beside the pack, or set `DSH_HARNESS_CHECKOUT`).
 - Provider: `cd provider && pnpm install --frozen-lockfile && pnpm run build && pnpm pack --pack-destination .tmp` — the tarball must carry `lib/`, both embedded editions under `pack/`, and `cordis.patch.yml`.
 - Installers: exercise `scripts/install.ps1` (Windows PowerShell 5.1) and `scripts/install.sh` (POSIX), including `--dry-run`, the overwrite protection, and `--uninstall`.
 - CI runs the same checks on Ubuntu and Windows against a pinned harness commit; bump the `ref` in `.github/workflows/verify.yml` when the provider's peer dependencies or the skill-format assumptions change.

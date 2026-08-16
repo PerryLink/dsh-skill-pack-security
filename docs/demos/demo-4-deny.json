@@ -1,0 +1,162 @@
+{
+  "kind": "vet-report",
+  "target": {
+    "raw": "ali-meoo/meoo-cli",
+    "kind": "github-repo",
+    "resolved": "ali-meoo/meoo-cli",
+    "ref": "main"
+  },
+  "fetchedAt": "2026-08-16T12:54:53.721Z",
+  "checks": [
+    {
+      "id": "license",
+      "name": "License scan",
+      "verdict": "fail",
+      "score": 0,
+      "findings": [
+        {
+          "level": "fail",
+          "message": "No license at all: no LICENSE file and no license field",
+          "skill": "dependency-audit §3",
+          "evidence": "no LICENSE* file; no package.json license field; GitHub detected no license"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §3"
+    },
+    {
+      "id": "sbom",
+      "name": "SBOM dependency tree",
+      "verdict": "skip",
+      "skipReason": "no package.json, cannot build a dependency tree",
+      "score": 0,
+      "findings": [],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §7"
+    },
+    {
+      "id": "commit-lock",
+      "name": "Commit lock verification",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "this scan fetched \"main\" (not a commit); pin the install to a 40-hex commit (DSH git installs run prepare scripts)",
+          "skill": "supply-chain-review §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §3"
+    },
+    {
+      "id": "install-scripts",
+      "name": "Install script checks",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "no preinstall/install/postinstall/prepare lifecycle scripts",
+          "skill": "supply-chain-review §1"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §1"
+    },
+    {
+      "id": "network-exfil",
+      "name": "Network exfiltration scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "scanned 2 script/manifest files, no exfiltration-domain indicators",
+          "skill": "dependency-audit §4.4"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §4.4"
+    },
+    {
+      "id": "obfuscation",
+      "name": "Obfuscation scan",
+      "verdict": "pass",
+      "score": 100,
+      "findings": [
+        {
+          "level": "info",
+          "message": "scanned 0 code files, no obfuscation indicators",
+          "skill": "supply-chain-review §1"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "supply-chain-review §1"
+    },
+    {
+      "id": "source",
+      "name": "Source trust signals",
+      "verdict": "warn",
+      "score": 90,
+      "findings": [
+        {
+          "level": "warn",
+          "message": "no CI workflows (no automated build/test evidence)",
+          "skill": "dependency-audit §4.3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "dependency-audit §4.3"
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintenance status",
+      "verdict": "pass",
+      "score": 92,
+      "findings": [
+        {
+          "level": "info",
+          "message": "pushed within the last 19 days: actively maintained",
+          "skill": "security-audit §3"
+        }
+      ],
+      "truncatedFindings": false,
+      "skill": "security-audit §3"
+    }
+  ],
+  "scores": {
+    "license": 0,
+    "source": 95,
+    "dependencies": 60,
+    "build-scripts": 100,
+    "maintenance": 92,
+    "overall": 67
+  },
+  "verdict": "fail",
+  "gate": {
+    "policy": "deny",
+    "applied": true,
+    "blocked": true,
+    "reason": "verdict=fail with deny gate policy"
+  },
+  "sbom": {
+    "lockfile": null,
+    "directDependencies": 0,
+    "directDevDependencies": 0,
+    "packages": [],
+    "truncated": false,
+    "totalPackages": 0,
+    "unpinned": []
+  },
+  "budget": {
+    "filesScanned": 11,
+    "filesSkipped": 0,
+    "bytesScanned": 85124,
+    "truncated": false
+  },
+  "followupSkills": [
+    "security-audit",
+    "dependency-audit"
+  ]
+}

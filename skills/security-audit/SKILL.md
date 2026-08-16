@@ -4,13 +4,17 @@ description: '仓库/软件安全审计总览：范围界定→资产清单→�
 whenToUse: '用户要求对代码仓库或项目做安全审计、制定审计计划、划分审计阶段、汇总多类发现成报告，或不确定该从哪个专项技能开始时使用；单一主题任务（只查密钥、只查依赖、只评审一个 PR、只查注入面）直接加载对应专项技能，不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 
 # 安全审计总览（security-audit）
 
 本技能编排一次仓库安全审计的完整流程，产出**每条发现都能用一条命令复核**的报告。
 它只编排；四类主题的检查细节分别在 `secret-scan`（密钥）、`dependency-audit`（依赖）、`supply-chain-review`（新增依赖评审）、`prompt-injection-review`（agent 项目注入面）中。进入相应阶段时，用 `skill` 工具按需加载对应专项技能，不要在本文件里重写其细节。
+
+## 自动化预检：plugin_vet 工具
+
+本包 provider 同时注册 `plugin_vet` 工具（license 扫描 / SBOM / commit 锁定 / 恶意模式 / 五维评分）。它只做机器预检，结果中每条 finding 都标注本包对应技能小节，命中后按本技能流程继续人工审计；工具结果 fail 且门禁策略为 deny 时安装被阻断。
 
 ## 阶段 0：固定审计对象（不固定对象，报告不可复现）
 

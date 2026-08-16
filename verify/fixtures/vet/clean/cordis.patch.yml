@@ -1,0 +1,6 @@
+# Verify fixture: mounts the fixture plugin by its published name.
+
+- insert:
+    - id: fixture-clean
+      name: dsh-fixture-clean
+      config: {}

@@ -4,11 +4,15 @@ description: 'Repository/software security audit overview: a staged flow of scop
 whenToUse: 'Use when the user asks for a security audit of a code repository or project, an audit plan, staged audit steps, a consolidated findings report, or is unsure which specialist skill to start with. Single-topic tasks (only secrets, only dependencies, only one PR, only injection surfaces) load the matching specialist skill directly and do not trigger this overview.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 # Security audit overview (security-audit)
 
 This skill orchestrates the complete flow of one repository security audit and produces a report in which **every finding can be re-verified with a single command**. It only orchestrates; the check details for the four topics live in `secret-scan` (secrets), `dependency-audit` (dependencies), `supply-chain-review` (new-dependency review), and `prompt-injection-review` (injection surfaces of agent projects). When a stage is reached, load the matching specialist skill on demand with the `skill` tool — do not rewrite its details here.
+
+## Automated pre-check: the plugin_vet tool
+
+The pack's provider also registers the `plugin_vet` tool (license scan / SBOM / commit pinning / malicious patterns / five-dimension scoring). It performs only machine pre-checks; every finding cites the matching skill section of this pack, and after a hit you continue with this skill's manual audit flow. A FAIL verdict under a deny gate policy blocks installation.
 
 ## Stage 0: fix the audit target (an unfixed target makes the report unreproducible)
 

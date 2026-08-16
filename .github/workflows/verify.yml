@@ -8,15 +8,15 @@ on:
 
 jobs:
   verify:
-    name: skill pack verification (19 checks, both language editions)
+    name: skill pack + plugin_vet verification (25 checks, both language editions)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Checkout deepseek-harness
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump in the same PR as any
@@ -25,12 +25,12 @@ jobs:
           path: harness
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
         with:
           version: 11.7.0
 
       - name: Set up Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 22
           cache: pnpm
@@ -70,10 +70,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Checkout deepseek-harness
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump with peer-dependency changes.
@@ -81,12 +81,12 @@ jobs:
           path: harness
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
         with:
           version: 11.7.0
 
       - name: Set up Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 22
           cache: pnpm
@@ -123,15 +123,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout skill pack
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
         with:
           version: 11.7.0
 
       - name: Set up Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 22
 

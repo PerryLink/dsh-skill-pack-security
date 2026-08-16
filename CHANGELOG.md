@@ -3,6 +3,24 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-08-16
+
+### Added
+
+- `plugin_vet` supply-chain gate tool (registered by the provider plugin on `ctx.tools`): license scan (LICENSE + SPDX; missing/unknown/NOASSERTION flagged), SBOM from the lockfile, commit-lock verification (install refs and workflow actions must be immutable 40-hex SHAs), malicious-pattern static checks (lifecycle scripts, network-exfiltration domains, obfuscated payloads), and a five-dimension risk report (license / source / dependencies / build scripts / maintenance) rendered as a card. Every finding cites the matching skill section for the manual deep-dive.
+- Installation gate: `vet.gate.policy` — `warn` (default, non-blocking) or `deny` (blocks installs that fail the scan).
+- Zero-dependency scan engine (`node:` builtins + relative imports only, enforced by a verification check); network fetches respect timeouts and `AbortSignal`; reports redact secret-shaped text.
+- Demo runner `docs/demos/run-demos.mjs` plus artifacts for three real repositories (compliant / no license / postinstall) and the deny-gate replay.
+- Verification grew from 19 to 25 checks: `plugin_vet` behavior through the real tools runtime, the zero-dependency invariant, and report redaction.
+- GitHub Actions pinned to immutable SHAs in `.github/workflows/verify.yml`.
+
+### Changed
+
+- Provider bumped to 2.0.0 (`@perrylink/dsh-skill-pack-security-provider`): registers the skills provider AND the `plugin_vet` tool.
+- Root bundle pins the provider to the exact `2.0.0` release.
+- All 16 `SKILL.md` files reference the automated pre-check and carry `metadata.version: 2.0.0`.
+- README (all five languages) documents `plugin_vet`, the gate configuration, the live demos, and the complementary relationship with `dsh-plugin-check`'s 36 contract checks.
+
 ## [1.3.0] - 2026-08-14
 
 ### Added

@@ -4,12 +4,16 @@ description: 'PR/新依赖快速供应链评审：危险 install/postinstall 脚
 whenToUse: '评审含新依赖（package.json/锁文件变更）的 PR、审查某包的 install 脚本行为、判断疑似 typosquat 包或验证构建可复现性时使用；纯业务代码、与新增依赖无关的 PR 评审不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 
 # 新增依赖快速评审（supply-chain-review）
 
 目标：在 PR 评审时间内（几分钟）对新增依赖给出 **通过 / 要求修改 / 阻断** 三档结论；每条结论必须附命令证据与误报排除说明。
+
+## 自动化预检：plugin_vet 工具
+
+`plugin_vet` 已自动执行本技能第 1/2/3 节的静态部分（危险 install 脚本、网络回传、混淆载荷、commit/action 锁定），其结果逐条引用本技能小节编号。自动化命中后，按各节的误报判据与放行判据人工确认，再下三档结论。
 
 ## 0. 确认范围
 

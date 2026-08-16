@@ -4,11 +4,15 @@ description: 'Dependency supply-chain audit: reading pnpm/npm audit output and e
 whenToUse: 'Use when the user asks to audit or inventory project dependency security (vulnerabilities, licenses, poisoning, lockfile drift), to interpret an audit report, to judge whether a dependency may be introduced, or to write a dependency-audit conclusion. Upgrading a single dependency and plain feature development do not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 # Dependency audit (dependency-audit)
 
 Goal: produce an audit of the repository's dependency surface in which **every conclusion carries command evidence**. The output has seven blocks: known vulnerabilities, licenses, poisoning risk, lockfile drift, multi-ecosystem vulnerabilities, the SBOM inventory, and provenance/signatures.
+
+## Automated pre-check: the plugin_vet tool
+
+`plugin_vet` already runs the static parts of sections 3/4/7 (license verdicts, the poisoning checklist, the SBOM dependency tree), and its findings cite those section numbers. After an automated hit, verify the evidence and rule out false positives with each section's commands.
 
 ## 1. Locate the package manager and lockfile
 

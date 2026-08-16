@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+packages:
+
+  left-pad@1.3.0:
+    resolution: {integrity: sha512-fakeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==}
+    engines: {node: '>=0.10.0'}
+
+  tinycolor2@1.6.0:
+    resolution: {integrity: sha512-fakeBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB==}
+    engines: {node: '*'}
+
+snapshots:
+
+  left-pad@1.3.0:
+    dependencies: {}
+
+  tinycolor2@1.6.0:
+    dependencies: {}
