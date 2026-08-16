@@ -1,0 +1,70 @@
+{
+  "name": "dsh-skill-pack-security",
+  "private": true,
+  "description": "Security-audit methodology skill pack for DeepSeek Harness (dsh): eight agent skills in Chinese and English editions, mounted through the published provider bundle. Zero runtime code.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "skill-pack",
+    "skills",
+    "security",
+    "security-audit",
+    "supply-chain"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PerryLink/dsh-skill-pack-security.git"
+  },
+  "dependencies": {
+    "@perrylink/dsh-skill-pack-security-provider": "^1.3.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./provider/cordis.patch.yml"
+    }
+  },
+  "dshWorkshop": {
+    "schema": "omdsh-workshop-package/v1",
+    "type": "plugin",
+    "integration": {
+      "protocol": "harness-profile",
+      "artifact": "provider/cordis.patch.yml"
+    },
+    "install": {
+      "mode": "transactional",
+      "adapter": "profile-bundle",
+      "failurePolicy": "generation-rollback",
+      "touchesCurrentBeforeActivation": false
+    },
+    "lifecycle": {
+      "activation": "restart-profile",
+      "dispose": "supported"
+    },
+    "permissions": [
+      "files:read"
+    ],
+    "compatibility": {
+      "dshVersions": [
+        "0.1.0-rc.6"
+      ]
+    },
+    "capability": {
+      "id": "skill-pack-security",
+      "kind": "provider",
+      "invocation": "boot the RC.6 candidate Profile with the bundle mounted (config.language zh|en) and call ctx.skills.get('security-audit') through the @deepseek-ai/dsh-skill-filesystem provider contract",
+      "expected": "ctx.skills.get('security-audit') resolves an entry named 'security-audit' whose description matches the mounted edition"
+    },
+    "evidence": {
+      "install": null,
+      "failureIsolation": null,
+      "hotReload": null,
+      "remove": null
+    }
+  }
+}
