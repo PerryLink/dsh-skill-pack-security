@@ -38,6 +38,18 @@
 - **निष्कर्ष स्किल उद्धृत करते हैं** — हर निष्कर्ष संबंधित स्किल अनुभाग की ओर इंगित करता है (जैसे `supply-chain-review §1`) ताकि एजेंट मैनुअल ऑडिट जारी रख सके।
 - **मॉडल द्वारा निष्पादन-योग्य** — हर स्किल चरण एक वास्तविक कमांड है (`gitleaks`, `trivy`, `pnpm audit`, `npm view`, `git …`) जिसमें अपेक्षित आउटपुट नमूना और एग्ज़िट-कोड कसौटी है।
 
+## Why skills, not tools?
+
+| रूप | क्या करता है | क्या नहीं कर सकता |
+|---|---|---|
+| टूल प्लगइन (जैसे स्कैनर) | स्कैन **निष्पादित** करता है, निष्कर्ष लौटाता है | अलर्ट की व्याख्या, गलत-सकारात्मक का वर्गीकरण, रिडैक्टेड रिपोर्ट लिखना |
+| प्रोटोकॉल परत | किसी प्रोटोकॉल को **बाधित** करता है | रेपो और एजेंटों के बीच सामान्यीकरण |
+| **स्किल पैक (यह रेपो)** | **पद्धति सिखाता है**: ट्राइएज, रिपोर्ट, समाधान-क्रम — **और** `plugin_vet` से प्री-इंस्टॉल स्थैतिक जाँचें स्वचालित करता है | मैनुअल ऑडिट को शुरू से अंत तक बदलना |
+
+टूल-प्रकार के सुरक्षा प्लगइन के साथ स्थापित करने पर दोनों मिलकर काम करते हैं: टूल स्कैन चलाता है, स्किल व्याख्या, ट्राइएज और रिपोर्ट को दिशा देती है। यह पैक दोनों रूपों को जोड़ता है: स्किल पद्धति सिखाती हैं और `plugin_vet` यांत्रिक स्थैतिक उपसमुच्चय को स्वतः चलाता है, हर निष्कर्ष वापस स्किलों की ओर इंगित करता है।
+
+Claude Code इकोसिस्टम की 3000+ स्किल इस रूप के वितरण-मूल्य को सिद्ध करती हैं। DSH का `SKILL.md` फ्रंटमैटर (`name`, `description`, `whenToUse`) CC स्किल प्रारूप के अनुकूल है; यह पैक केवल साझा उपसमुच्चय का उपयोग करता है और इसकी सामग्री पूर्णतः मौलिक है।
+
 ## The eight skills
 
 | स्किल | उद्देश्य | कब उपयोग करें |
@@ -74,6 +86,16 @@
       gate:
         policy: deny   # plugin_vet में विफल इंस्टॉल रोकें
 ```
+
+**`dsh-plugin-check` का पूरक।** आधिकारिक प्लगइन सत्यापक की 36 जाँचें एक प्लगइन के *अनुबंध और गुणवत्ता* की पुष्टि करती हैं (कॉन्फ़िगरेशन स्कीमा, effect पंजीकरण, टूल JSON आकार); `plugin_vet` इसकी *सप्लाई चेन* सत्यापित करता है कि प्लगइन कहाँ से आता है। दोनों चलाएँ:
+
+| | `dsh-plugin-check` (36 जाँचें) | `plugin_vet` (यह रेपो) |
+|---|---|---|
+| उत्तरित प्रश्न | क्या यह प्लगइन सुगठित और अनुबंध-अनुरूप है? | क्या यह पैकेज इंस्टॉल करना सुरक्षित है? |
+| क्या देखता है | प्लगइन कोड, स्कीमा, पंजीकरण, टूल अनुबंध | LICENSE, lockfile, इंस्टॉल refs/क्रियाएँ, lifecycle स्क्रिप्ट, exfil/obfuscation, रखरखाव |
+| निर्णय | प्रति जाँच पास/फेल | PASS / WARN / FAIL + गेट |
+| कब | प्लगइन विकास या समीक्षा | `dsh plugin add` से पहले, PR समीक्षा, CI सप्लाई-चेन गेट |
+| अवरोधक | CI गेट (उल्लंघन पर गैर-शून्य) | कॉन्फ़िगर करने योग्य: `warn` (डिफ़ॉल्ट) या `deny` |
 
 ## Quick start
 
@@ -115,6 +137,26 @@ Ranks (एक परत में समान-नाम विरोध मे�
 ```sh
 bash ./scripts/install.sh --target user-agents --language en
 ```
+
+## What's inside
+
+| पथ | क्या है |
+|---|---|
+| `skills/<name>/SKILL.md` | आठ स्किल (चीनी संस्करण); frontmatter आधिकारिक `dsh-skill-filesystem` अनुबंध का पालन करता है |
+| `skills-en/<name>/SKILL.md` | आठ स्किल (अंग्रेज़ी संस्करण); चीनी संस्करण जैसे नाम व मेटाडेटा |
+| `skills/<name>/references/` | प्रगतिशील-प्रकटीकरण विवरण: कमांड मैट्रिक्स, ट्राइएज तालिकाएँ, टेम्पलेट |
+| `scripts/install.ps1` | चारों roots (दोनों भाषा संस्करण) के लिए एक-कमांड Windows इंस्टॉलर; manifest रिकॉर्ड करता है, `-Uninstall`/`-DryRun`/`-Force` समर्थन |
+| `scripts/install.sh` | POSIX समकक्ष (`--uninstall`/`--dry-run`/`--force`) |
+| `provider/` | npm-इंस्टॉल योग्य provider बंडल (`dsh.bundle` घोषित; `prepack` से दोनों संस्करण `pack/` में एम्बेड; `language: zh\|en`); `ctx.effect()` से स्किल प्रदाता **और** `plugin_vet` गेट टूल पंजीकृत करता है, खराब `skillsDir` पर ज़ोर से विफल |
+| `provider/src/vet/` | शून्य-निर्भरता `plugin_vet` स्कैन इंजन (लाइसेंस / SBOM / कमिट लॉक / दुर्भावनापूर्ण पैटर्न / जोखिम रिपोर्ट) |
+| `package.json` | रूट बंडल manifest: `dsh.bundle.patch` (→ `provider/cordis.patch.yml`) और `dshWorkshop` intake तथ्य घोषित |
+| `verify/verify-skill-pack.mts` | आधिकारिक parser, वास्तविक `skill` टूल और वास्तविक टूल्स runtime के विरुद्ध headless सत्यापन — दोनों संस्करणों में 25 जाँचें |
+| `VERSION` | संस्करण का एकल स्रोत; हर SKILL.md का `metadata.version` और `provider/package.json` उससे मेल खाना चाहिए (CI-लागू) |
+| `docs/` | इकोसिस्टम संघर्ष जाँच, प्रकाशन सूची, सुधार योजनाएँ और `plugin_vet` डेमो |
+| `CHANGELOG.md` / `SECURITY.md` / `CONTRIBUTING.md` | रिलीज़ इतिहास, भेद्यता रिपोर्ट नीति, योगदान/सत्यापन नियम |
+| `.github/workflows/verify.yml` | CI: 25-जाँच सत्यापन + इंस्टॉलर अभ्यास + provider build/pack स्मोक (Ubuntu और Windows) |
+| `.github/dependabot.yml` | provider और GitHub Actions के साप्ताहिक डिपेंडेंसी अपडेट |
+| `LICENSE` | Apache License 2.0 |
 
 ## Configuration
 
@@ -158,13 +200,40 @@ bash ./scripts/install.sh --target user-agents --language en
 
 ## Verification
 
-`verify/verify-skill-pack.mts` स्थानीय `deepseek-harness` checkout से **आधिकारिक** `dsh-skill-filesystem` पार्सर, **वास्तविक** `skill` टूल और **वास्तविक** टूल्स runtime आयात करता है और दोनों भाषा संस्करणों पर 25 जाँचें करता है: संरचना व frontmatter वैधता, आधिकारिक/सामुदायिक स्किलों से शून्य नाम-विरोध, `ctx.skills.get()` की पूर्ण लोडिंग, वास्तविक टूल्स runtime से `plugin_vet` का व्यवहार, शून्य-निर्भरता अपरिवर्तनीयता और रिपोर्ट रिडैक्शन। यही 25 जाँचें GitHub पर `.github/workflows/verify.yml` से चलती हैं (Ubuntu और Windows)।
+`verify/verify-skill-pack.mts` स्थानीय `deepseek-harness` checkout से **आधिकारिक** `dsh-skill-filesystem` parser, **वास्तविक** `skill` टूल और **वास्तविक** टूल्स runtime आयात करता है और दोनों भाषा संस्करणों पर 25 जाँचें करता है:
+
+1. संरचना: दोनों संस्करण मौजूद, हर संस्करण में 8 निर्देशिका बंडल, कोई अतिरिक्त फ्लैट स्किल नहीं, frontmatter `name` निर्देशिका से मेल, ≤ 300 पंक्तियाँ, `references/` जुड़ा, `metadata.version` `VERSION` फ़ाइल से सिंक
+2. आधिकारिक `.agents/skills/` स्किलों (रनटाइम पर checkout से व्युत्पन्न) या ज्ञात सामुदायिक स्किल पैकों से शून्य नाम-विरोध
+3–6. प्रति संस्करण (चीनी `skills/`, अंग्रेज़ी `skills-en/`): आधिकारिक provider से रजिस्ट्री खोज, `ctx.skills.get()` से पूर्ण लोडिंग, वास्तविक `skill` टूल `<skill_content>` लौटाता है (अज्ञात/अमान्य नाम अस्वीकृत), और सत्र कैटलॉग में केवल `name` + `description` — `whenToUse` मॉडल कैटलॉग से बाहर (आधिकारिक डिज़ाइन)
+7. 13 खराब-frontmatter fixtures आधिकारिक fail-closed नियमों का अभ्यास करते हैं (गायब फ़ील्ड, लेगेसी camel-case कुंजियाँ, गैर-बूलियन मान, गैर-kebab नाम, नेस्टेड निर्देशिकाएँ, नाम बेमेल); फ्लैट-फ़ाइल स्किल लोड होती हैं और नेस्टेड `**/SKILL.md` नहीं खोजा जाता
+8. वैकल्पिक provider प्लगइन `ctx.effect()` से चीनी और अंग्रेज़ी संस्करण माउंट करता है, साफ़ dispose होता है, और गलत कॉन्फ़िगरेशन (खाली/अनुपस्थित `skillsDir`) अस्वीकार करता है
+9–15. स्व-सख़्ती जाँचें: zh↔en संरचनात्मक समता, references जुड़ाव (कोई लटकती/अनाथ फ़ाइल नहीं), provider संस्करण सिंक, आधिकारिक स्थिरांकों के विरुद्ध दस्तावेज़ीकृत स्किल-root ranks, POSIX-पोर्टेबल `grep -E` पैटर्न, सीक्रेट स्व-जाँच, UTF-8-सुरक्षित प्रकाशन सूची
+16–19. वास्तविक टूल्स runtime से `plugin_vet`: यह `ctx.tools` पर पंजीकृत होता है; अनुरूप fixture पास; बिना-लाइसेंस fixture विफल और `dependency-audit §3` उद्धृत; दुर्भावनापूर्ण postinstall fixture विफल (स्क्रिप्ट/exfil/obfuscation, `supply-chain-review §1` उद्धृत); `policy: deny` के तहत गेट इंस्टॉल रोकता है
+20. स्कैन इंजन शून्य-निर्भरता (केवल `node:` builtins और सापेक्ष imports)
+21. रिपोर्ट रिडैक्शन सीक्रेट-आकार वाले पाठ को रेंडर आउटपुट से बाहर रखता है
+
+```powershell
+# स्थानीय: पैक के पास harness checkout को स्वतः हल करता है, या स्पष्ट रूप से इंगित करें
+$env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
+& D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
+# All 25 checks passed for dsh-skill-pack-security.
+```
+
+यही 25 जाँचें GitHub पर हर push पर `.github/workflows/verify.yml` से चलती हैं — Ubuntu और Windows पर — साथ में `install.sh`/`install.ps1` अभ्यास और provider का स्वतंत्र build/pack स्मोक जो सुनिश्चित करता है कि tarball दोनों एम्बेडेड संस्करण और बंडल patch ले जाता है।
 
 ## Known limitations
 
 - **पूर्ण ऑडिट टूल नहीं।** `plugin_vet` एक संकीर्ण प्री-इंस्टॉल ट्रस्ट गेट है; यह शुरू-से-अंत मैनुअल ऑडिट नहीं बदल सकता।
 - **केवल स्थैतिक स्कैन।** दुर्भावनापूर्ण-पैटर्न और रखरखाव संकेत वितरित पैकेज पर ह्यूरिस्टिक हैं, गतिशील विश्लेषण नहीं।
 - **हर root में एक संस्करण।** एक root में समान-नाम स्किल rank से हल होती हैं, इसलिए एक सत्र कैटलॉग में केवल एक भाषा संस्करण आता है।
+
+## Roadmap
+
+- `dsh-skill-pack-data-engineering` — डेटा पाइपलाइन, डेटा गुणवत्ता, ETL चेकलिस्ट (समान टेम्पलेट)
+- `dsh-skill-pack-oss-collab` — PR शिष्टाचार, issue ट्राइएज, अनुरक्षक कार्यप्रवाह
+- `dsh-skill-pack-performance` — profiling पद्धति, बेंचमार्क कसौतियाँ, रिग्रेशन चेकलिस्ट
+- इस पैक में और स्किल (समान शुद्ध-स्किल सीमा): `sbom-lifecycle` (SBOM निर्माण/आयु/आयात कार्यप्रवाह), `pen-test-review` (अधिकृत जुड़ाव का दायरा और रिपोर्ट समीक्षा), `compliance-audit` (ASVS/NIST-CSF वॉकथ्रू)
+- `plugin_vet` डेमो आर्टिफ़ैक्ट ताज़ा रखें (`docs/demos/run-demos.mjs`) और `dsh-plugin-check` पूरक तालिका सटीक रखें
 
 ## Development
 
@@ -182,6 +251,29 @@ tsx verify/verify-skill-pack.mts    # 25-जाँच headless सत्या�
 ## Contributors
 
 - [@PerryLink](https://github.com/PerryLink) — लेखक और अनुरक्षक: दोनों भाषा संस्करणों में आठ स्किल, इंस्टॉलर, सत्यापन सूट, provider बंडल, CI और दस्तावेज़ीकरण।
+
+## PerryLink DSH Plugin Family
+
+यह परियोजना [PerryLink](https://github.com/PerryLink) द्वारा अनुरक्षित [DeepSeek Harness प्लगइनों](https://github.com/PerryLink) में से एक है। अगर यह आपकी मदद करता है, तो बाकी भी संभवतः करेंगे:
+
+| प्लगइन | एक पंक्ति में |
+|---|---|
+| [dsh-mask](https://github.com/PerryLink/dsh-mask) | PII मास्किंग मिडलवेयर: मॉडल सीमा पर अनाम करें, डिस्प्ले लेयर पर पुनर्स्थापित करें |
+| [dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel) | रीड-ओनली MCP रनटाइम पैनल: /mcp कमांड + सेटिंग्स टैब, स्थिति/टूल/त्रुटियाँ |
+| [dsh-doublecheck](https://github.com/PerryLink/dsh-doublecheck) | इंजीनियरिंग-अनुशासन गार्ड: आवश्यकता पूछताछ, टेस्ट गेट, विरोधी समीक्षा |
+| [dsh-background-agents](https://github.com/PerryLink/dsh-background-agents) | टिकाऊ पृष्ठभूमि चाइल्ड एजेंट: वेब साइडबार, संदेश और व्यवधान |
+| [dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions) | LSP निदान, फ़ॉर्मेटिंग, पूर्णता, कोड क्रियाएँ और नाम बदलना |
+| [dsh-output-styles](https://github.com/PerryLink/dsh-output-styles) | Claude Code outputStyles-समकक्ष रनटाइम शैली बदलाव |
+| [dsh-checkpoint-rewind](https://github.com/PerryLink/dsh-checkpoint-rewind) | Claude Code /rewind-समकक्ष: स्नैपशॉट, सत्र fork, एक-क्लिक पुनर्स्थापना |
+| [dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules) | Claude Code-शैली घोषणात्मक allow/deny/ask अनुमति नियम, ऑडिट सहित |
+| [dsh-auto-review](https://github.com/PerryLink/dsh-auto-review) | अनुमोदन श्रृंखला पर दूसरे मॉडल की स्वतः समीक्षा, डिफ़ॉल्ट fail-closed |
+| [dsh-memento](https://github.com/PerryLink/dsh-memento) | अनुमोदित क्रॉस-सत्र मेमोरी: ctx.memory seam + SQLite + memory टूल |
+| **[dsh-skill-pack-security](https://github.com/PerryLink/dsh-skill-pack-security)** | सुरक्षा-ऑडिट स्किल पैक: सीक्रेट स्कैन, डिपेंडेंसी और सप्लाई-चेन समीक्षा |
+| [dsh-session-pin](https://github.com/PerryLink/dsh-session-pin) | वेब साइडबार में सत्र पिन करें, टिकाऊ क्रम |
+| [dsh-composer-history](https://github.com/PerryLink/dsh-composer-history) | वेब कम्पोज़र के लिए टर्मिनल-शैली इनपुट इतिहास: तीर, Ctrl+R खोज |
+| [dsh-github](https://github.com/PerryLink/dsh-github) | DSH के लिए GitHub PR/issue एकीकरण, हर लेखन अनुमोदित |
+| [dsh-plugin-guide](https://github.com/PerryLink/dsh-plugin-guide) | प्लगइन-विकास ज्ञान आधार, माँग पर एजेंट स्किल के रूप में |
+| [dsh-claude-move](https://github.com/PerryLink/dsh-claude-move) | Claude Code के सत्र, मेमोरी, स्किल और CLAUDE.md को DSH में स्थानांतरित करें |
 
 ## License
 

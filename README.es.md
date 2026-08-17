@@ -38,6 +38,18 @@
 - **Los hallazgos citan las skills** — cada hallazgo apunta a la sección de skill correspondiente (por ejemplo `supply-chain-review §1`) para continuar la auditoría manual.
 - **Ejecutable por un modelo** — cada paso de skill es un comando real (`gitleaks`, `trivy`, `pnpm audit`, `npm view`, `git …`) con muestra de salida esperada y criterio de código de salida.
 
+## Why skills, not tools?
+
+| Forma | Qué hace | Qué no puede hacer |
+|---|---|---|
+| Plugin de herramientas (p. ej. escáneres) | **Ejecuta** escaneos, devuelve hallazgos | Interpretar alertas, clasificar falsos positivos, redactar informes |
+| Capa de protocolo | **Restringe** un protocolo | Generalizar entre repos y agentes |
+| **Paquete de skills (este repo)** | **Enseña metodología**: triaje, informes, orden de remediación — **y** automatiza las comprobaciones estáticas previas a la instalación vía `plugin_vet` | Sustituir una auditoría manual de principio a fin |
+
+Instalado junto a un plugin de seguridad tipo herramienta, ambos se complementan: la herramienta ejecuta el escaneo, la skill dirige la interpretación, el triaje y el informe. Este paquete combina ambas formas: las skills enseñan la metodología y `plugin_vet` ejecuta el subconjunto estático automáticamente, con cada hallazgo apuntando de vuelta a las skills.
+
+Los 3000+ skills del ecosistema Claude Code demuestran el valor de distribución de esta forma. El frontmatter `SKILL.md` de DSH (`name`, `description`, `whenToUse`) es compatible con el formato de skills de CC; este paquete usa solo el subconjunto común y su contenido es totalmente original.
+
 ## The eight skills
 
 | Skill | Propósito | Cuándo usarla |
@@ -74,6 +86,16 @@ Cada bundle mantiene su archivo principal ≤ 300 líneas (divulgación progresi
       gate:
         policy: deny   # bloquea las instalaciones que fallan plugin_vet
 ```
+
+**Complementario a `dsh-plugin-check`.** Las 36 comprobaciones del validador oficial verifican el *contrato y la calidad* de un plugin (esquema de configuración, registro de efectos, forma JSON de las herramientas); `plugin_vet` verifica la *cadena de suministro* de dónde proviene un plugin. Ejecuta ambos:
+
+| | `dsh-plugin-check` (36 comprobaciones) | `plugin_vet` (este repo) |
+|---|---|---|
+| Pregunta respondida | ¿Está bien formado este plugin y cumple el contrato? | ¿Es seguro instalar este paquete? |
+| Qué mira | Código del plugin, esquema, registros, contratos de herramientas | LICENSE, lockfile, refs de instalación/acciones, scripts de ciclo de vida, exfil/ofuscación, mantenimiento |
+| Veredicto | Pasa/falla por comprobación | PASS / WARN / FAIL + puerta |
+| Cuándo | Desarrollo o revisión de plugins | Antes de `dsh plugin add`, revisión de PR, puerta de CI de cadena de suministro |
+| Bloqueante | Puerta de CI (no cero ante violaciones) | Configurable: `warn` (por defecto) o `deny` |
 
 ## Quick start
 
@@ -115,6 +137,26 @@ Rangos (el menor gana los conflictos de nombre dentro de una capa): `project-dsh
 ```sh
 bash ./scripts/install.sh --target user-agents --language en
 ```
+
+## What's inside
+
+| Ruta | Qué es |
+|---|---|
+| `skills/<nombre>/SKILL.md` | Las ocho skills (edición china); el frontmatter sigue el contrato oficial de `dsh-skill-filesystem` |
+| `skills-en/<nombre>/SKILL.md` | Las ocho skills (edición inglesa); mismos nombres y metadatos que la edición china |
+| `skills/<nombre>/references/` | Detalle con divulgación progresiva: matrices de comandos, tablas de triaje, plantillas |
+| `scripts/install.ps1` | Instalador de Windows de un comando para las cuatro raíces (ambas ediciones de idioma); registra un manifiesto, soporta `-Uninstall`/`-DryRun`/`-Force` |
+| `scripts/install.sh` | El equivalente POSIX (`--uninstall`/`--dry-run`/`--force`) |
+| `provider/` | Bundle proveedor instalable por npm (declara `dsh.bundle`; embebe ambas ediciones en `pack/` vía `prepack`; `language: zh\|en`); registra el proveedor de skills Y la puerta `plugin_vet` vía `ctx.effect()`, falla en alto ante un `skillsDir` inválido |
+| `provider/src/vet/` | El motor de escaneo `plugin_vet` sin dependencias (licencia / SBOM / bloqueo de commit / patrones maliciosos / informe de riesgo) |
+| `package.json` | Manifest de bundle raíz: declara `dsh.bundle.patch` (→ `provider/cordis.patch.yml`) y los datos de intake `dshWorkshop` |
+| `verify/verify-skill-pack.mts` | Verificación headless contra el parser oficial, la herramienta `skill` real y el runtime de herramientas real — 25 comprobaciones sobre ambas ediciones |
+| `VERSION` | Fuente única de versión; cada `metadata.version` de SKILL.md y `provider/package.json` debe coincidir con ella (aplicado por CI) |
+| `docs/` | Comprobación de conflictos del ecosistema, lista de publicación, planes de mejora y demos de `plugin_vet` |
+| `CHANGELOG.md` / `SECURITY.md` / `CONTRIBUTING.md` | Historial de versiones, política de reporte de vulnerabilidades y reglas de contribución/verificación |
+| `.github/workflows/verify.yml` | CI: verificación de 25 comprobaciones + ejercicio de instaladores + build/pack del provider (Ubuntu y Windows) |
+| `.github/dependabot.yml` | Actualizaciones semanales de dependencias para el provider y GitHub Actions |
+| `LICENSE` | Apache License 2.0 |
 
 ## Configuration
 
@@ -158,13 +200,40 @@ Todas las opciones son campos Schemastery `Config` (modificables desde cordis.ym
 
 ## Verification
 
-`verify/verify-skill-pack.mts` importa el parser **oficial** `dsh-skill-filesystem`, la herramienta **real** `skill` y el runtime de herramientas **real** desde un checkout local de `deepseek-harness` y ejecuta 25 comprobaciones sobre ambas ediciones: estructura y validez del frontmatter, cero conflictos de nombre con skills oficiales/comunitarias, cargas completas vía `ctx.skills.get()`, comportamiento de `plugin_vet` a través del runtime de herramientas real, el invariante de cero dependencias y la redacción de informes. Las mismas 25 comprobaciones se ejecutan en GitHub vía `.github/workflows/verify.yml` (Ubuntu y Windows).
+`verify/verify-skill-pack.mts` importa el parser **oficial** `dsh-skill-filesystem`, la herramienta **real** `skill` y el runtime de herramientas **real** desde un checkout local de `deepseek-harness` y ejecuta 25 comprobaciones sobre ambas ediciones de idioma:
+
+1. Estructura: ambas ediciones presentes, 8 bundles de directorio en cada edición, sin skills planas sueltas, `name` del frontmatter coincide con el directorio, ≤ 300 líneas, `references/` conectado, `metadata.version` sincronizado con el archivo `VERSION`
+2. Sin conflictos de nombre con las skills oficiales de `.agents/skills/` (derivadas del checkout en tiempo de ejecución) ni con paquetes de skills comunitarios conocidos
+3–6. Por edición (china `skills/`, inglesa `skills-en/`): descubrimiento por el registro a través del proveedor oficial, cargas completas vía `ctx.skills.get()`, la herramienta `skill` real devolviendo `<skill_content>` (nombres desconocidos/inválidos rechazados), y el catálogo de sesión conteniendo solo `name` + `description` — `whenToUse` queda fuera del catálogo del modelo (diseño oficial)
+7. 13 fixtures de frontmatter inválido ejercitan las reglas oficiales fail-closed (campos faltantes, claves camel-case heredadas, valores no booleanos, nombres no kebab, directorios anidados, desajuste de nombre); las skills en archivo plano cargan y el anidado `**/SKILL.md` no se descubre
+8. El plugin proveedor opcional monta la edición china y la inglesa vía `ctx.effect()`, se desmonta limpiamente y rechaza la mala configuración (`skillsDir` vacío o inexistente)
+9–15. Comprobaciones de auto-endurecimiento: paridad estructural zh↔en, cableado de referencias (sin archivos colgantes/huérfanos), sincronización de versión del provider, rangos de raíces de skills documentados frente a las constantes oficiales, patrones `grep -E` portables a POSIX, auto-comprobación de secretos, lista de verificación de publicación segura en UTF-8
+16–19. `plugin_vet` a través del runtime de herramientas real: se registra en `ctx.tools`; el fixture conforme pasa; el fixture sin licencia falla y cita `dependency-audit §3`; el fixture postinstall malicioso falla (scripts/exfil/ofuscación, citando `supply-chain-review §1`); la puerta bloquea la instalación bajo `policy: deny`
+20. El motor de escaneo no tiene dependencias (solo builtins `node:` e imports relativos)
+21. La redacción de informes mantiene fuera del resultado renderizado los textos con forma de secreto
+
+```powershell
+# local: resuelve automáticamente el checkout del harness junto al pack, o apúntalo explícitamente
+$env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
+& D:\deepseek-harness\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
+# All 25 checks passed for dsh-skill-pack-security.
+```
+
+Las mismas 25 comprobaciones se ejecutan en GitHub en cada push mediante `.github/workflows/verify.yml` — en Ubuntu y Windows — más un ejercicio de `install.sh`/`install.ps1` y un build/pack independiente del provider que comprueba que el tarball lleva ambas ediciones embebidas y el parche del bundle.
 
 ## Known limitations
 
 - **No es una herramienta de auditoría completa.** `plugin_vet` es una puerta de confianza previa a la instalación; no puede sustituir una auditoría manual de principio a fin.
 - **Solo escaneo estático.** Las señales de patrones maliciosos y mantenimiento son heurísticas sobre el paquete distribuido, no análisis dinámico.
 - **Una edición por raíz.** Las skills del mismo nombre en una raíz se resuelven por rango, de modo que solo una edición entra en un catálogo de sesión.
+
+## Roadmap
+
+- `dsh-skill-pack-data-engineering` — pipelines de datos, calidad de datos, listas de verificación ETL (misma plantilla)
+- `dsh-skill-pack-oss-collab` — etiqueta de PR, triaje de issues, flujos de mantenedor
+- `dsh-skill-pack-performance` — metodología de profiling, criterios de benchmark, listas de regresión
+- Más skills dentro de este pack (mismo límite de skill puro): `sbom-lifecycle` (flujos de generación/envejecimiento/importación de SBOM), `pen-test-review` (alcance de compromisos autorizados y revisión de informes), `compliance-audit` (recorridos ASVS/NIST-CSF)
+- Mantén frescos los artefactos de demo de `plugin_vet` (`docs/demos/run-demos.mjs`) y precisa la tabla de complementariedad con `dsh-plugin-check`
 
 ## Development
 
@@ -182,6 +251,29 @@ tsx verify/verify-skill-pack.mts    # verificación headless de 25 comprobacione
 ## Contributors
 
 - [@PerryLink](https://github.com/PerryLink) — autor y mantenedor: las ocho skills en ambas ediciones, los instaladores, la suite de verificación, el bundle del provider, CI y la documentación.
+
+## PerryLink DSH Plugin Family
+
+Este proyecto es uno de los [plugins de DeepSeek Harness](https://github.com/PerryLink) mantenidos por [PerryLink](https://github.com/PerryLink). Si este te ayuda, los demás probablemente también:
+
+| Plugin | En una línea |
+|---|---|
+| [dsh-mask](https://github.com/PerryLink/dsh-mask) | Middleware de enmascaramiento de PII: anonimiza en el límite del modelo, restaura en la capa de visualización |
+| [dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel) | Panel MCP de solo lectura: comando /mcp + pestaña de ajustes con estado, herramientas y errores |
+| [dsh-doublecheck](https://github.com/PerryLink/dsh-doublecheck) | Guardia de disciplina de ingeniería: interrogatorio de requisitos, puertas de pruebas, revisión adversaria |
+| [dsh-background-agents](https://github.com/PerryLink/dsh-background-agents) | Agentes hijos en segundo plano con barra lateral web, mensajería e interrupción |
+| [dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions) | Diagnóstico, formato, autocompletado, acciones de código y renombrado LSP |
+| [dsh-output-styles](https://github.com/PerryLink/dsh-output-styles) | Cambio de estilo en tiempo de ejecución equivalente a outputStyles de Claude Code |
+| [dsh-checkpoint-rewind](https://github.com/PerryLink/dsh-checkpoint-rewind) | Equivalente a /rewind de Claude Code: snapshots, forks de sesión, restauración de un clic |
+| [dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules) | Reglas de permisos declarativas allow/deny/ask estilo Claude Code, con auditoría |
+| [dsh-auto-review](https://github.com/PerryLink/dsh-auto-review) | Autorrevisión de segundo modelo en la cadena de aprobación, fail-closed por defecto |
+| [dsh-memento](https://github.com/PerryLink/dsh-memento) | Memoria entre sesiones con aprobación: seam ctx.memory + SQLite + herramienta memory |
+| **[dsh-skill-pack-security](https://github.com/PerryLink/dsh-skill-pack-security)** | Paquete de skills de auditoría de seguridad: escaneo de secretos, revisión de dependencias y cadena de suministro |
+| [dsh-session-pin](https://github.com/PerryLink/dsh-session-pin) | Fija sesiones en la barra lateral web con orden duradero |
+| [dsh-composer-history](https://github.com/PerryLink/dsh-composer-history) | Historial de entrada estilo terminal para el compositor web: flechas, búsqueda Ctrl+R |
+| [dsh-github](https://github.com/PerryLink/dsh-github) | Integración de PR/issues de GitHub para DSH, toda escritura con aprobación |
+| [dsh-plugin-guide](https://github.com/PerryLink/dsh-plugin-guide) | Base de conocimiento de desarrollo de plugins como skill de agente bajo demanda |
+| [dsh-claude-move](https://github.com/PerryLink/dsh-claude-move) | Migra sesiones, memoria, skills y CLAUDE.md de Claude Code a DSH |
 
 ## License
 
