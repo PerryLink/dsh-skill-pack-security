@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-08-17
+
+### Fixed
+
+- Provider tarball was incomplete: `package.json#files` shipped only `lib/index.js` + type declarations, while `lib/index.js` imports `./vet/config.js` and `./vet/tool.js` — every published provider failed to load with `Cannot find module '…/lib/vet/config.js'` (reported as `Cannot find package '@perrylink/dsh-skill-pack-security-provider'` by install-time loaders). The `files` whitelist now ships `lib/vet/**`.
+- CI pack smoke now asserts `package/lib/vet/config.js` inside the tarball so the gate engine can never silently drop out of a release again.
+
 ## [2.0.0] - 2026-08-16
 
 ### Added

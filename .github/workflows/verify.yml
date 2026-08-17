@@ -147,6 +147,8 @@ jobs:
         run: |
           test -f provider/lib/index.js
           test -f provider/lib/types/index.d.ts
+          test -f provider/lib/vet/config.js
+          test -f provider/lib/vet/tool.js
 
       - name: Pack smoke
         working-directory: provider
@@ -157,6 +159,8 @@ jobs:
         run: |
           tar -tzf .tmp/*.tgz | grep -q 'package/lib/index.js'
           tar -tzf .tmp/*.tgz | grep -q 'package/lib/types/index.d.ts'
+          tar -tzf .tmp/*.tgz | grep -q 'package/lib/vet/config.js'
+          tar -tzf .tmp/*.tgz | grep -q 'package/lib/vet/tool.js'
           tar -tzf .tmp/*.tgz | grep -q 'package/pack/skills/security-audit/SKILL.md'
           tar -tzf .tmp/*.tgz | grep -q 'package/pack/skills-en/security-audit/SKILL.md'
           tar -tzf .tmp/*.tgz | grep -q 'package/cordis.patch.yml'

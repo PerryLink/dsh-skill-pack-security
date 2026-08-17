@@ -21,7 +21,7 @@
     "url": "git+https://github.com/PerryLink/dsh-skill-pack-security.git"
   },
   "dependencies": {
-    "@perrylink/dsh-skill-pack-security-provider": "2.0.0"
+    "@perrylink/dsh-skill-pack-security-provider": "2.0.1"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6"
