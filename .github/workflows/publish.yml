@@ -11,7 +11,50 @@ permissions:
   contents: read
 
 jobs:
+  # Tag pushes do not trigger verify.yml (it runs on main pushes and PRs),
+  # so the release tag used to bypass the 25-check skill-pack verification.
+  # Replicate the verify job here and gate publishing on it.
+  verify:
+    name: skill pack verification (25 checks) before publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout skill pack
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Checkout deepseek-harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: deepseek-ai/deepseek-harness
+          # Pinned for reproducible verification; bump in the same PR as any
+          # peer-dependency change (mirrors verify.yml).
+          ref: 47f943859bef60e4160492346772ded9b24f765a
+          path: harness
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
+        with:
+          version: 11.7.0
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: harness/pnpm-lock.yaml
+
+      - name: Install harness workspace
+        working-directory: harness
+        run: pnpm install --frozen-lockfile
+
+      - name: Run skill pack verification
+        working-directory: harness
+        env:
+          DSH_HARNESS_CHECKOUT: ${{ github.workspace }}/harness
+        run: pnpm exec tsx "${{ github.workspace }}/verify/verify-skill-pack.mts"
+
   publish-provider:
+    needs: verify
     runs-on: ubuntu-latest
     steps:
       - name: Checkout skill pack
