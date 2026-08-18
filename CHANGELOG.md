@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-08-18
+
+### Added
+
+- `plugin_vet` gains the `data-responsibility` check (the Claude policy-scan dimensions as deterministic rules; a model-assisted stage is the documented future upgrade): ungated listeners on sensitive seams, outbound endpoints without README telemetry/privacy disclosure, description-behavior keyword coverage, and embedded instruction-override payloads in shipped text — every finding cites the `prompt-injection-review` skill for the manual deep-dive. Config `vet.dataResponsibility` (default true) disables it per deployment; the `source` risk dimension now folds it in (weights source 0.5 / commit-lock 0.3 / data-responsibility 0.2).
+- The scanner's injection-pattern literals are runtime-fragmented so the shipped scanner source itself does not trip content filters (a security scanner ships patterns, never payloads).
+
 ## [2.0.2] - 2026-08-17
 
 ### Fixed

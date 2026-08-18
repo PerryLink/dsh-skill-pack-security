@@ -34,7 +34,7 @@
 `dsh-skill-pack-security` is a **skill pack + supply-chain gate** for DeepSeek Harness. It ships eight security methodologies as `SKILL.md` bundles that the model discovers in its session catalog and loads on demand with the `skill` tool, plus the automated `plugin_vet` pre-install scanner. **The skills teach the methodology; the plugin executes the static checks.**
 
 - **Eight skills, two editions** — every skill ships with identical names and metadata in `skills/` (Chinese) and `skills-en/` (English); install one language per root.
-- **`plugin_vet` gate** — a zero-dependency scanner (license / SBOM / commit pinning / malicious patterns / five-dimension risk card) registered by the optional `provider/` plugin on `ctx.tools`.
+- **`plugin_vet` gate** — a zero-dependency scanner (license / SBOM / commit pinning / malicious patterns / data-responsibility review / five-dimension risk card) registered by the optional `provider/` plugin on `ctx.tools`.
 - **Findings cite the skills** — every finding points to the matching skill section (for example `supply-chain-review §1`) so the agent can continue the manual audit.
 - **Executable by a model** — each skill step is a real command (`gitleaks`, `trivy`, `pnpm audit`, `npm view`, `git …`) with an expected-output sample and an exit-code criterion.
 
@@ -73,6 +73,7 @@ Each bundle keeps its main file ≤ 300 lines (progressive disclosure; details l
 - **SBOM** — extracts the dependency tree with versions from the lockfile (pnpm/npm/yarn).
 - **Commit locking** — install-manifest refs and workflow actions must be immutable 40-hex commit SHAs; `@tag`/branch refs are flagged as mutable.
 - **Malicious patterns** — lifecycle scripts (`preinstall`/`install`/`postinstall`), network-exfiltration domains, and obfuscated/encoded payloads in shipped code.
+- **Data-responsibility review** — the policy-scan dimensions as deterministic rules: ungated listeners on sensitive seams (`agent/pre-step`, `tools/pre-execute`, `session/event`, …), outbound endpoints without README telemetry/privacy disclosure, description-behavior keyword coverage, and embedded instruction-override payloads in shipped text (skills, docs, prompts, tests). Every finding cites `prompt-injection-review` for the manual deep-dive; disable per deployment with `vet.dataResponsibility: false`. A model-assisted review stage is the documented future upgrade.
 - **Five-dimension risk report** — license / source / dependencies / build scripts / maintenance, each 0–100, folded into an overall verdict: PASS, WARN, or FAIL.
 
 **Install gate.** The verdict feeds an installation gate — `gate.policy: warn` (default, non-blocking) prints a warning on FAIL; `gate.policy: deny` blocks the installation:
@@ -92,7 +93,7 @@ Each bundle keeps its main file ≤ 300 lines (progressive disclosure; details l
 | | `dsh-plugin-check` (36 checks) | `plugin_vet` (this repo) |
 |---|---|---|
 | Question answered | Is this plugin well-formed and contract-compliant? | Is this package safe to install? |
-| Looks at | Plugin code, schema, registrations, tool contracts | LICENSE, lockfile, install refs/actions, lifecycle scripts, exfil/obfuscation, maintenance |
+| Looks at | Plugin code, schema, registrations, tool contracts | LICENSE, lockfile, install refs/actions, lifecycle scripts, exfil/obfuscation, maintenance, data-responsibility (hooks scope, telemetry disclosure, description-behavior, embedded injection payloads) |
 | Verdict | Pass/fail per check | PASS / WARN / FAIL + gate |
 | When | Plugin development or review | Before `dsh plugin add`, PR review, CI supply-chain gate |
 | Blocking | CI gate (non-zero on violations) | Configurable: `warn` (default) or `deny` |

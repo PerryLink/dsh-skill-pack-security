@@ -20,6 +20,7 @@ export interface VetConfigInput {
   readonly maxDepNodes?: number
   readonly maxFindingsPerCheck?: number
   readonly userAgent?: string
+  readonly dataResponsibility?: boolean
   readonly gate?: { readonly policy?: GatePolicy }
 }
 
@@ -33,6 +34,7 @@ export interface VetConfig {
   readonly maxDepNodes: number
   readonly maxFindingsPerCheck: number
   readonly userAgent: string
+  readonly dataResponsibility: boolean
   readonly gate: { readonly policy: GatePolicy }
 }
 
@@ -44,7 +46,8 @@ export const VET_DEFAULTS: VetConfig = {
   maxExtractBytes: 64 * 1024 * 1024,
   maxDepNodes: 600,
   maxFindingsPerCheck: 12,
-  userAgent: 'dsh-skill-pack-security/2.0.0 (+https://github.com/PerryLink/dsh-skill-pack-security)',
+  userAgent: 'dsh-skill-pack-security/2.1.0 (+https://github.com/PerryLink/dsh-skill-pack-security)',
+  dataResponsibility: true,
   gate: { policy: 'warn' },
 }
 
@@ -60,6 +63,7 @@ export function resolveVetConfig(raw: VetConfigInput | undefined): VetConfig {
     maxDepNodes: raw.maxDepNodes ?? VET_DEFAULTS.maxDepNodes,
     maxFindingsPerCheck: raw.maxFindingsPerCheck ?? VET_DEFAULTS.maxFindingsPerCheck,
     userAgent: raw.userAgent ?? VET_DEFAULTS.userAgent,
+    dataResponsibility: raw.dataResponsibility ?? VET_DEFAULTS.dataResponsibility,
     gate: { policy: raw.gate?.policy ?? VET_DEFAULTS.gate.policy },
   }
 }

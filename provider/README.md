@@ -23,6 +23,7 @@ This directory is an **optional** DSH plugin: it registers the pack's skill dire
 | `language` | `'zh' \| 'en'` | `'zh'` | Which edition to publish: the Chinese `skills/` or the English `skills-en/`. Ignored when `skillsDir` is set. |
 | `skillsDir` | string | — | Explicit skills root; overrides the `language`-derived default. Must exist and contain at least one `<skill>/SKILL.md` bundle, otherwise the plugin refuses to load. |
 | `watch` | boolean | `false` | Whether to watch the packaged directory; packaged content is static. |
+| `vet.dataResponsibility` | boolean | `true` | Run the `plugin_vet` data-responsibility review (ungated sensitive-seam hooks, undisclosed outbound endpoints, description-behavior coverage, embedded instruction-override payloads). Full `vet.*` documentation lives in the root README. |
 
 ### Mounting (any one)
 
@@ -67,6 +68,7 @@ Check 8 of `../verify/verify-skill-pack.mts` exercises this plugin: mounting the
 | `language` | `'zh' \| 'en'` | `'zh'` | 发布哪个语言版：中文 `skills/` 或英文 `skills-en/`；设置了 `skillsDir` 时忽略 |
 | `skillsDir` | string | — | 显式指定技能根目录，覆盖 `language` 推导的默认值；必须存在且含至少一个 `<skill>/SKILL.md` 包，否则插件拒绝加载 |
 | `watch` | boolean | `false` | 是否监听包内技能目录；静态内容无需监听 |
+| `vet.dataResponsibility` | boolean | `true` | 运行 `plugin_vet` 数据责任审查（无门控敏感监听、未披露出站端点、描述-行为覆盖率、随包文本中的指令覆盖类注入载荷）；完整 `vet.*` 文档见根 README |
 
 ### 挂载方式（任选）
 

@@ -86,10 +86,17 @@ function jsonClean(value: unknown): unknown {
 /** Dimension → checks contributing to it. */
 const DIMENSION_CHECKS: Record<Dimension, CheckId[]> = {
   license: ['license'],
-  source: ['source', 'commit-lock'],
+  source: ['source', 'commit-lock', 'data-responsibility'],
   dependencies: ['sbom'],
   'build-scripts': ['install-scripts', 'network-exfil', 'obfuscation'],
   maintenance: ['maintenance'],
+}
+
+/** Weight factors per check inside the `source` dimension (they sum to 1). */
+const SOURCE_WEIGHTS: Partial<Record<CheckId, number>> = {
+  source: 0.5,
+  'commit-lock': 0.3,
+  'data-responsibility': 0.2,
 }
 
 /** Build the five-dimension scorecard from executed checks. */
@@ -109,7 +116,7 @@ function scoreDimensions(checks: VetCheck[]): VetScores {
         return check.score * factor
       }
       if (dim === 'source') {
-        return check.score * (check.id === 'source' ? 0.5 : 0.5)
+        return check.score * (SOURCE_WEIGHTS[check.id] ?? 1)
       }
       return check.score
     })
@@ -132,6 +139,9 @@ function scoreDimensions(checks: VetCheck[]): VetScores {
 /** Run the whole pipeline for one tool call. */
 export async function runVet(args: VetArgs, config: VetConfig, lang: Lang, signal: AbortSignal | undefined): Promise<VetReport> {
   const ids = requestedChecks(args)
+  // The data-responsibility review can be disabled per deployment; an explicit
+  // per-call request then simply does not run (documented in the tool help).
+  const effectiveIds = config.dataResponsibility ? ids : ids.filter(id => id !== 'data-responsibility')
   const policy: GatePolicy = args.policy === undefined || args.policy === 'inherit' ? config.gate.policy : args.policy
   const now = Date.now()
   const fetchedAt = new Date(now).toISOString()
@@ -190,7 +200,7 @@ export async function runVet(args: VetArgs, config: VetConfig, lang: Lang, signa
       localHead,
       now,
     },
-    ids,
+    effectiveIds,
   )
   const checks = results.map(result => result.check)
   const sbom = results.find(result => result.sbom !== undefined)?.sbom

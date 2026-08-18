@@ -132,7 +132,7 @@ export function buildVetTool(config: VetConfig, lang: Lang) {
   return defineTool({
     name: 'plugin_vet',
     description:
-      'Supply-chain security gate for DSH plugin repositories/packages. Scans a target (GitHub `owner/repo[@ref]`, an `npm:name@version` package, or a local path) and returns a five-dimension risk report: license, source, dependencies, build scripts, maintenance. Checks: LICENSE/SPDX detection (missing/unknown/NOASSERTION flagged), SBOM dependency tree, 40-hex commit pinning of install references, dangerous postinstall/preinstall scripts, network-exfiltration domains, obfuscated code, source trust signals, maintenance status. Each finding cites the matching dsh-skill-pack-security skill section for a manual deep-dive. Use it BEFORE installing any plugin (`dsh plugin add`); a FAIL verdict warns or blocks depending on the configured gate policy (default warn). Read-only: never modifies the target. Respects timeouts; bounded network use.',
+      'Supply-chain security gate for DSH plugin repositories/packages. Scans a target (GitHub `owner/repo[@ref]`, an `npm:name@version` package, or a local path) and returns a five-dimension risk report: license, source, dependencies, build scripts, maintenance. Checks: LICENSE/SPDX detection (missing/unknown/NOASSERTION flagged), SBOM dependency tree, 40-hex commit pinning of install references, dangerous postinstall/preinstall scripts, network-exfiltration domains, obfuscated code, source trust signals, maintenance status, and the data-responsibility review (ungated sensitive-seam hooks, undisclosed outbound endpoints, description-behavior coverage, embedded instruction-override payloads in shipped text). Each finding cites the matching dsh-skill-pack-security skill section for a manual deep-dive. Use it BEFORE installing any plugin (`dsh plugin add`); a FAIL verdict warns or blocks depending on the configured gate policy (default warn). Read-only: never modifies the target. Respects timeouts; bounded network use.',
     parameters: {
       target: {
         type: 'string',
@@ -146,7 +146,7 @@ export function buildVetTool(config: VetConfig, lang: Lang) {
       checks: {
         type: 'array',
         items: { type: 'string' },
-        description: 'Optional subset of check ids: license, sbom, commit-lock, install-scripts, network-exfil, obfuscation, source, maintenance. Default: all.',
+        description: 'Optional subset of check ids: license, sbom, commit-lock, install-scripts, network-exfil, obfuscation, source, maintenance, data-responsibility. Default: all.',
       },
       policy: {
         type: 'string',

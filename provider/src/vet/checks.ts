@@ -13,6 +13,7 @@ import { isCommitRef, type GitHubMeta, type NpmMeta, type ResolvedTarget } from 
 import { CHECK_NAME, SKILL_REF, type Lang } from './skills.js'
 import type { VetConfig } from './config.js'
 import type { ScannedFile } from './walk.js'
+import { dataResponsibilityFindings, dataResponsibilityScore } from './data-responsibility.js'
 import type { CheckId, VetCheck, VetFinding, VetSbom } from './vocabulary.js'
 
 /** Shared inputs every check reads. */
@@ -748,6 +749,29 @@ export function maintenanceCheck(inputs: CheckInputs): VetCheck {
   return makeCheck('maintenance', score, findings, lang, config)
 }
 
+// --- data-responsibility ------------------------------------------------------
+
+/** README text across the shipped files (the telemetry-disclosure corpus). */
+function readmeTextOf(files: ScannedFile[]): string {
+  return files
+    .filter(file => file.text !== null && /^readme(\.|$)/i.test(file.path.split('/').pop() ?? ''))
+    .map(file => file.text)
+    .join('\n')
+}
+
+export function dataResponsibilityCheck(inputs: CheckInputs): VetCheck {
+  const { files, manifest, lang, config } = inputs
+  const findings = dataResponsibilityFindings(files, manifest.description, readmeTextOf(files), lang, config)
+  if (findings.length === 0) {
+    return makeCheck('data-responsibility', 100, [{
+      level: 'info',
+      message: lang === 'zh' ? '随包文本未发现无门控敏感监听、未披露出站端点或注入载荷特征' : 'no ungated sensitive-seam listeners, undisclosed outbound endpoints, or injection-payload indicators in shipped text',
+      skill: SKILL_REF['data-responsibility'],
+    }], lang, config)
+  }
+  return makeCheck('data-responsibility', dataResponsibilityScore(findings), findings, lang, config)
+}
+
 // --- runner ----------------------------------------------------------------------------
 
 /** Run the requested checks over shared inputs. */
@@ -763,6 +787,7 @@ export function runChecks(inputs: CheckInputs, ids: readonly CheckId[]): CheckRe
       case 'obfuscation': results.push({ check: obfuscationCheck(inputs) }); break
       case 'source': results.push({ check: sourceCheck(inputs) }); break
       case 'maintenance': results.push({ check: maintenanceCheck(inputs) }); break
+      case 'data-responsibility': results.push({ check: dataResponsibilityCheck(inputs) }); break
     }
   }
   return results

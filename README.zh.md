@@ -34,7 +34,7 @@
 `dsh-skill-pack-security` 是面向 DeepSeek Harness 的**技能包 + 供应链门禁**。它把 8 套安全方法论做成 `SKILL.md` 技能（模型在会话目录中发现它们，用 `skill` 工具按需加载），并附自动化安装前扫描器 `plugin_vet`。**技能教方法论，插件执行静态检查。**
 
 - **八个技能、双语双套** —— 每个技能以相同名称与元数据提供 `skills/`（中文）与 `skills-en/`（英文）两个版本；每个根目录只装一种语言。
-- **`plugin_vet` 门禁** —— 由可选 `provider/` 插件注册到 `ctx.tools` 的零依赖扫描器（许可证 / SBOM / commit 锁定 / 恶意模式 / 五维风险卡片）。
+- **`plugin_vet` 门禁** —— 由可选 `provider/` 插件注册到 `ctx.tools` 的零依赖扫描器（许可证 / SBOM / commit 锁定 / 恶意模式 / 数据责任审查 / 五维风险卡片）。
 - **发现引用技能** —— 每个发现指向对应技能章节（如 `supply-chain-review §1`），agent 可继续人工审计。
 - **可被模型执行** —— 每个技能步骤都是真实命令（`gitleaks`、`trivy`、`pnpm audit`、`npm view`、`git …`），附预期输出样例与退出码判据。
 
@@ -73,6 +73,7 @@ Claude Code 生态 3000+ 技能已经证明这种形态的分发价值。DSH 的
 - **SBOM** —— 从锁文件（pnpm/npm/yarn）提取带版本的依赖树。
 - **commit 锁定** —— 安装清单 ref 与 workflow action 必须是不可变的 40 位 commit SHA；`@tag`/分支 ref 会被标记为可变。
 - **恶意模式** —— 生命周期脚本（`preinstall`/`install`/`postinstall`）、网络回传域名、发布代码中的混淆/编码载荷。
+- **数据责任审查** —— 策略扫描三维的确定性规则版：敏感 seam（`agent/pre-step`、`tools/pre-execute`、`session/event` 等）上的无门控监听、README 未披露出站端点、描述-行为关键词覆盖率、随包文本中的指令覆盖类注入载荷（技能/文档/提示词/测试）。每条发现都指向 `prompt-injection-review` 供人工深审；可用 `vet.dataResponsibility: false` 按部署关闭。模型辅助审查阶段为已文档化的后续升级。
 - **五维风险报告** —— 许可证 / 来源 / 依赖 / 构建脚本 / 维护状态，各 0–100 分，汇总为整体判定：PASS、WARN 或 FAIL。
 
 **安装前门禁。** 判定结果进入安装门禁——`gate.policy: warn`（默认，不阻断）在 FAIL 时打印警告；`gate.policy: deny` 直接阻断安装：
@@ -92,7 +93,7 @@ Claude Code 生态 3000+ 技能已经证明这种形态的分发价值。DSH 的
 | | `dsh-plugin-check`（36 项检测） | `plugin_vet`（本仓库） |
 |---|---|---|
 | 回答的问题 | 这个插件是否结构良好、符合契约？ | 这个包安装是否安全？ |
-| 检查对象 | 插件代码、Schema、注册、工具契约 | LICENSE、锁文件、安装 ref/action、生命周期脚本、回传/混淆、维护状态 |
+| 检查对象 | 插件代码、Schema、注册、工具契约 | LICENSE、锁文件、安装 ref/action、生命周期脚本、回传/混淆、维护状态、数据责任（监听作用域、遥测披露、描述-行为、嵌入式注入载荷） |
 | 判定 | 逐项 pass/fail | PASS / WARN / FAIL + 门禁 |
 | 时机 | 插件开发或评审时 | `dsh plugin add` 前、PR 评审、CI 供应链门禁 |
 | 阻断 | CI 门禁（有违规即非零退出） | 可配置：`warn`（默认）或 `deny` |

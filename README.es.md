@@ -34,7 +34,7 @@
 `dsh-skill-pack-security` es un **paquete de skills + puerta de cadena de suministro** para DeepSeek Harness. Distribuye ocho metodologías de seguridad como bundles `SKILL.md` que el modelo descubre en su catálogo de sesión y carga bajo demanda con la herramienta `skill`, más el escáner automático `plugin_vet` previo a la instalación. **Las skills enseñan la metodología; el plugin ejecuta las comprobaciones estáticas.**
 
 - **Ocho skills, dos ediciones** — cada skill se distribuye con nombres y metadatos idénticos en `skills/` (chino) y `skills-en/` (inglés); instala un idioma por raíz.
-- **Puerta `plugin_vet`** — un escáner sin dependencias (licencia / SBOM / pin de commit / patrones maliciosos / tarjeta de riesgo de cinco dimensiones) registrado por el plugin opcional `provider/` en `ctx.tools`.
+- **Puerta `plugin_vet`** — un escáner sin dependencias (licencia / SBOM / pin de commit / patrones maliciosos / revisión de responsabilidad de datos / tarjeta de riesgo de cinco dimensiones) registrado por el plugin opcional `provider/` en `ctx.tools`.
 - **Los hallazgos citan las skills** — cada hallazgo apunta a la sección de skill correspondiente (por ejemplo `supply-chain-review §1`) para continuar la auditoría manual.
 - **Ejecutable por un modelo** — cada paso de skill es un comando real (`gitleaks`, `trivy`, `pnpm audit`, `npm view`, `git …`) con muestra de salida esperada y criterio de código de salida.
 

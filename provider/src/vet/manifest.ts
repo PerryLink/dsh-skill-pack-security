@@ -21,6 +21,7 @@ export interface Manifest {
   readonly optionalDependencies: Record<string, string>
   readonly peerDependencies: Record<string, string>
   readonly repository: string
+  readonly description: string
   readonly present: boolean
 }
 
@@ -61,7 +62,7 @@ export function parseManifest(files: ScannedFile[]): Manifest {
   const empty: Manifest = {
     name: '', version: '', license: '', scripts: {},
     dependencies: {}, devDependencies: {}, optionalDependencies: {}, peerDependencies: {},
-    repository: '', present: false,
+    repository: '', description: '', present: false,
   }
   if (hit === undefined || hit.text === null) return empty
   let json: unknown
@@ -104,6 +105,7 @@ export function parseManifest(files: ScannedFile[]): Manifest {
     optionalDependencies: record(pkg['optionalDependencies']),
     peerDependencies: record(pkg['peerDependencies']),
     repository: repositoryString,
+    description: typeof pkg['description'] === 'string' ? pkg['description'] : '',
     present: true,
   }
 }

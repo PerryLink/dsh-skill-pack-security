@@ -22,6 +22,7 @@ export const SKILL_REF: Record<CheckId, string> = {
   obfuscation: 'supply-chain-review §1',
   source: 'dependency-audit §4.3',
   maintenance: 'security-audit §3',
+  'data-responsibility': 'prompt-injection-review §2',
 }
 
 /** check id → human-readable check name per language. */
@@ -35,6 +36,7 @@ export const CHECK_NAME: Record<Lang, Record<CheckId, string>> = {
     obfuscation: '混淆代码检测',
     source: '来源可信信号',
     maintenance: '维护状态',
+    'data-responsibility': '数据责任审查',
   },
   en: {
     license: 'License scan',
@@ -45,6 +47,7 @@ export const CHECK_NAME: Record<Lang, Record<CheckId, string>> = {
     obfuscation: 'Obfuscation scan',
     source: 'Source trust signals',
     maintenance: 'Maintenance status',
+    'data-responsibility': 'Data-responsibility review',
   },
 }
 

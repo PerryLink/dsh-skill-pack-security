@@ -30,6 +30,7 @@ export type CheckId =
   | 'obfuscation'
   | 'source'
   | 'maintenance'
+  | 'data-responsibility'
 
 export const ALL_CHECK_IDS: readonly CheckId[] = [
   'license',
@@ -40,6 +41,7 @@ export const ALL_CHECK_IDS: readonly CheckId[] = [
   'obfuscation',
   'source',
   'maintenance',
+  'data-responsibility',
 ]
 
 /** Finding severity: fail blocks the check, warn downgrades, info is an observation. */
