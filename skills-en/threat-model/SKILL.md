@@ -4,7 +4,7 @@ description: 'Lightweight threat modeling for new features/systems: fix the targ
 whenToUse: 'Use when the user asks for threat modeling of a new feature/system, design-stage security review, STRIDE analysis, attack-tree analysis, or wants security considered up front at design time. Pure implementation detail discussions and changes unrelated to trust boundaries do not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.1.0'
+  version: '2.1.1'
 ---
 
 # Threat modeling (threat-model)

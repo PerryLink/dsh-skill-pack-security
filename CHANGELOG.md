@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-08-19
+
+### Fixed
+
+- The publish workflow now runs the full 25-check skill verification before publishing (`needs: verify`); tag pushes previously bypassed it.
+- Version-pin drift: the root manifest's provider dependency and the README's `vet.userAgent` default now track the provider version (both were left at 2.0.x at 2.1.0).
+
 ## [2.1.0] - 2026-08-18
 
 ### Added

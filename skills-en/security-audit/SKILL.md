@@ -4,7 +4,7 @@ description: 'Repository/software security audit overview: a staged flow of scop
 whenToUse: 'Use when the user asks for a security audit of a code repository or project, an audit plan, staged audit steps, a consolidated findings report, or is unsure which specialist skill to start with. Single-topic tasks (only secrets, only dependencies, only one PR, only injection surfaces) load the matching specialist skill directly and do not trigger this overview.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.1.0'
+  version: '2.1.1'
 ---
 # Security audit overview (security-audit)
 
