@@ -8,6 +8,11 @@ updates:
       dsh-provider:
         patterns:
           - '@deepseek-ai/*'
+    ignore:
+      # @types/node tracks the engines floor (Node 22); major bumps to the
+      # 26.x line would describe APIs the supported runtime does not have.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
