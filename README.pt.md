@@ -24,7 +24,7 @@
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness `0.1.0-rc.6` |
+| Harness | DeepSeek Harness `0.1.0-rc.8` |
 | Node | `^22.19.0 \|\| >=24.0.0` (o runtime do DeepSeek Harness) |
 | Plataformas | Todas (as skills são conteúdo; o provider é um plugin de host) |
 | Modelo | Qualquer (as skills carregam sob demanda com a ferramenta `skill`; `plugin_vet` é determinístico) |

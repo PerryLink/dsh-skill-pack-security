@@ -24,7 +24,7 @@
 
 | सतह | स्थिति |
 |---|---|
-| Harness | DeepSeek Harness `0.1.0-rc.6` |
+| Harness | DeepSeek Harness `0.1.0-rc.8` |
 | Node | `^22.19.0 \|\| >=24.0.0` (DeepSeek Harness का runtime) |
 | प्लेटफ़ॉर्म | सभी (स्किल सामग्री हैं; provider एक host प्लगइन है) |
 | मॉडल | कोई भी (स्किल `skill` टूल से माँग पर लोड होती हैं; `plugin_vet` नियतात्मक है) |

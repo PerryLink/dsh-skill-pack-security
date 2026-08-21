@@ -24,7 +24,7 @@
     "@perrylink/dsh-skill-pack-security-provider": "2.1.1"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.6"
+    "@deepseek-ai/dsh-skill-filesystem": ">=0.1.0-rc.8 <0.2.0"
   },
   "dsh": {
     "bundle": {
@@ -54,7 +54,7 @@
     ],
     "compatibility": {
       "dshVersions": [
-        "0.1.0-rc.6"
+        "0.1.0-rc.8"
       ]
     },
     "capability": {

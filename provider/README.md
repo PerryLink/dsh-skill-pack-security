@@ -39,7 +39,7 @@ plugins:
 
 ### Dependencies, build, and packaging
 
-- peerDependencies: `@deepseek-ai/cordis@^4.0.1`, `@deepseek-ai/dsh-skill-filesystem@0.1.0-rc.6`, `@deepseek-ai/schemastery@^3.18.1` (all published on the npm registry — the provider installs and builds standalone).
+- peerDependencies: `@deepseek-ai/cordis@^4.0.1`, `@deepseek-ai/dsh-skill-filesystem@>=0.1.0-rc.8 <0.2.0`, `@deepseek-ai/schemastery@^3.18.1` (all published on the npm registry — the provider installs and builds standalone).
 - Build: `pnpm install --frozen-lockfile && pnpm run build` (`tsc` emits `lib/index.js` + `lib/types/index.d.ts`; the committed `pnpm-lock.yaml` keeps the build reproducible).
 - Packaging: `prepack` runs `scripts/copy-skills.mjs`, which embeds both editions into `pack/`; `files` then ships `lib/`, `pack/`, and `cordis.patch.yml`, so `pnpm pack` produces a self-contained tarball (npm `files` cannot reach outside the package directory, which is why the copy exists).
 - Contract notes: `name` + `inject: ['skills']` + `apply(ctx, config)`; the configuration is a Schemastery schema (no plain objects); `providerName` is unique within the registry layer (`'skill-pack-security'`).
@@ -84,7 +84,7 @@ plugins:
 
 ### 依赖、构建与打包
 
-- peerDependencies：`@deepseek-ai/cordis@^4.0.1`、`@deepseek-ai/dsh-skill-filesystem@0.1.0-rc.6`、`@deepseek-ai/schemastery@^3.18.1`（均已发布在 npm registry，插件可独立安装构建）。
+- peerDependencies：`@deepseek-ai/cordis@^4.0.1`、`@deepseek-ai/dsh-skill-filesystem@>=0.1.0-rc.8 <0.2.0`、`@deepseek-ai/schemastery@^3.18.1`（均已发布在 npm registry，插件可独立安装构建）。
 - 构建：`pnpm install --frozen-lockfile && pnpm run build`（`tsc` 输出 `lib/index.js` + `lib/types/index.d.ts`；提交的 `pnpm-lock.yaml` 保证构建可复现）。
 - 打包：`prepack` 执行 `scripts/copy-skills.mjs` 把双语言版嵌入 `pack/`；`files` 随包发布 `lib/`、`pack/` 与 `cordis.patch.yml`，因此 `pnpm pack` 产出即自包含 tarball（npm `files` 不能包含包外路径，这是拷贝步骤存在的原因）。
 - 契约要点：`name` + `inject: ['skills']` + `apply(ctx, config)`；配置为 Schemastery schema（禁止普通对象）；`providerName` 在注册表层内唯一（'skill-pack-security'）。
