@@ -4,7 +4,7 @@ description: 'Injection-surface review for agent projects: a checklist covering 
 whenToUse: 'Use when reviewing the context injection surfaces of an agent project (AGENTS.md/CLAUDE.md, .agents/skills, tool descriptions, MCP server sources, web-fetch chains), assessing indirect-injection risk, or doing a security review of an agent project. Ordinary code review unrelated to model context does not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.1.1'
+  version: '2.1.2'
 ---
 # Prompt-injection surface review (prompt-injection-review)
 

@@ -3,6 +3,12 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2026-08-21
+
+### Changed
+
+- Upgraded the provider's `@deepseek-ai/dsh-*` dev and peer ranges to `0.1.0-rc.8` (`dsh-skill-filesystem`, `dsh-tools`, `dsh-llm`) and the root manifest's `dsh-skill-filesystem` peer to `>=0.1.0-rc.8 <0.2.0`; the declared DSH compatibility (`dshWorkshop`), the README compatibility tables, and the CI pins (harness checkout `141eb6f` = `dsh-v0.1.0-rc.8`; compat profile `dsh`/`dsh-base`/`dsh-headless` rc.8) all sync to rc8. Verified against the rc8 harness: the 25-check skill-pack verification, the provider build/pack smoke, and a real headless profile run (mock LLM, `SMOKE-OK`) all pass.
+
 ## [2.1.1] - 2026-08-19
 
 ### Fixed

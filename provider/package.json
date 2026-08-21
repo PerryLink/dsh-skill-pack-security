@@ -1,6 +1,6 @@
 {
   "name": "@perrylink/dsh-skill-pack-security-provider",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Provider plugin for dsh-skill-pack-security: registers the pack's skills/ (zh) or skills-en/ (en) edition on ctx.skills AND the plugin_vet supply-chain gate tool on ctx.tools (license/SBOM/commit-lock/malware scans + five-dimension risk card). Ships both skill editions embedded in pack/.",
   "type": "module",
   "main": "lib/index.js",

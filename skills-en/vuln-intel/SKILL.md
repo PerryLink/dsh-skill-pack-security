@@ -4,7 +4,7 @@ description: 'Vulnerability intelligence lookup and triage: query commands for t
 whenToUse: 'Use when the user gives a CVE/GHSA id and asks for details and impact, whether a vulnerability is actively exploited (KEV), its applicability to the current project/dependencies, or a vulnerability intelligence brief. General security learning without a specific id, and discussions unrelated to a specific vulnerability, do not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.1.1'
+  version: '2.1.2'
 ---
 
 # Vulnerability intelligence (vuln-intel)
