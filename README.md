@@ -25,7 +25,7 @@
 
 | Surface | Status |
 |---|---|
-| Harness | DeepSeek Harness `0.1.0-rc.8` |
+| Harness | DeepSeek Harness `0.1.1-rc.2` |
 | Node | `^22.19.0 \|\| >=24.0.0` (the DeepSeek Harness runtime) |
 | Platforms | All (the skills are content; the provider is a host plugin) |
 | Model | Any (skills load on demand via the `skill` tool; `plugin_vet` is deterministic) |
@@ -176,7 +176,7 @@ All tunables are Schemastery `Config` fields (changeable from cordis.yml). `prov
 | `vet.maxExtractBytes` | `67108864` | Extraction byte cap |
 | `vet.maxDepNodes` | `600` | Dependency-tree node cap |
 | `vet.maxFindingsPerCheck` | `12` | Findings cap per check |
-| `vet.userAgent` | `dsh-skill-pack-security/2.1.2 (+https://github.com/PerryLink/dsh-skill-pack-security)` | Fetch user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.1.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | Fetch user-agent |
 | `vet.gate.policy` | `warn` | Install gate: `warn` (non-blocking) or `deny` (block on FAIL) |
 
 ## Tools & surfaces

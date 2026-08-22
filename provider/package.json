@@ -1,6 +1,6 @@
 {
   "name": "@perrylink/dsh-skill-pack-security-provider",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Provider plugin for dsh-skill-pack-security: registers the pack's skills/ (zh) or skills-en/ (en) edition on ctx.skills AND the plugin_vet supply-chain gate tool on ctx.tools (license/SBOM/commit-lock/malware scans + five-dimension risk card). Ships both skill editions embedded in pack/.",
   "type": "module",
   "main": "lib/index.js",
@@ -45,7 +45,7 @@
     ],
     "compatibility": {
       "dshVersions": [
-        "0.1.0-rc.8"
+        "0.1.1-rc.2"
       ]
     },
     "capability": {
@@ -80,9 +80,9 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-llm": "0.1.0-rc.8",
-    "@deepseek-ai/dsh-skill-filesystem": "0.1.0-rc.8",
-    "@deepseek-ai/dsh-tools": "0.1.0-rc.8",
+    "@deepseek-ai/dsh-llm": "0.1.1-rc.2",
+    "@deepseek-ai/dsh-skill-filesystem": "0.1.1-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.1-rc.2",
     "@deepseek-ai/schemastery": "^3.18.1",
     "@types/node": "^26.2.0",
     "typescript": "^7.0.2"

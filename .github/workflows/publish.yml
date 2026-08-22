@@ -28,7 +28,7 @@ jobs:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump in the same PR as any
           # peer-dependency change (mirrors verify.yml).
-          ref: 141eb6fef83422698aef7a981029e843e8161534
+          ref: b150a551b8d465e31e418e1b2eaf5e79bbb7d28e
           path: harness
 
       - name: Set up pnpm
