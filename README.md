@@ -1,6 +1,7 @@
 <div align="center">
 
 # dsh-skill-pack-security
+[![Gitee](https://img.shields.io/badge/Gitee-mirror-c71d23?logo=gitee)](https://gitee.com/perrylink/dsh-skill-pack-security)
 
 **Eight security-audit skills plus an automated plugin supply-chain gate for DeepSeek Harness.**
 
