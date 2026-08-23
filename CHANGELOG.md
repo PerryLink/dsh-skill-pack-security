@@ -3,6 +3,16 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `THIRD_PARTY_NOTICES.md` records the project's third-party posture: the zero-dependency `plugin_vet` engine bundles no third-party code; the GPL-Radar / LLM-detective / Sus-PY assets were evaluated for porting but no licensed public source was found, so the license-scan and malicious-pattern checks remain original implementations; the installed-not-bundled peer dependencies are listed with their MIT licenses. Documented across all five README editions.
+
+### Changed
+
+- Root and provider manifests declare `engines.node` (`^22.19.0 || >=24.0.0`) and `packageManager` (`pnpm@11.7.0`) to match the dsh-plugin family baseline.
+
 ## [2.1.3] - 2026-08-22
 
 ### Changed
