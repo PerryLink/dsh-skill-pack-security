@@ -177,7 +177,7 @@ All tunables are Schemastery `Config` fields (changeable from cordis.yml). `prov
 | `vet.maxExtractBytes` | `67108864` | Extraction byte cap |
 | `vet.maxDepNodes` | `600` | Dependency-tree node cap |
 | `vet.maxFindingsPerCheck` | `12` | Findings cap per check |
-| `vet.userAgent` | `dsh-skill-pack-security/2.1.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | Fetch user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.1.4 (+https://github.com/PerryLink/dsh-skill-pack-security)` | Fetch user-agent |
 | `vet.gate.policy` | `warn` | Install gate: `warn` (non-blocking) or `deny` (block on FAIL) |
 
 ## Tools & surfaces

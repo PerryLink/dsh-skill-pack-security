@@ -176,7 +176,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `vet.maxExtractBytes` | `67108864` | 解压字节上限 |
 | `vet.maxDepNodes` | `600` | 依赖树节点上限 |
 | `vet.maxFindingsPerCheck` | `12` | 每项检查的发现数上限 |
-| `vet.userAgent` | `dsh-skill-pack-security/2.0.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | 下载用的 user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.1.4 (+https://github.com/PerryLink/dsh-skill-pack-security)` | 下载用的 user-agent |
 | `vet.gate.policy` | `warn` | 安装门禁：`warn`（不阻断）或 `deny`（FAIL 时阻断） |
 
 ## Tools & surfaces
