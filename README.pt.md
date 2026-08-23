@@ -157,6 +157,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `.github/workflows/verify.yml` | CI: verificação de 25 itens + exercício dos instaladores + build/pack do provider (Ubuntu e Windows) |
 | `.github/dependabot.yml` | Atualizações semanais de dependências para o provider e GitHub Actions |
 | `LICENSE` | Apache License 2.0 |
+| `THIRD_PARTY_NOTICES.md` | Postura de terceiros: motor sem dependências, ativos avaliados mas não portados, licenças de dependências peer |
 
 ## Configuration
 
@@ -197,6 +198,7 @@ Todas as opções são campos Schemastery `Config` (modificáveis a partir do co
 - **Portão pré-instalação de escopo acotado.** Não é uma ferramenta de auditoria de propósito geral — deliberadamente complementar aos plugins escâner e ao validador oficial `dsh-plugin-check`.
 - **Não bloqueante por padrão.** O portão de instalação é `warn` salvo se você optar por `deny`.
 - **Conteúdo original.** Compatível com o formato de skills do Claude Code, mas sem conteúdo copiado de CC e sem marketplace de skills.
+- **Motor original, sem ports de terceiros.** O escaneo de licença e as verificações de padrões maliciosos são implementações originais sem dependências; os ativos GPL-Radar / LLM-detective / Sus-PY foram avaliados para portar, mas nenhum código-fonte público licenciado foi encontrado — veja `THIRD_PARTY_NOTICES.md`.
 
 ## Verification
 

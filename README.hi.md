@@ -158,6 +158,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `.github/workflows/verify.yml` | CI: 25-जाँच सत्यापन + इंस्टॉलर अभ्यास + provider build/pack स्मोक (Ubuntu और Windows) |
 | `.github/dependabot.yml` | provider और GitHub Actions के साप्ताहिक डिपेंडेंसी अपडेट |
 | `LICENSE` | Apache License 2.0 |
+| `THIRD_PARTY_NOTICES.md` | तृतीय-पक्ष स्थिति: शून्य-निर्भरता इंजन, मूल्यांकित-पर-अपोर्टेड संपत्तियाँ, peer निर्भरता लाइसेंस |
 
 ## Configuration
 
@@ -198,6 +199,7 @@ bash ./scripts/install.sh --target user-agents --language en
 - **संकीर्ण प्री-इंस्टॉल गेट।** सामान्य-उद्देश्य सुरक्षा-ऑडिट टूल नहीं — जान-बूझकर स्कैनर प्लगइनों और आधिकारिक `dsh-plugin-check` अनुबंध सत्यापक का पूरक।
 - **डिफ़ॉल्ट रूप से गैर-अवरोधक।** इंस्टॉल गेट `warn` है जब तक आप `deny` न चुनें।
 - **मौलिक सामग्री।** Claude Code स्किल प्रारूप के अनुकूल, पर कोई कॉपी की गई CC सामग्री नहीं और कोई स्किल मार्केटप्लेस नहीं।
+- **मौलिक इंजन, कोई तृतीय-पक्ष पोर्ट नहीं।** लाइसेंस स्कैन और दुर्भावनापूर्ण-पैटर्न जाँच मौलिक शून्य-निर्भरता कार्यान्वयन हैं; GPL-Radar / LLM-detective / Sus-PY संपत्तियों का पोर्ट के लिए मूल्यांकन किया गया पर कोई लाइसेंस-युक्त सार्वजनिक स्रोत नहीं मिला — `THIRD_PARTY_NOTICES.md` देखें।
 
 ## Verification
 

@@ -159,6 +159,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `.github/workflows/verify.yml` | CI: 25-check verification + installer exercise + provider build/pack smoke (Ubuntu and Windows) |
 | `.github/dependabot.yml` | Weekly dependency updates for the provider and GitHub Actions |
 | `LICENSE` | Apache License 2.0 |
+| `THIRD_PARTY_NOTICES.md` | Third-party posture: zero-dependency engine, evaluated-but-not-ported assets, peer dependency licenses |
 
 ## Configuration
 
@@ -199,6 +200,7 @@ All tunables are Schemastery `Config` fields (changeable from cordis.yml). `prov
 - **Narrow pre-install gate.** Not a general-purpose security-audit tool — deliberately complementary to scanner plugins and the official `dsh-plugin-check` contract validator.
 - **Non-blocking by default.** The install gate is `warn` unless you opt into `deny`.
 - **Original content.** Format-compatible with Claude Code skills, but no copied CC skill content and no skill marketplace.
+- **Original engine, no third-party ports.** The license scan and malicious-pattern checks are original zero-dependency implementations; the GPL-Radar / LLM-detective / Sus-PY assets were evaluated for porting but no licensed public source was found — see `THIRD_PARTY_NOTICES.md`.
 
 ## Verification
 

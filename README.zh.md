@@ -158,6 +158,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `.github/workflows/verify.yml` | CI：25 项校验 + 安装器演练 + provider 独立构建/打包冒烟（Ubuntu 与 Windows） |
 | `.github/dependabot.yml` | provider 与 GitHub Actions 的每周依赖更新 |
 | `LICENSE` | Apache License 2.0 |
+| `THIRD_PARTY_NOTICES.md` | 第三方立场：零依赖引擎、已评估未移植的资产、peer 依赖许可 |
 
 ## Configuration
 
@@ -198,6 +199,7 @@ bash ./scripts/install.sh --target user-agents --language en
 - **窄范围安装前门禁。** 不是通用安全审计工具——刻意与扫描器插件、官方 `dsh-plugin-check` 契约校验器互补。
 - **默认不阻断。** 安装门禁默认为 `warn`，除非显式选择 `deny`。
 - **内容原创。** 与 Claude Code 技能格式兼容，但不复制 CC 技能内容、不设技能市场。
+- **引擎原创、未移植第三方资产。** 许可证扫描与恶意模式检查为原创零依赖实现；GPL-Radar / LLM-detective / Sus-PY 资产经评估未移植（未找到可核实许可证的公开源码）——见 `THIRD_PARTY_NOTICES.md`。
 
 ## Verification
 
