@@ -14,7 +14,8 @@ import { CHECK_NAME, SKILL_REF, type Lang } from './skills.js'
 import type { VetConfig } from './config.js'
 import type { ScannedFile } from './walk.js'
 import { dataResponsibilityFindings, dataResponsibilityScore } from './data-responsibility.js'
-import type { CheckId, VetCheck, VetFinding, VetSbom } from './vocabulary.js'
+import type { CheckId, ScannerSource, VetCheck, VetFinding, VetSbom } from './vocabulary.js'
+import type { ScannerResult } from './scanners.js'
 
 /** Shared inputs every check reads. */
 export interface CheckInputs {
@@ -29,6 +30,8 @@ export interface CheckInputs {
   /** 40-hex HEAD of a local git target, when readable without spawning git. */
   readonly localHead: string
   readonly now: number
+  /** Dependency-scanner result (builtin or an external CLI), when computed. */
+  readonly scanner?: ScannerResult
 }
 
 /** One check run: the check plus its optional SBOM payload. */
@@ -195,18 +198,20 @@ export function licenseCheck(inputs: CheckInputs): VetCheck {
 // --- sbom --------------------------------------------------------------------
 
 export function sbomCheck(inputs: CheckInputs): CheckResult {
-  const { manifest, lock, config, lang } = inputs
+  const { manifest, lock, config, lang, scanner } = inputs
   const zh = lang === 'zh'
   const findings: VetFinding[] = []
   let score = 100
   const direct = Object.keys(manifest.dependencies).length
   const dev = Object.keys(manifest.devDependencies).length
   const unpinned = unpinnedSpecs(manifest)
+  const source = scanner?.source ?? 'builtin'
+  const vulnerabilities = scanner?.issues ?? []
 
   if (!manifest.present) {
     return {
       check: makeCheck('sbom', 0, [], lang, config, zh ? '无 package.json，无法生成依赖树' : 'no package.json, cannot build a dependency tree'),
-      sbom: { lockfile: null, directDependencies: 0, directDevDependencies: 0, packages: [], truncated: false, totalPackages: 0, unpinned: [] },
+      sbom: { lockfile: null, directDependencies: 0, directDevDependencies: 0, packages: [], truncated: false, totalPackages: 0, unpinned: [], source, vulnerabilities },
     }
   }
 
@@ -253,6 +258,8 @@ export function sbomCheck(inputs: CheckInputs): CheckResult {
     truncated: tree.truncated,
     totalPackages: tree.total,
     unpinned,
+    source,
+    vulnerabilities,
   }
   if (tree.truncated) {
     findings.push({
@@ -266,7 +273,44 @@ export function sbomCheck(inputs: CheckInputs): CheckResult {
     message: zh ? `依赖树：${tree.packages.length} 个唯一包（直接 ${direct} + dev ${dev}）${lock.lockfile !== null ? `，锁文件 ${lock.lockfile}${lock.lockfileVersion !== '' ? ` v${lock.lockfileVersion}` : ''}` : ''}` : `dependency tree: ${tree.packages.length} unique packages (direct ${direct} + dev ${dev})${lock.lockfile !== null ? `, lockfile ${lock.lockfile}${lock.lockfileVersion !== '' ? ` v${lock.lockfileVersion}` : ''}` : ''}`,
     skill: SKILL_REF.sbom,
   })
+  // External scanner evidence replaces the self-computed vulnerability view;
+  // its source is annotated so the report never misattributes findings.
+  if (source !== 'builtin') {
+    if (vulnerabilities.length === 0) {
+      findings.push({
+        level: 'info',
+        message: zh ? `外部扫描器（${scannerLabel(source, zh)}）未发现已知漏洞` : `external scanner (${scannerLabel(source, zh)}) found no known vulnerabilities`,
+        skill: SKILL_REF.sbom,
+      })
+    } else {
+      for (const vuln of vulnerabilities) {
+        const severity = vuln.severity
+        const level: 'fail' | 'warn' = severity === 'critical' || severity === 'high' ? 'fail' : 'warn'
+        findings.push({
+          level,
+          message: zh
+            ? `[${source}] ${vuln.package}${vuln.version !== undefined ? `@${vuln.version}` : ''}：${vuln.title}（${severity}${vuln.id !== undefined ? `, ${vuln.id}` : ''}）`
+            : `[${source}] ${vuln.package}${vuln.version !== undefined ? `@${vuln.version}` : ''}: ${vuln.title} (${severity}${vuln.id !== undefined ? `, ${vuln.id}` : ''})`,
+          skill: SKILL_REF.sbom,
+        })
+        score -= level === 'fail' ? 30 : 15
+      }
+    }
+  } else {
+    findings.push({
+      level: 'info',
+      message: zh ? '依赖扫描来源：内置自算（未探测到 osv-scanner/npm audit CLI）' : 'dependency scan source: builtin (no osv-scanner/npm audit CLI detected)',
+      skill: SKILL_REF.sbom,
+    })
+  }
   return { check: makeCheck('sbom', score, findings, lang, config), sbom }
+}
+
+/** Human label for a scanner source. */
+function scannerLabel(source: ScannerSource, zh: boolean): string {
+  if (source === 'osv-scanner') return zh ? 'OSV-Scanner' : 'OSV-Scanner'
+  if (source === 'npm-audit') return zh ? 'npm audit' : 'npm audit'
+  return zh ? '内置自算' : 'builtin'
 }
 
 // --- commit-lock ---------------------------------------------------------------

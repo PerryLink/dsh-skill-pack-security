@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Dependency-scanner Provider seam** (`provider/src/vet/scanners.ts`). The `sbom` check now probes `osv-scanner` and `npm audit` CLIs and, when present, orchestrates their vulnerability output to replace the self-computed dependency scan; when neither CLI is available (or the target is remote), it degrades to the built-in zero-dependency tree scan. Every report annotates the effective source (`builtin` / `osv-scanner` / `npm-audit`) on the SBOM summary and on each vulnerability finding, so findings are never misattributed.
+- **`vet.externalScanners` config** (default `true`) gates the external-scanner orchestration; `false` forces the built-in self-computed scan.
+
 ## [2.1.4] - 2026-08-23
 
 ### Added

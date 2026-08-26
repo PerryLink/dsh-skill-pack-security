@@ -15,6 +15,7 @@ import { runChecks } from './checks.js'
 import { parseLockfile, parseManifest } from './manifest.js'
 import { resolveTarget } from './source.js'
 import { VetFetchError } from './fetch.js'
+import { probeDependencyScanner, type ScannerResult } from './scanners.js'
 import { CHECK_NAME, SKILL_REF, T, type Lang } from './skills.js'
 
 /** Engine-level failure: target unusable (not found, offline, budget). */
@@ -171,7 +172,7 @@ export async function runVet(args: VetArgs, config: VetConfig, lang: Lang, signa
         scores: scoreDimensions(checks),
         verdict: 'skip',
         gate: { policy, applied: false, blocked: false },
-        sbom: { lockfile: null, directDependencies: 0, directDevDependencies: 0, packages: [], truncated: false, totalPackages: 0, unpinned: [] },
+        sbom: { lockfile: null, directDependencies: 0, directDevDependencies: 0, packages: [], truncated: false, totalPackages: 0, unpinned: [], source: 'builtin', vulnerabilities: [] },
         budget: { filesScanned: 0, filesSkipped: 0, bytesScanned: 0, truncated: false, truncatedReason: skipReason },
         followupSkills: ['security-audit'],
       }) as VetReport
@@ -187,6 +188,14 @@ export async function runVet(args: VetArgs, config: VetConfig, lang: Lang, signa
   const lock = parseLockfile(resolved.files)
   const localHead = resolved.kind === 'local-path' ? await readLocalHead(resolved.resolved) : ''
 
+  // External scanners (osv-scanner/npm audit) need a real on-disk project, so
+  // they are orchestrated only for local targets; remote targets degrade to
+  // the built-in tree scan with an explicit `builtin` source annotation.
+  let scanner: ScannerResult | undefined
+  if (config.externalScanners && resolved.kind === 'local-path') {
+    scanner = await probeDependencyScanner(resolved.resolved, config.timeoutMs, signal)
+  }
+
   const results = runChecks(
     {
       files: resolved.files,
@@ -199,6 +208,7 @@ export async function runVet(args: VetArgs, config: VetConfig, lang: Lang, signa
       lang,
       localHead,
       now,
+      scanner,
     },
     effectiveIds,
   )
@@ -257,6 +267,8 @@ export async function runVet(args: VetArgs, config: VetConfig, lang: Lang, signa
       truncated: false,
       totalPackages: 0,
       unpinned: [],
+      source: 'builtin',
+      vulnerabilities: [],
     },
     budget,
     followupSkills: [...followupSkills],

@@ -21,6 +21,8 @@ export interface VetConfigInput {
   readonly maxFindingsPerCheck?: number
   readonly userAgent?: string
   readonly dataResponsibility?: boolean
+  /** Orchestrate osv-scanner/npm audit when their CLIs are present (default true). */
+  readonly externalScanners?: boolean
   readonly gate?: { readonly policy?: GatePolicy }
 }
 
@@ -35,6 +37,7 @@ export interface VetConfig {
   readonly maxFindingsPerCheck: number
   readonly userAgent: string
   readonly dataResponsibility: boolean
+  readonly externalScanners: boolean
   readonly gate: { readonly policy: GatePolicy }
 }
 
@@ -48,6 +51,7 @@ export const VET_DEFAULTS: VetConfig = {
   maxFindingsPerCheck: 12,
   userAgent: 'dsh-skill-pack-security/2.1.4 (+https://github.com/PerryLink/dsh-skill-pack-security)',
   dataResponsibility: true,
+  externalScanners: true,
   gate: { policy: 'warn' },
 }
 
@@ -64,6 +68,7 @@ export function resolveVetConfig(raw: VetConfigInput | undefined): VetConfig {
     maxFindingsPerCheck: raw.maxFindingsPerCheck ?? VET_DEFAULTS.maxFindingsPerCheck,
     userAgent: raw.userAgent ?? VET_DEFAULTS.userAgent,
     dataResponsibility: raw.dataResponsibility ?? VET_DEFAULTS.dataResponsibility,
+    externalScanners: raw.externalScanners ?? VET_DEFAULTS.externalScanners,
     gate: { policy: raw.gate?.policy ?? VET_DEFAULTS.gate.policy },
   }
 }

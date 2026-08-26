@@ -91,6 +91,22 @@ export interface VetPackage {
   readonly dev: boolean
 }
 
+/** Where the dependency-scan evidence came from. */
+export type ScannerSource = 'builtin' | 'osv-scanner' | 'npm-audit'
+
+/** One vulnerability reported by a dependency scanner. */
+export interface VulnIssue {
+  /** Advisory id when known (GHSA-…, CVE-…, or npm advisory id). */
+  readonly id?: string
+  /** Affected package name. */
+  readonly package: string
+  /** Affected version range, when the scanner reported one. */
+  readonly version?: string
+  readonly severity: 'critical' | 'high' | 'moderate' | 'low' | 'unknown'
+  /** Short human-readable summary. */
+  readonly title: string
+}
+
 /** SBOM summary produced by the `sbom` check. */
 export interface VetSbom {
   readonly lockfile: string | null
@@ -102,6 +118,10 @@ export interface VetSbom {
   readonly totalPackages: number
   /** Direct dependency specs that are not pinned to an exact version. */
   readonly unpinned: string[]
+  /** Which scanner produced the dependency evidence (`builtin` = self-computed). */
+  readonly source: ScannerSource
+  /** Vulnerabilities reported by an external scanner; empty for `builtin`. */
+  readonly vulnerabilities: VulnIssue[]
 }
 
 /** Scorecard: the five dimensions plus the overall weighted score. */

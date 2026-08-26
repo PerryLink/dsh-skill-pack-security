@@ -73,7 +73,9 @@ export function renderReport(report: VetReport, lang: Lang): string {
     parts.push(renderCheck(check, lang))
   }
   parts.push('')
-  parts.push(`**SBOM** (${report.sbom.lockfile ?? (lang === 'zh' ? '无锁文件' : 'no lockfile')}) — ${lang === 'zh' ? '直接依赖' : 'direct'} ${report.sbom.directDependencies} + dev ${report.sbom.directDevDependencies}, ${lang === 'zh' ? '唯一包' : 'unique packages'} ${report.sbom.packages.length}${report.sbom.totalPackages > report.sbom.packages.length ? ` (${lang === 'zh' ? '总计' : 'total'} ${report.sbom.totalPackages})` : ''}`)
+  const sbomSource = report.sbom.source === 'osv-scanner' ? 'OSV-Scanner' : report.sbom.source === 'npm-audit' ? 'npm audit' : (lang === 'zh' ? '内置自算' : 'builtin')
+  const vulnCount = report.sbom.vulnerabilities.length
+  parts.push(`**SBOM** (${report.sbom.lockfile ?? (lang === 'zh' ? '无锁文件' : 'no lockfile')}) — ${lang === 'zh' ? '直接依赖' : 'direct'} ${report.sbom.directDependencies} + dev ${report.sbom.directDevDependencies}, ${lang === 'zh' ? '唯一包' : 'unique packages'} ${report.sbom.packages.length}${report.sbom.totalPackages > report.sbom.packages.length ? ` (${lang === 'zh' ? '总计' : 'total'} ${report.sbom.totalPackages})` : ''} · ${lang === 'zh' ? '扫描来源' : 'scan source'}: ${sbomSource}${vulnCount > 0 ? ` · ${lang === 'zh' ? '已知漏洞' : 'known vulns'}: ${vulnCount}` : ''}`)
   if (report.sbom.packages.length > 0) {
     const tree = report.sbom.packages.slice(0, TREE_CAP).map(pkg => `${'  '.repeat(Math.min(pkg.depth, 8))}${pkg.name}@${pkg.version}`).join('\n')
     parts.push('```text')

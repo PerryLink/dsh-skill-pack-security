@@ -103,6 +103,20 @@ const REPORT_SCHEMA = {
         truncated: { type: 'boolean', required: true },
         totalPackages: { type: 'integer', required: true },
         unpinned: { type: 'array', required: true, items: { type: 'string' } },
+        source: { type: 'string', required: true, enum: ['builtin', 'osv-scanner', 'npm-audit'] },
+        vulnerabilities: {
+          type: 'array', required: true,
+          items: {
+            type: 'object', additionalProperties: false,
+            properties: {
+              id: { type: 'string' },
+              package: { type: 'string', required: true },
+              version: { type: 'string' },
+              severity: { type: 'string', required: true, enum: ['critical', 'high', 'moderate', 'low', 'unknown'] },
+              title: { type: 'string', required: true },
+            },
+          },
+        },
       },
     },
     budget: {

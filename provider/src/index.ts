@@ -63,6 +63,7 @@ export const Config: Schema<Config> = z.object({
     maxFindingsPerCheck: z.natural().min(1).max(100).default(12),
     userAgent: z.string().max(200).default('dsh-skill-pack-security/2.1.4 (+https://github.com/PerryLink/dsh-skill-pack-security)'),
     dataResponsibility: z.boolean().default(true),
+    externalScanners: z.boolean().default(true),
     gate: z.object({
       policy: z.union(['warn', 'deny'] as const).default('warn'),
     }),
