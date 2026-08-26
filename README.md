@@ -250,6 +250,10 @@ pnpm --dir provider run prepack     # embeds both skill editions into the tarbal
 tsx verify/verify-skill-pack.mts    # 25-check headless verification
 ```
 
+### Benchmark
+
+The poison-sample regression set (per-class detection rate / FPR / F1 over 38 samples, plus the OSV/Socket gap) is published in [`benchmark/RESULTS.md`](benchmark/RESULTS.md); regenerate it with `pnpm --dir provider run build && node benchmark/run.mjs` (zero new dependencies).
+
 ## Topics
 
 `dsh`, `dsh-plugin`, `deepseek-harness`, `skill-pack`, `skills`, `security`, `security-audit`, `supply-chain`, `supply-chain-security`, `prompt-injection`

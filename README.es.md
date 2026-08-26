@@ -246,6 +246,10 @@ pnpm --dir provider run prepack     # embebe ambas ediciones en el tarball
 tsx verify/verify-skill-pack.mts    # verificación headless de 25 comprobaciones
 ```
 
+### Benchmark
+
+El conjunto de regresión de muestras envenenadas (tasa de detección / FPR / F1 por clase sobre 38 muestras, más la brecha frente a OSV/Socket) está en [`benchmark/RESULTS.md`](benchmark/RESULTS.md); regenéralo con `pnpm --dir provider run build && node benchmark/run.mjs` (cero dependencias nuevas).
+
 ## Topics
 
 `dsh`, `dsh-plugin`, `deepseek-harness`, `skill-pack`, `skills`, `security`, `security-audit`, `supply-chain`, `supply-chain-security`, `prompt-injection`

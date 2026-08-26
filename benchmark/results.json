@@ -1,0 +1,305 @@
+{
+  "name": "dsh-skill-pack-security poison-sample regression set",
+  "version": "1.0.0",
+  "detector": "provider/src/vet/checks.ts (installScriptsCheck / networkExfilCheck / obfuscationCheck), run from the built provider/lib",
+  "generatedBy": "benchmark/run.mjs",
+  "perClass": [
+    {
+      "id": "install-scripts",
+      "check": "install-scripts",
+      "tp": 8,
+      "fp": 0,
+      "fn": 0,
+      "tn": 8,
+      "total": 16,
+      "positives": 8,
+      "negatives": 8,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "fpr": 0,
+      "samples": [
+        {
+          "id": "is-pos-01",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-02",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-03",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-04",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-05",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-06",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-07",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-pos-08",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "is-neg-01",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-02",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-03",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-04",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-05",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-06",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-07",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "is-neg-08",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        }
+      ]
+    },
+    {
+      "id": "network-exfil",
+      "check": "network-exfil",
+      "tp": 4,
+      "fp": 0,
+      "fn": 2,
+      "tn": 5,
+      "total": 11,
+      "positives": 6,
+      "negatives": 5,
+      "precision": 1,
+      "recall": 0.667,
+      "f1": 0.8,
+      "fpr": 0,
+      "samples": [
+        {
+          "id": "ne-pos-01",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ne-pos-02",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ne-pos-03",
+          "label": true,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ne-pos-04",
+          "label": true,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ne-pos-05",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ne-pos-06",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ne-neg-01",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ne-neg-02",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ne-neg-03",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ne-neg-04",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ne-neg-05",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        }
+      ]
+    },
+    {
+      "id": "obfuscation",
+      "check": "obfuscation",
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "tn": 5,
+      "total": 11,
+      "positives": 6,
+      "negatives": 5,
+      "precision": 1,
+      "recall": 0.833,
+      "f1": 0.909,
+      "fpr": 0,
+      "samples": [
+        {
+          "id": "ob-pos-01",
+          "label": true,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ob-pos-02",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ob-pos-03",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ob-pos-04",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ob-pos-05",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ob-pos-06",
+          "label": true,
+          "predicted": true,
+          "verdict": "fail"
+        },
+        {
+          "id": "ob-neg-01",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ob-neg-02",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ob-neg-03",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ob-neg-04",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        },
+        {
+          "id": "ob-neg-05",
+          "label": false,
+          "predicted": false,
+          "verdict": "pass"
+        }
+      ]
+    }
+  ],
+  "overall": {
+    "macro": {
+      "classes": 3,
+      "precision": 1,
+      "recall": 0.833,
+      "f1": 0.903
+    },
+    "micro": {
+      "tp": 17,
+      "fp": 0,
+      "fn": 3,
+      "tn": 18,
+      "precision": 1,
+      "recall": 0.85,
+      "f1": 0.919,
+      "fpr": 0
+    }
+  }
+}

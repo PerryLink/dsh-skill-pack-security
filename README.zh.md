@@ -247,6 +247,10 @@ pnpm --dir provider run prepack     # 把两个语言版嵌入 tarball
 tsx verify/verify-skill-pack.mts    # 25 项 headless 校验
 ```
 
+### Benchmark
+
+投毒样本回归集（38 个样本的逐类检出率 / 误报率 / F1，以及与 OSV/Socket 的差距）见 [`benchmark/RESULTS.md`](benchmark/RESULTS.md)；用 `pnpm --dir provider run build && node benchmark/run.mjs` 复现（零新依赖）。
+
 ## Topics
 
 `dsh`, `dsh-plugin`, `deepseek-harness`, `skill-pack`, `skills`, `security`, `security-audit`, `supply-chain`, `supply-chain-security`, `prompt-injection`

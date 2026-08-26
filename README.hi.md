@@ -247,6 +247,10 @@ pnpm --dir provider run prepack     # दोनों स्किल संस�
 tsx verify/verify-skill-pack.mts    # 25-जाँच headless सत्यापन
 ```
 
+### Benchmark
+
+पॉइज़न-सैंपल रिग्रेशन सेट (38 नमूनों पर प्रति-वर्ग पहचान दर / FPR / F1, साथ ही OSV/Socket से अंतर) [`benchmark/RESULTS.md`](benchmark/RESULTS.md) में है; `pnpm --dir provider run build && node benchmark/run.mjs` से दोबारा बनाएँ (कोई नई निर्भरता नहीं)।
+
 ## Topics
 
 `dsh`, `dsh-plugin`, `deepseek-harness`, `skill-pack`, `skills`, `security`, `security-audit`, `supply-chain`, `supply-chain-security`, `prompt-injection`
