@@ -176,7 +176,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `vet.maxExtractBytes` | `67108864` | निष्कर्षण बाइट सीमा |
 | `vet.maxDepNodes` | `600` | डिपेंडेंसी-वृक्ष नोड सीमा |
 | `vet.maxFindingsPerCheck` | `12` | प्रति जाँच निष्कर्ष सीमा |
-| `vet.userAgent` | `dsh-skill-pack-security/2.1.4 (+https://github.com/PerryLink/dsh-skill-pack-security)` | डाउनलोड user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | डाउनलोड user-agent |
 | `vet.gate.policy` | `warn` | इंस्टॉल गेट: `warn` (गैर-अवरोधक) या `deny` (FAIL पर रोकें) |
 
 ## Tools & surfaces

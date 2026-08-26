@@ -1,6 +1,6 @@
 {
   "name": "dsh-skill-pack-security",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "private": true,
   "description": "Automated plugin supply-chain security gate for DeepSeek Harness (dsh): eight agent skills in Chinese and English editions teach the audit methodology, and the plugin_vet tool executes the pre-install gate (license / SBOM / commit pinning / malicious patterns / five-dimension risk card) with findings that cite the matching skill sections.",
   "license": "Apache-2.0",
@@ -26,7 +26,7 @@
     "url": "git+https://github.com/PerryLink/dsh-skill-pack-security.git"
   },
   "dependencies": {
-    "@perrylink/dsh-skill-pack-security-provider": "2.1.4"
+    "@perrylink/dsh-skill-pack-security-provider": "2.2.0"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-skill-filesystem": ">=0.1.0-rc.8 <0.2.0"
