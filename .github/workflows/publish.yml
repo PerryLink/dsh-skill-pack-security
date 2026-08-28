@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   # Tag pushes do not trigger verify.yml (it runs on main pushes and PRs),
@@ -108,7 +109,7 @@ jobs:
           if npm view "@perrylink/dsh-skill-pack-security-provider@${version}" version >/dev/null 2>&1; then
             echo "@perrylink/dsh-skill-pack-security-provider@${version} is already published; skipping npm publish"
           else
-            npm publish --access public
+            npm publish --access public --provenance
           fi
 
   release:
