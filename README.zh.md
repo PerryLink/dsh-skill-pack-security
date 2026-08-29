@@ -1,6 +1,7 @@
 <div align="center">
 
 # dsh-skill-pack-security
+- **1024 商店渠道**：先 `npm i -g dsh1024`，再 `dsh1024 plugin --profile web add dsh-skill-pack-security`（计入 [deepseek1024.com](https://deepseek1024.com) 安装排行）。
 
 **面向 DeepSeek Harness 的八个安全审计技能 + 一个自动化插件供应链门禁。**
 

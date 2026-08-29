@@ -1,6 +1,7 @@
 <div align="center">
 
 # dsh-skill-pack-security
+- **Canal 1024 store**: `npm i -g dsh1024` uma vez, depois `dsh1024 plugin --profile web add dsh-skill-pack-security` (conta para o ranking de instalações do [deepseek1024.com](https://deepseek1024.com)).
 
 **Oito skills de auditoria de segurança mais um portão automático de cadeia de suprimentos de plugins para o DeepSeek Harness.**
 
