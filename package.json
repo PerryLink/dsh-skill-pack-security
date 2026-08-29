@@ -74,5 +74,9 @@
       "hotReload": null,
       "remove": null
     }
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/PerryLink"
   }
 }
