@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- CI verify workflow: the `Readme sync (five languages)` step was nested under the `Install harness workspace` step's keys, so GitHub Actions rejected the YAML and recorded the run as a failure with 0 jobs. The step is now a sibling step (the sync script belongs to this repo and runs at the repo root).
+- The 25-check verification no longer imports the dsh-llm `CallId` brand from the harness checkout. Harness master renamed it to `ToolCallId`, so the script now derives the brand from the dsh-tools execution contract (`verify/call-id.ts`, mirroring `dsh-click/tests/call-id.ts`) and stays green on the pinned ref (`b150a551`) and on a future pin lift. The pinned harness ref is unchanged: this batch made no peer-dependency change.
+
 ## [2.2.0] - 2026-08-26
 
 ### Added
