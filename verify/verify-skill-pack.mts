@@ -77,7 +77,9 @@ const agentMod = await harnessImport('packages/core/agent/src/index.ts')
 const AgentRegistry = agentMod.default
 const { agentEvents, Inbox } = agentMod
 const { Session, SessionId } = await harnessImport('packages/core/session/src/index.ts')
-const { CallId } = await harnessImport('packages/llm/llm/src/index.ts')
+// Dual-ruler brand: the pinned ref exports dsh-llm CallId, master renamed it
+// to ToolCallId; see call-id.ts. Do not import either name from the harness.
+const { CallId } = await import(new URL('./call-id.ts', import.meta.url).href)
 
 // ---------------------------------------------------------------------------
 const PACK_DIR = fileURLToPath(new URL('..', import.meta.url))
