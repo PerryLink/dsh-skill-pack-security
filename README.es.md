@@ -176,6 +176,8 @@ Todas las opciones son campos Schemastery `Config` (modificables desde cordis.ym
 | `vet.maxExtractBytes` | `67108864` | Tope de bytes de extracción |
 | `vet.maxDepNodes` | `600` | Tope de nodos del árbol de dependencias |
 | `vet.maxFindingsPerCheck` | `12` | Tope de hallazgos por comprobación |
+| `vet.dataResponsibility` | `true` | Ejecuta la revisión de responsabilidad de datos (desactivable por despliegue) |
+| `vet.externalScanners` | `true` | Orquesta `osv-scanner`/`npm audit` cuando sus CLIs están presentes; `false` fuerza el escaneo de dependencias autoconsultado integrado |
 | `vet.userAgent` | `dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de descarga |
 | `vet.gate.policy` | `warn` | Puerta de instalación: `warn` (no bloqueante) o `deny` (bloquea ante FAIL) |
 

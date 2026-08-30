@@ -5,6 +5,9 @@
   "description": "Automated plugin supply-chain security gate for DeepSeek Harness (dsh): eight agent skills in Chinese and English editions teach the audit methodology, and the plugin_vet tool executes the pre-install gate (license / SBOM / commit pinning / malicious patterns / five-dimension risk card) with findings that cite the matching skill sections.",
   "license": "Apache-2.0",
   "type": "module",
+  "scripts": {
+    "check:readmes": "node scripts/check-readme-sync.mjs"
+  },
   "engines": {
     "node": "^22.19.0 || >=24.0.0"
   },
