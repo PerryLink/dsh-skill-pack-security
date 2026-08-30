@@ -177,6 +177,8 @@ bash ./scripts/install.sh --target user-agents --language en
 | `vet.maxExtractBytes` | `67108864` | 解压字节上限 |
 | `vet.maxDepNodes` | `600` | 依赖树节点上限 |
 | `vet.maxFindingsPerCheck` | `12` | 每项检查的发现数上限 |
+| `vet.dataResponsibility` | `true` | 运行数据责任审查（可按部署禁用） |
+| `vet.externalScanners` | `true` | 当 `osv-scanner`/`npm audit` CLI 存在时编排它们；`false` 强制使用内置自计算依赖扫描 |
 | `vet.userAgent` | `dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | 下载用的 user-agent |
 | `vet.gate.policy` | `warn` | 安装门禁：`warn`（不阻断）或 `deny`（FAIL 时阻断） |
 

@@ -39,6 +39,8 @@ jobs:
       - name: Install harness workspace
         working-directory: harness
         run: pnpm install --frozen-lockfile
+        - name: Readme sync (five languages)
+          run: pnpm run check:readmes
 
       - name: Run skill pack verification
         working-directory: harness
