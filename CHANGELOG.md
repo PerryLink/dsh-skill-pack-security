@@ -3,6 +3,12 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Align the compatibility pins to the published dsh `0.1.2-alpha.3` line: the root and provider `dshWorkshop.compatibility.dshVersions` list `0.1.2-alpha.3`, the provider devDependencies pin `0.1.2-alpha.3` (cordis `^4.0.2`, schemastery `^3.18.2`), the verify/publish workflows checkout harness commit `dd6322d604`, and the compat probe installs the `0.1.2-alpha.3` CLI/base/headless. No behavior change.
+
 ## [2.2.1] - 2026-08-30
 
 ### Fixed
