@@ -21,7 +21,7 @@ jobs:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump in the same PR as any
           # peer-dependency change (see docs/release-checklist.md).
-          ref: b150a551b8d465e31e418e1b2eaf5e79bbb7d28e
+          ref: dd6322d604e00eec1ba5e0c8541159906a21094a
           path: harness
 
       - name: Set up pnpm
@@ -80,7 +80,7 @@ jobs:
         with:
           repository: deepseek-ai/deepseek-harness
           # Pinned for reproducible verification; bump with peer-dependency changes.
-          ref: b150a551b8d465e31e418e1b2eaf5e79bbb7d28e
+          ref: dd6322d604e00eec1ba5e0c8541159906a21094a
           path: harness
 
       - name: Set up pnpm
