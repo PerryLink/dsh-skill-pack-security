@@ -25,7 +25,7 @@
 
 | 维度 | 状态 |
 |---|---|
-| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.3（2026-09-01 已适配）：会话信封保留 ignorable 字段但仅用于存量日志读取兼容——Session.append 仍无法盖章，门控行为不变。 |
+| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.5（2026-09-02 已适配）：会话信封保留 ignorable 字段但仅用于存量日志读取兼容——Session.append 仍无法盖章，门控行为不变。 |
 | Node | `^22.19.0 \|\| >=24.0.0`（DeepSeek Harness 运行时） |
 | 平台 | 任意（技能是内容；provider 是 host 插件） |
 | 模型 | 任意（技能经 `skill` 工具按需加载；`plugin_vet` 是确定性的） |

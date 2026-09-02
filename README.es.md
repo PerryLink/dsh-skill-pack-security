@@ -25,7 +25,7 @@
 
 | Superficie | Estado |
 |---|---|
-| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.3 (adaptado el 2026-09-01): el sobre de sesión conserva su campo ignorable solo para compatibilidad de lectura de logs almacenados - Session.append aún no puede estamparlo, por lo que el comportamiento de la puerta no cambia. |
+| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.5 (adaptado el 2026-09-02): el sobre de sesión conserva su campo ignorable solo para compatibilidad de lectura de logs almacenados - Session.append aún no puede estamparlo, por lo que el comportamiento de la puerta no cambia. |
 | Node | `^22.19.0 \|\| >=24.0.0` (el runtime de DeepSeek Harness) |
 | Plataformas | Todas (las skills son contenido; el provider es un plugin de host) |
 | Modelo | Cualquiera (las skills cargan bajo demanda con la herramienta `skill`; `plugin_vet` es determinista) |
