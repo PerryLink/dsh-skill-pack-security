@@ -4,7 +4,7 @@ description: 'PR/新依赖快速供应链评审：危险 install/postinstall 脚
 whenToUse: '评审含新依赖（package.json/锁文件变更）的 PR、审查某包的 install 脚本行为、判断疑似 typosquat 包或验证构建可复现性时使用；纯业务代码、与新增依赖无关的 PR 评审不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.0'
+  version: '2.2.3'
 ---
 
 # 新增依赖快速评审（supply-chain-review）

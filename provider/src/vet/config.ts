@@ -49,7 +49,7 @@ export const VET_DEFAULTS: VetConfig = {
   maxExtractBytes: 64 * 1024 * 1024,
   maxDepNodes: 600,
   maxFindingsPerCheck: 12,
-  userAgent: 'dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)',
+  userAgent: 'dsh-skill-pack-security/2.2.3 (+https://github.com/PerryLink/dsh-skill-pack-security)',
   dataResponsibility: true,
   externalScanners: true,
   gate: { policy: 'warn' },

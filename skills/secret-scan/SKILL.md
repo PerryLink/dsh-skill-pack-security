@@ -4,7 +4,7 @@ description: '凭据/密钥暴露审计：gitleaks、trivy 全历史扫描命令
 whenToUse: '用户要求扫描或检查仓库的密钥泄露、排查某提交或某文件中的 token、给扫描告警定真伪、写脱敏泄露报告或规划密钥轮换时使用；纯功能开发与常规代码审查不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.0'
+  version: '2.2.3'
 ---
 
 # 凭据扫描（secret-scan）
