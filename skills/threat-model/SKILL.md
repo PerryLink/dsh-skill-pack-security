@@ -4,7 +4,7 @@ description: '新功能/新系统的轻量威胁建模：固定对象→划定�
 whenToUse: '用户要求对新功能/新系统做威胁建模、设计阶段安全评审、STRIDE 分析、攻击树分析，或要求把安全考虑前置到设计阶段时使用；纯实现细节讨论、与信任边界无关的改动不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.3'
+  version: '2.2.4'
 ---
 
 # 威胁建模（threat-model）
