@@ -25,7 +25,7 @@
 
 | सतह | स्थिति |
 |---|---|
-| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.5 (2026-09-02 को अनुकूलित): सत्र लिफ़ाफ़ा अपना ignorable फ़ील्ड केवल संग्रहीत-लॉग पठन संगतता के लिए रखता है - Session.append अभी भी इसे स्टैम्प नहीं कर सकता, इसलिए गेट व्यवहार अपरिवर्तित है। |
+| Harness | DeepSeek Harness `0.1.2-alpha.5` (2026-09-02 को अनुकूलित): सत्र लिफ़ाफ़ा अपना ignorable फ़ील्ड केवल संग्रहीत-लॉग पठन संगतता के लिए रखता है - Session.append अभी भी इसे स्टैम्प नहीं कर सकता, इसलिए गेट व्यवहार अपरिवर्तित है। |
 | Node | `^22.19.0 \|\| >=24.0.0` (DeepSeek Harness का runtime) |
 | प्लेटफ़ॉर्म | सभी (स्किल सामग्री हैं; provider एक host प्लगइन है) |
 | मॉडल | कोई भी (स्किल `skill` टूल से माँग पर लोड होती हैं; `plugin_vet` नियतात्मक है) |
@@ -179,7 +179,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `vet.maxFindingsPerCheck` | `12` | प्रति जाँच निष्कर्ष सीमा |
 | `vet.dataResponsibility` | `true` | डेटा-ज़िम्मेदारी समीक्षा चलाएँ (तैनाती अनुसार अक्षम करने योग्य) |
 | `vet.externalScanners` | `true` | जब उनके CLI मौजूद हों तो `osv-scanner`/`npm audit` का संचालन करें; `false` अंतर्निहित स्व-गणित निर्भरता स्कैन बाध्य करता है |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | डाउनलोड user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | डाउनलोड user-agent |
 | `vet.gate.policy` | `warn` | इंस्टॉल गेट: `warn` (गैर-अवरोधक) या `deny` (FAIL पर रोकें) |
 
 ## Tools & surfaces

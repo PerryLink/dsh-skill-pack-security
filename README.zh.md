@@ -25,7 +25,7 @@
 
 | 维度 | 状态 |
 |---|---|
-| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.5（2026-09-02 已适配）：会话信封保留 ignorable 字段但仅用于存量日志读取兼容——Session.append 仍无法盖章，门控行为不变。 |
+| Harness | DeepSeek Harness `0.1.2-alpha.5`（2026-09-02 已适配）：会话信封保留 ignorable 字段但仅用于存量日志读取兼容——Session.append 仍无法盖章，门控行为不变。 |
 | Node | `^22.19.0 \|\| >=24.0.0`（DeepSeek Harness 运行时） |
 | 平台 | 任意（技能是内容；provider 是 host 插件） |
 | 模型 | 任意（技能经 `skill` 工具按需加载；`plugin_vet` 是确定性的） |
@@ -179,7 +179,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `vet.maxFindingsPerCheck` | `12` | 每项检查的发现数上限 |
 | `vet.dataResponsibility` | `true` | 运行数据责任审查（可按部署禁用） |
 | `vet.externalScanners` | `true` | 当 `osv-scanner`/`npm audit` CLI 存在时编排它们；`false` 强制使用内置自计算依赖扫描 |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | 下载用的 user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | 下载用的 user-agent |
 | `vet.gate.policy` | `warn` | 安装门禁：`warn`（不阻断）或 `deny`（FAIL 时阻断） |
 
 ## Tools & surfaces

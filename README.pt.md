@@ -25,7 +25,7 @@
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness `0.1.1-rc.2` 0.1.2-alpha.5 (adaptado em 2026-09-02): o envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
+| Harness | DeepSeek Harness `0.1.2-alpha.5` (adaptado em 2026-09-02): o envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
 | Node | `^22.19.0 \|\| >=24.0.0` (o runtime do DeepSeek Harness) |
 | Plataformas | Todas (as skills são conteúdo; o provider é um plugin de host) |
 | Modelo | Qualquer (as skills carregam sob demanda com a ferramenta `skill`; `plugin_vet` é determinístico) |
@@ -178,7 +178,7 @@ Todas as opções são campos Schemastery `Config` (modificáveis a partir do co
 | `vet.maxFindingsPerCheck` | `12` | Teto de achados por verificação |
 | `vet.dataResponsibility` | `true` | Executa a revisão de responsabilidade de dados (desativável por implantação) |
 | `vet.externalScanners` | `true` | Orquestra `osv-scanner`/`npm audit` quando seus CLIs estão presentes; `false` força a verificação de dependências autoconsultada integrada |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.0 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de download |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de download |
 | `vet.gate.policy` | `warn` | Portão de instalação: `warn` (não bloqueante) ou `deny` (bloqueia ante FAIL) |
 
 ## Tools & surfaces
