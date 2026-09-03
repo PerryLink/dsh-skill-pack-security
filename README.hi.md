@@ -304,3 +304,7 @@ tsx verify/verify-skill-pack.mts    # 25-जाँच headless सत्या�
 ## License
 
 [Apache License 2.0](LICENSE) © 2026 dsh-skill-pack-security contributors
+
+### DSH Desktop मार्केट से इंस्टॉल करें
+
+सभी PerryLink प्लगइन DSH Desktop के बिल्ट-इन मार्केट में देखे जा सकते हैं: **Market → Sources → add source → पेस्ट करें** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ चुनें**। इंस्टॉलेशन मार्केट के npm-identity सत्यापन और आपकी पुष्टि से ही होता है।
