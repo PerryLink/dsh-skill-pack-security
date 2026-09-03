@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.5] - 2026-09-03
+
+### Changed
+
+- `dshWorkshop.compatibility.dshVersions` raised from `0.1.2-alpha.3` to `0.1.2-alpha.5` (the provider dev pins were already on the alpha.5 line).
+- All version carriers aligned to 2.2.5: `VERSION`, root and provider `package.json`, the 32 tracked `SKILL.md` frontmatter blocks, and the provider runtime user-agent/config strings; the root dependency on `@perrylink/dsh-skill-pack-security-provider` raised to 2.2.5.
+
 ## [2.2.4] - 2026-09-02
 
 ### Docs

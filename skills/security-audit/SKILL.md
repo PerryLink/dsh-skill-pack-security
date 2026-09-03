@@ -4,7 +4,7 @@ description: '仓库/软件安全审计总览：范围界定→资产清单→�
 whenToUse: '用户要求对代码仓库或项目做安全审计、制定审计计划、划分审计阶段、汇总多类发现成报告，或不确定该从哪个专项技能开始时使用；单一主题任务（只查密钥、只查依赖、只评审一个 PR、只查注入面）直接加载对应专项技能，不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.4'
+  version: '2.2.5'
 ---
 
 # 安全审计总览（security-audit）
