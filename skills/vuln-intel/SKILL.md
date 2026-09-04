@@ -4,7 +4,7 @@ description: '漏洞情报检索与判定：NVD/CISA-KEV/GHSA/OSV 四处权威�
 whenToUse: '用户给出 CVE/GHSA 编号要求查详情与影响、判断漏洞是否被在野利用（KEV）、评估漏洞对当前项目/依赖的适用性或汇总漏洞情报简报时使用；没有具体编号的通用安全学习、与特定漏洞无关的讨论不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.6'
+  version: '2.2.7'
 ---
 
 # 漏洞情报（vuln-intel）

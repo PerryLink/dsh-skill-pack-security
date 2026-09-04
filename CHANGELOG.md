@@ -3,6 +3,17 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.7] - 2026-09-04
+
+### Changed
+
+- Align the provider dev pins and `dshWorkshop.compatibility.dshVersions` to the published dsh `0.1.2-rc.1` line, and advance the pinned deepseek-harness verification ref from `76fda72979` to `d347e70390` (dsh-v0.1.3-alpha.1) across the verify and publish workflows; no behavior change.
+- All version carriers aligned to 2.2.7: `VERSION`, root and provider `package.json`, the 16 tracked `SKILL.md` files, and the provider runtime user-agent/config strings.
+
+### Fixed
+
+- 2.2.6 never left CI: its release run failed in the harness checkout step during a transient GitHub fetch outage, so 2.2.7 repackages the same changes with the verification ref advanced to the new baseline.
+
 ## [2.2.5] - 2026-09-03
 
 ### Changed

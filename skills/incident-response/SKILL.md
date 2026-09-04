@@ -4,7 +4,7 @@ description: 'agent 环境安全事件响应：分类→控制蔓延→取证留
 whenToUse: 'agent 环境（DSH 会话、插件、MCP、CI）出现疑似安全事件——密钥泄露、被注入执行了未授权操作、依赖投毒、权限异常——需要响应、留证与复盘时使用；没有事件迹象的日常开发不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.6'
+  version: '2.2.7'
 ---
 
 # 事件响应（incident-response）
