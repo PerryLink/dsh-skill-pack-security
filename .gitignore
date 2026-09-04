@@ -7,3 +7,5 @@ provider/lib/
 provider/pack/
 provider/.tmp/
 
+
+*.tgz
