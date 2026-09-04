@@ -179,7 +179,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `vet.maxFindingsPerCheck` | `12` | प्रति जाँच निष्कर्ष सीमा |
 | `vet.dataResponsibility` | `true` | डेटा-ज़िम्मेदारी समीक्षा चलाएँ (तैनाती अनुसार अक्षम करने योग्य) |
 | `vet.externalScanners` | `true` | जब उनके CLI मौजूद हों तो `osv-scanner`/`npm audit` का संचालन करें; `false` अंतर्निहित स्व-गणित निर्भरता स्कैन बाध्य करता है |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | डाउनलोड user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.7 (+https://github.com/PerryLink/dsh-skill-pack-security)` | डाउनलोड user-agent |
 | `vet.gate.policy` | `warn` | इंस्टॉल गेट: `warn` (गैर-अवरोधक) या `deny` (FAIL पर रोकें) |
 
 ## Tools & surfaces

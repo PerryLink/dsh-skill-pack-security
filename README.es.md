@@ -178,7 +178,7 @@ Todas las opciones son campos Schemastery `Config` (modificables desde cordis.ym
 | `vet.maxFindingsPerCheck` | `12` | Tope de hallazgos por comprobación |
 | `vet.dataResponsibility` | `true` | Ejecuta la revisión de responsabilidad de datos (desactivable por despliegue) |
 | `vet.externalScanners` | `true` | Orquesta `osv-scanner`/`npm audit` cuando sus CLIs están presentes; `false` fuerza el escaneo de dependencias autoconsultado integrado |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.3 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de descarga |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.7 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de descarga |
 | `vet.gate.policy` | `warn` | Puerta de instalación: `warn` (no bloqueante) o `deny` (bloquea ante FAIL) |
 
 ## Tools & surfaces
