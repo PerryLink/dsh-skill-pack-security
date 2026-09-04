@@ -117,7 +117,7 @@ function check(name: string, fn: () => void | Promise<void>): () => Promise<void
 /** Minimal agent mock, mirroring the official tool-skill spec's agentForCwd. */
 function agentForCwd(cwd: string) {
   const id = SessionId(`verify-${cwd.replace(/[^a-zA-Z0-9]/g, '-')}`)
-  const session = Session.create(id, [], { version: 0, id, createdAt: 0, cwd })
+  const session = Session.create(id, [], { version: 2, id, isSeeded: false, createdAt: 0, cwd })
   return {
     ctx: new Context(),
     id,

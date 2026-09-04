@@ -4,7 +4,7 @@ description: '面向 agent 项目的提示注入面审查：AGENTS.md、技能�
 whenToUse: '审查 agent 项目的上下文注入面（AGENTS.md/CLAUDE.md、.agents/skills、工具描述、MCP server 来源、web 抓取链路）、评估间接注入风险或对 agent 项目做安全评审时使用；与模型上下文无关的普通代码评审不触发本技能。'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.5'
+  version: '2.2.6'
 ---
 
 # 提示注入面审查（prompt-injection-review）

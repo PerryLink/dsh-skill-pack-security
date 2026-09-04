@@ -4,7 +4,7 @@ description: 'Security incident response for agent environments: a staged flow o
 whenToUse: 'Use when an agent environment (DSH sessions, plugins, MCP, CI) shows a suspected security incident — secret leak, injected execution of unauthorized actions, dependency poisoning, permission anomalies — and it needs response, evidence, and a postmortem. Day-to-day development without incident indicators does not trigger this skill.'
 metadata:
   pack: dsh-skill-pack-security
-  version: '2.2.5'
+  version: '2.2.6'
 ---
 
 # Incident response (incident-response)
