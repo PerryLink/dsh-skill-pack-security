@@ -3,6 +3,16 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.8] - 2026-09-06
+
+### Changed
+
+- All version carriers aligned to 2.2.8: `VERSION`, root and provider `package.json`, the 16 tracked `SKILL.md` files, the provider runtime user-agent/config strings, and the five-language README `vet.userAgent` rows.
+
+### Fixed
+
+- The provider's published peer ranges for `@deepseek-ai/dsh-skill-filesystem` and `@deepseek-ai/dsh-tools` started at `>=0.1.0-rc.8`, which under prerelease-tuple resolution matched only the 0.1.0-rc.8 line and broke fresh tarball installs against the published `0.1.2-rc.1` wave. Both now start at `>=0.1.2-rc.1 <0.2.0`, matching the root manifest; the provider README peer list is synced to the actual four peers and their current ranges. No behavior change.
+
 ## [2.2.7] - 2026-09-04
 
 ### Changed
