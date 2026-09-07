@@ -3,6 +3,13 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.9] - 2026-09-07
+
+### Docs
+
+- Refresh the five-language README support-version wording (GitHub tag `dsh-v0.1.3-alpha.1` leads, npm `0.1.2-rc.1` stays the dependency-pin line) and carry 2.2.9 through every version carrier; no behavior change.
+
+
 ## [2.2.8] - 2026-09-06
 
 ### Changed
