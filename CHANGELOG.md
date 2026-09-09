@@ -17,6 +17,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - The root `dependencies["@perrylink/dsh-skill-pack-security-provider"]` pin is no longer bumped in the release commit. pnpm 11 runs a dependency-status check before every `pnpm run`, and the root lockfile resolves that dependency from the registry, so pinning the not-yet-published release version breaks `pnpm run check:readmes` with `ERR_PNPM_NO_MATCHING_VERSION`. The pin (and the root lockfile) are refreshed right after the npm publish — `docs/release-checklist.md` step 10.
+- Root integration pin backfilled to the published provider 2.2.12: `dependencies["@perrylink/dsh-skill-pack-security-provider"]` and `pnpm-lock.yaml` now resolve `2.2.12` (the release commit deliberately stayed on 2.2.10 because a lockfile cannot resolve an unpublished version). The generated root `pnpm-workspace.yaml` carries the `minimumReleaseAgeExclude` entry pnpm requires for a version published inside the minimum-release-age window, so `pnpm install --frozen-lockfile` passes the supply-chain policy check; `node scripts/bump-version.mjs --check` still reports all 26 carriers at 2.2.12.
 
 ### Docs
 
