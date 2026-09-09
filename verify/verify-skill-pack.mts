@@ -41,6 +41,10 @@
  *   20. the scan engine is zero-dependency (node: builtins and relative imports only)
  *   21. report redaction keeps secret-shaped fixture text out of rendered output
  *
+ * The agent mocks carry the checkout's own SESSION_FORMAT_VERSION (2 on the
+ * pinned ref, 3 on harness master), read live from the session module — see
+ * resolveSessionFormatVersion() — so one script verifies both rulers.
+ *
  * Run: <checkout>\node_modules\.bin\tsx.CMD verify\verify-skill-pack.mts
  * Requires a local deepseek-harness checkout; the script resolves it relative
  * to its own location (Project/Plugins/<pack>/verify -> ../../../../).
@@ -78,11 +82,43 @@ const SystemPrompt = (await harnessImport('packages/core/system-prompt/src/index
 const ToolRuntime = (await harnessImport('packages/core/tools/src/index.ts')).default
 const agentMod = await harnessImport('packages/core/agent/src/index.ts')
 const AgentRegistry = agentMod.default
+// `Inbox` is a live class on the pinned ref and only an interface on master
+// (the class was dropped in favour of the agent-loop testkit's
+// unsupportedInbox()); keep the runtime value and let stubInbox() pick.
 const { agentEvents, Inbox } = agentMod
-const { Session, SessionId } = await harnessImport('packages/core/session/src/index.ts')
+const sessionMod = await harnessImport('packages/core/session/src/index.ts')
+const { Session, SessionId } = sessionMod
 // Dual-ruler brand: the pinned ref exports dsh-llm CallId, master renamed it
 // to ToolCallId; see call-id.ts. Do not import either name from the harness.
 const { CallId } = await import(new URL('./call-id.ts', import.meta.url).href)
+
+// ---------------------------------------------------------------------------
+// Session format version: read the checkout's own constant, never hardcode one
+// ruler. The pinned ref (d347e70390 = dsh-v0.1.3-alpha.1) stamps session
+// headers with SESSION_FORMAT_VERSION = 2 and harness master (>= 19d2e38480)
+// stamps 3; Session.create() rejects any header whose version differs from the
+// harness's own constant ("session header version must be N, got M"), so the
+// agent mocks below must carry whatever this checkout writes. Read the live
+// module export (the session package re-exports ./types.ts) and fail loud when
+// it is absent or not a version this script knows how to drive: a silently
+// wrong header would make every mock below throw.
+// ---------------------------------------------------------------------------
+const SUPPORTED_SESSION_FORMAT_VERSIONS: readonly number[] = [2, 3]
+
+/** The checkout's live session header version; throws when absent or unsupported. */
+function resolveSessionFormatVersion(mod: Record<string, unknown>): number {
+  const value = mod.SESSION_FORMAT_VERSION
+  if (typeof value !== 'number' || !Number.isSafeInteger(value) || !SUPPORTED_SESSION_FORMAT_VERSIONS.includes(value)) {
+    throw new Error(
+      `unsupported SESSION_FORMAT_VERSION ${String(value)} from the harness checkout at ${fileURLToPath(HARNESS)}: ` +
+      `this script drives session headers for version ${SUPPORTED_SESSION_FORMAT_VERSIONS.join(' or ')}; ` +
+      'extend the agent mock and this list for a newer format',
+    )
+  }
+  return value
+}
+
+const SESSION_FORMAT_VERSION = resolveSessionFormatVersion(sessionMod)
 
 // ---------------------------------------------------------------------------
 const PACK_DIR = fileURLToPath(new URL('..', import.meta.url))
@@ -117,16 +153,34 @@ function check(name: string, fn: () => void | Promise<void>): () => Promise<void
   }
 }
 
+/**
+ * Agent-stub inbox that satisfies both rulers. The pinned ref exports a live
+ * `Inbox` class (a durable-splice projection); master dropped that class and
+ * types `agent.inbox` as an interface, so its own tool-skill spec passes a
+ * structural `unsupportedInbox()`. The skill tool never mutates the inbox, so
+ * the structural stub's mutators throw, exactly like the official testkit.
+ */
+function stubInbox(session: Session) {
+  if (typeof Inbox === 'function') {
+    return new Inbox(session, { inserted: () => {}, discarded: () => {}, claimed: () => {} })
+  }
+  const rejectMutation = (): never => { throw new Error('this verify Agent stub does not support Inbox mutations') }
+  return {
+    nextTurn: [], nextStep: [], clear: rejectMutation, append: rejectMutation, prepend: rejectMutation,
+    replace: rejectMutation, remove: rejectMutation, splice: rejectMutation,
+  }
+}
+
 /** Minimal agent mock, mirroring the official tool-skill spec's agentForCwd. */
 function agentForCwd(cwd: string) {
   const id = SessionId(`verify-${cwd.replace(/[^a-zA-Z0-9]/g, '-')}`)
-  const session = Session.create(id, [], { version: 2, id, isSeeded: false, createdAt: 0, cwd })
+  const session = Session.create(id, [], { version: SESSION_FORMAT_VERSION, id, isSeeded: false, createdAt: 0, cwd })
   return {
     ctx: new Context(),
     id,
     options: {},
     session,
-    inbox: new Inbox(session, { inserted: () => {}, discarded: () => {}, claimed: () => {} }),
+    inbox: stubInbox(session),
     status: 'idle',
     send: () => {},
     followup: () => {},
