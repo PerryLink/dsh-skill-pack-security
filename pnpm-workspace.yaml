@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - '@perrylink/dsh-skill-pack-security-provider@2.2.12'
