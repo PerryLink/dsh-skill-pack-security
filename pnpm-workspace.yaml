@@ -1,3 +1,8 @@
+# The provider is this repository's own package, pinned to an exact published
+# version and reviewed in-tree, so it is exempt from the minimum-release-age
+# gate. pnpm matches package names/patterns here (not `name@version` specs):
+# the earlier `@<version>` entries never applied to the lockfile policy check,
+# which only passed while the local metadata cache was warm and failed on a
+# cold CI runner with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION.
 minimumReleaseAgeExclude:
-  - '@perrylink/dsh-skill-pack-security-provider@2.2.12'
-  - '@perrylink/dsh-skill-pack-security-provider@2.2.13'
+  - '@perrylink/dsh-skill-pack-security-provider'

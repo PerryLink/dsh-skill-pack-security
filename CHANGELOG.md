@@ -8,10 +8,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Fixed
 
 - **The `verify` workflow failed on the Windows runner with `version carriers drifted: 1 file(s)` / `DRIFT VERSION`.** The GitHub Actions `windows-latest` checkout applies `core.autocrlf=true`, so `VERSION` read back as `2.2.13\r\n` while `scripts/bump-version.mjs --check` compares against the literal `"2.2.13\n"` carrier content; the Ubuntu job passed because it checks out LF. The repository now ships a `.gitattributes` (`* text=auto eol=lf`, binary overrides) so every checkout is LF, and `--check` compares line-ending-insensitively so a CRLF working tree can never read as drift again.
+- **`pnpm install` failed the supply-chain policy check on a cold CI runner with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`.** `minimumReleaseAgeExclude` matches package names/patterns, not `name@version` specs: the `@perrylink/dsh-skill-pack-security-provider@2.2.12` entry never exempted the lockfile check, which only passed while the runner's metadata cache was warm. The entry is now the bare package name, which exempts this repository's own exactly-pinned provider from the 24-hour age gate on a cold cache (verified with `--config.cacheDir`/`--store-dir` pointed at empty directories).
 
 ### Changed
 
-- Root integration pin backfilled to the published provider 2.2.13: `dependencies["@perrylink/dsh-skill-pack-security-provider"]` and `pnpm-lock.yaml` now resolve `2.2.13` (post-publish step 10 of `docs/release-checklist.md`), and `pnpm-workspace.yaml` carries the `minimumReleaseAgeExclude` entry pnpm requires for a version published inside the minimum-release-age window.
+- Root integration pin backfilled to the published provider 2.2.13: `dependencies["@perrylink/dsh-skill-pack-security-provider"]` and `pnpm-lock.yaml` now resolve `2.2.13` (post-publish step 10 of `docs/release-checklist.md`).
 
 ## [2.2.13] - 2026-09-09
 
