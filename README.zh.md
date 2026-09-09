@@ -25,7 +25,7 @@
 
 | 维度 | 状态 |
 |---|---|
-| Harness | DeepSeek Harness **`dsh-v0.1.3-alpha.1`**（GitHub tag，已于 2026-09-06 核验：完整门禁链 + profile 安装冒烟）。npm 依赖线：`@deepseek-ai/dsh` **0.1.2-rc.1**（peers `>=0.1.2-rc.1 <0.2.0`）。会话信封保留 ignorable 字段但仅用于存量日志读取兼容——Session.append 仍无法盖章，门控行为不变。 |
+| Harness | DeepSeek Harness **`dsh-v0.1.5-alpha.1`**（GitHub tag，已于 2026-09-09 核验：完整门禁链 + profile 安装冒烟）。npm 依赖线：`@deepseek-ai/dsh` **0.1.2-rc.1**（peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`）。会话信封保留 ignorable 字段但仅用于存量日志读取兼容——Session.append 仍无法盖章，门控行为不变。 |
 | Node | `^22.19.0 \|\| >=24.0.0`（DeepSeek Harness 运行时） |
 | 平台 | 任意（技能是内容；provider 是 host 插件） |
 | 模型 | 任意（技能经 `skill` 工具按需加载；`plugin_vet` 是确定性的） |
