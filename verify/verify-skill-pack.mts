@@ -23,7 +23,9 @@
  *      file sets) so the editions cannot drift apart
  *   10. references wiring: every `references/<file>.md` mentioned by a
  *       SKILL.md exists, and every file under references/ is mentioned
- *   11. provider/package.json version syncs to the VERSION file
+ *   11. every version carrier agrees with VERSION (scripts/bump-version.mjs
+ *       --check: both package.json files, 16 SKILL.md, runtime user-agent,
+ *       five README rows)
  *   12. installers/README document the official skill-root ranks (extracted
  *       from the checkout's skill-filesystem source)
  *   13. shell `grep -E` patterns stay POSIX-portable (no GNU-only escapes
@@ -45,6 +47,7 @@
  */
 
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { mkdir, mkdtemp, readFile, realpath, readdir, rm, rmdir, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -514,10 +517,26 @@ async function main(): Promise<void> {
     }
   }))
 
-  // --- 11. provider version sync -----------------------------------------------
-  steps.push(check('provider version: package.json syncs to the VERSION file', async () => {
+  // --- 11. version carriers -----------------------------------------------------
+  // The 2.2.11 release bumped provider/package.json and the runtime user-agent
+  // but left VERSION (and everything derived from it) at 2.2.10, so this check
+  // now delegates to scripts/bump-version.mjs --check, which owns the full
+  // 26-carrier list: VERSION, both package.json version fields, the 16 SKILL.md
+  // metadata.version fields, the two runtime user-agent defaults, and the five
+  // README vet.userAgent rows.
+  steps.push(check('version carriers: VERSION, root+provider package.json, 16 SKILL.md, runtime user-agent, five READMEs all agree', async () => {
     const pkg = JSON.parse(await readFile(join(PACK_DIR, 'provider', 'package.json'), 'utf8'))
     assert.equal(pkg.version, VERSION, `provider/package.json version ${pkg.version} must equal VERSION (${VERSION})`)
+    const result = spawnSync(process.execPath, [join(PACK_DIR, 'scripts', 'bump-version.mjs'), '--check'], {
+      cwd: PACK_DIR,
+      encoding: 'utf8',
+    })
+    assert.equal(
+      result.status,
+      0,
+      `version carriers drifted from VERSION ${VERSION}:\n${result.stdout ?? ''}${result.stderr ?? ''}`,
+    )
+    assert.match(result.stdout ?? '', /version-carriers: OK/, 'bump-version --check must report the carrier count')
   }))
 
   // --- 12. documented ranks vs official constants -------------------------------
