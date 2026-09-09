@@ -128,7 +128,11 @@ if (check) {
   }
   for (const [rel, want] of carriers) {
     const have = read(rel)
-    if (have === want) continue
+    // Compare line-ending-insensitively: a CRLF checkout (Windows default
+    // core.autocrlf=true, e.g. a GitHub Actions windows runner without a
+    // .gitattributes rule) must not read as drift. `.gitattributes` keeps the
+    // checkout LF; this guard keeps the check honest even without it.
+    if (have.replaceAll('\r\n', '\n') === want.replaceAll('\r\n', '\n')) continue
     drift += 1
     const wantLine = want.split('\n').find(line => line.includes(expected))?.trim()
     const haveLine = have.split('\n').find(line => new RegExp(`${UA_PREFIX}\\d`).test(line))?.trim()

@@ -1,0 +1,12 @@
+# Normalize every text file to LF in the repository and in checkouts.
+# The root `VERSION` file is compared byte-for-byte against `"<version>\n"` by
+# scripts/bump-version.mjs --check, so a CRLF checkout (Windows default
+# core.autocrlf=true) must not change it.
+* text=auto eol=lf
+
+# Binary assets stay byte-identical.
+*.tgz binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary

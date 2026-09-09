@@ -3,6 +3,16 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **The `verify` workflow failed on the Windows runner with `version carriers drifted: 1 file(s)` / `DRIFT VERSION`.** The GitHub Actions `windows-latest` checkout applies `core.autocrlf=true`, so `VERSION` read back as `2.2.13\r\n` while `scripts/bump-version.mjs --check` compares against the literal `"2.2.13\n"` carrier content; the Ubuntu job passed because it checks out LF. The repository now ships a `.gitattributes` (`* text=auto eol=lf`, binary overrides) so every checkout is LF, and `--check` compares line-ending-insensitively so a CRLF working tree can never read as drift again.
+
+### Changed
+
+- Root integration pin backfilled to the published provider 2.2.13: `dependencies["@perrylink/dsh-skill-pack-security-provider"]` and `pnpm-lock.yaml` now resolve `2.2.13` (post-publish step 10 of `docs/release-checklist.md`), and `pnpm-workspace.yaml` carries the `minimumReleaseAgeExclude` entry pnpm requires for a version published inside the minimum-release-age window.
+
 ## [2.2.13] - 2026-09-09
 
 ### Fixed
