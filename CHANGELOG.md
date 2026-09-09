@@ -3,6 +3,25 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.12] - 2026-09-09
+
+### Fixed
+
+- **The 2.2.11 release never reached npm.** The Publish workflow's `skill pack verification (25 checks) before publish` job failed in `provider version: package.json syncs to the VERSION file` with `AssertionError: '2.2.11' !== '2.2.10'`: the bump moved `provider/package.json` and the two runtime user-agent defaults to 2.2.11 but left `VERSION`, the 16 `SKILL.md` `metadata.version` fields, and the five README `vet.userAgent` rows at 2.2.10. The tag `v2.2.11` published nothing, so `@perrylink/dsh-skill-pack-security-provider` stayed at 2.2.10 on npm. All 26 carriers are now in lockstep at 2.2.12.
+
+### Added
+
+- `scripts/bump-version.mjs`: one command writes every version carrier from a single input (`node scripts/bump-version.mjs 2.2.12`), and `--check` asserts all 26 carriers equal `VERSION` with a per-file drift report. A renamed carrier fails loud instead of silently skipping.
+- `verify/verify-skill-pack.mts` check 11 now runs that `--check` instead of comparing `provider/package.json` alone, so a partial bump cannot pass verification again.
+
+### Changed
+
+- The root `dependencies["@perrylink/dsh-skill-pack-security-provider"]` pin is no longer bumped in the release commit. pnpm 11 runs a dependency-status check before every `pnpm run`, and the root lockfile resolves that dependency from the registry, so pinning the not-yet-published release version breaks `pnpm run check:readmes` with `ERR_PNPM_NO_MATCHING_VERSION`. The pin (and the root lockfile) are refreshed right after the npm publish — `docs/release-checklist.md` step 10.
+
+### Docs
+
+- `docs/release-checklist.md` lists all 26 carriers and makes the bump script the release path (the PowerShell batch command stays as the documented manual fallback).
+
 ## [2.2.11] - 2026-09-09
 
 ### Changed
