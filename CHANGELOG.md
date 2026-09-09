@@ -3,6 +3,12 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.13] - 2026-09-09
+
+### Fixed
+
+- **`verify/verify-skill-pack.mts` hardcoded session format version 2, so it could never pass on a v3 harness.** The agent mock built its session header as `{ version: 2, ... }`, but `Session.create()` rejects any header whose version differs from the checkout's own `SESSION_FORMAT_VERSION` (`session header version must be 3, got 2` on harness master `19d2e38480`, while the CI-pinned ref `d347e70390` is still v2). The script now reads the live `SESSION_FORMAT_VERSION` from the harness session module and accepts 2 or 3; an absent or unsupported value fails loud instead of silently defaulting. `Inbox` had the same ruler split - a live class on the pinned ref, an interface only on master - so the mock now uses the class when the checkout exports one and otherwise a structural `unsupportedInbox()` stub mirroring the official `dsh-agent-loop-testkit`, whose mutators throw. Re-verified 25/25 on both the local v3 checkout and the pinned v2 copy.
+
 ## [2.2.12] - 2026-09-09
 
 ### Fixed
