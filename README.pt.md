@@ -25,7 +25,7 @@
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness **`dsh-v0.1.5-alpha.1`** (GitHub tag, verificado em 2026-09-09: cadeia completa de gates + smoke de instalação de perfil). Linha de dependência npm: `@deepseek-ai/dsh` **0.1.2-rc.1** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). O envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
+| Harness | DeepSeek Harness **`dsh-v0.1.5-rc.1`** (GitHub tag, verificado em 2026-09-10: cadeia completa de gates + smoke de instalação de perfil). Linha de dependência npm: `@deepseek-ai/dsh` **0.1.5-rc.1** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). O envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
 | Node | `^22.19.0 \|\| >=24.0.0` (o runtime do DeepSeek Harness) |
 | Plataformas | Todas (as skills são conteúdo; o provider é um plugin de host) |
 | Modelo | Qualquer (as skills carregam sob demanda com a ferramenta `skill`; `plugin_vet` é determinístico) |

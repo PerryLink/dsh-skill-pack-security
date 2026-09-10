@@ -5,6 +5,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Pin the `@deepseek-ai/dsh-*` dev/test dependencies to the published `0.1.5-rc.1` line and record `0.1.5-rc.1` in `dshWorkshop.compatibility.dshVersions`; the monthly Compat workflow now runs against `0.1.5-rc.1`. The peer range `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0` is unchanged, so no supported host line is dropped.
+
+### Docs
+
+- Refresh the five-language README compatibility baseline to `dsh-v0.1.5-rc.1` (verified 2026-09-10).
+
+
 ### Fixed
 
 - **The `verify` workflow failed on the Windows runner with `version carriers drifted: 1 file(s)` / `DRIFT VERSION`.** The GitHub Actions `windows-latest` checkout applies `core.autocrlf=true`, so `VERSION` read back as `2.2.13\r\n` while `scripts/bump-version.mjs --check` compares against the literal `"2.2.13\n"` carrier content; the Ubuntu job passed because it checks out LF. The repository now ships a `.gitattributes` (`* text=auto eol=lf`, binary overrides) so every checkout is LF, and `--check` compares line-ending-insensitively so a CRLF working tree can never read as drift again.
