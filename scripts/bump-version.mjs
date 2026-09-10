@@ -20,7 +20,7 @@
  *   3. provider/package.json               version
  *   4. skills/<name>/SKILL.md + skills-en/<name>/SKILL.md  metadata.version (16 files)
  *   5. provider/src/index.ts, provider/src/vet/config.ts   user-agent default
- *   6. README.md + README.{zh,es,pt,hi}.md   vet.userAgent table rows
+ *   6. README.md + README-{zh,es,pt,hi}.md   vet.userAgent table rows
  *
  * NOT a carrier: the root `dependencies["@perrylink/dsh-skill-pack-security-provider"]`
  * pin. pnpm 11 runs a dependency-status check before every `pnpm run`, and the
