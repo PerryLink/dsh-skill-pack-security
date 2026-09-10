@@ -798,7 +798,7 @@ export function maintenanceCheck(inputs: CheckInputs): VetCheck {
 /** README text across the shipped files (the telemetry-disclosure corpus). */
 function readmeTextOf(files: ScannedFile[]): string {
   return files
-    .filter(file => file.text !== null && /^readme(\.|$)/i.test(file.path.split('/').pop() ?? ''))
+    .filter(file => file.text !== null && /^readme(?:[.-]|$)/i.test(file.path.split('/').pop() ?? ''))
     .map(file => file.text)
     .join('\n')
 }
