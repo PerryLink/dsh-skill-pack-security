@@ -93,8 +93,10 @@ jobs:
 
       # npm publish runs the provider's prepack (skills copy into pack/).
       # Requires the NPM_TOKEN repository secret; a tag push without the
-      # secret, or for a version already on the registry, skips the publish
-      # instead of failing the release tag.
+      # secret, or for a version already on the registry, no longer skips
+      # silently: a release that published nothing used to go green, and it now
+      # fails loudly instead. A version already on the registry still skips
+      # (idempotent re-runs).
       - name: Publish provider to npm
         working-directory: provider
         env:
@@ -103,14 +105,30 @@ jobs:
         run: |
           version="$(node -p "require('./package.json').version")"
           if [ -z "$NPM_TOKEN" ]; then
-            echo "NPM_TOKEN secret is not set; skipping npm publish"
-            exit 0
+            echo "::error::NPM_TOKEN secret is not set; refusing to report a release that published nothing"
+            exit 1
           fi
           if npm view "@perrylink/dsh-skill-pack-security-provider@${version}" version >/dev/null 2>&1; then
             echo "@perrylink/dsh-skill-pack-security-provider@${version} is already published; skipping npm publish"
           else
             npm publish --access public --provenance
           fi
+
+      - name: Verify the version is live on the registry
+        shell: bash
+        working-directory: provider
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          for attempt in 1 2 3 4 5 6; do
+            if npm view "@perrylink/dsh-skill-pack-security-provider@${version}" version >/dev/null 2>&1; then
+              echo "@perrylink/dsh-skill-pack-security-provider@${version} is live on the registry"
+              exit 0
+            fi
+            echo "attempt ${attempt}: not visible on the registry yet; retrying"
+            sleep 5
+          done
+          echo "::error::@perrylink/dsh-skill-pack-security-provider@${version} is not on the registry after the publish step"
+          exit 1
 
   release:
     needs: publish-provider
