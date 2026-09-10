@@ -61,7 +61,7 @@
       "network:fetch"
     ],
     "compatibility": {
-      "dshVersions": ["0.1.2-rc.1","0.1.5-alpha.1"]
+      "dshVersions": ["0.1.2-rc.1","0.1.5-rc.1"]
     },
     "capability": {
       "id": "skill-pack-security",
