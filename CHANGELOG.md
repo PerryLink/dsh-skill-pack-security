@@ -3,6 +3,16 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.16] - 2026-09-12
+
+### Fixed
+
+- Write every version carrier from `VERSION` with `scripts/bump-version.mjs` before tagging.
+  The 2.2.15 tag left `VERSION` and the derived carriers at 2.2.14, so the Publish
+  workflow's 25-check verification failed at `version carriers drifted from VERSION 2.2.14`
+  and no npm version shipped. 2.2.16 carries the rc.2 pin move and the provider-subtree
+  sync that 2.2.15 was meant to deliver.
+
 ## [2.2.15] - 2026-09-12
 
 ### Fixed
