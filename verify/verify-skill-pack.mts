@@ -160,7 +160,7 @@ function check(name: string, fn: () => void | Promise<void>): () => Promise<void
  * structural `unsupportedInbox()`. The skill tool never mutates the inbox, so
  * the structural stub's mutators throw, exactly like the official testkit.
  */
-function stubInbox(session: Session) {
+function stubInbox(session: InstanceType<typeof Session>) {
   if (typeof Inbox === 'function') {
     return new Inbox(session, { inserted: () => {}, discarded: () => {}, claimed: () => {} })
   }
