@@ -6,7 +6,9 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "check:readmes": "node scripts/check-readme-sync.mjs"
+    "check:readmes": "node scripts/check-readme-sync.mjs",
+    "check": "tsc -p tsconfig.check.json",
+    "check:ci": "tsc -p tsconfig.check.ci.json"
   },
   "engines": {
     "node": "^22.19.0 || >=24.0.0"
@@ -33,6 +35,10 @@
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-skill-filesystem": ">=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
   },
   "dsh": {
     "bundle": {
