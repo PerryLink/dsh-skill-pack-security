@@ -11,7 +11,18 @@
     "noImplicitAny": false,
     "strict": false,
     "skipLibCheck": true,
-    "paths": {}
+        "paths": {
+      "@deepseek-ai/cordis": ["D:/deepseek-harness/vendor/cordis/lib/types/index.d.ts"],
+      "@deepseek-ai/cordis/*": ["D:/deepseek-harness/vendor/cordis/lib/types/*"],
+      "@deepseek-ai/dsh-llm": ["D:/deepseek-harness/packages/llm/llm/lib/types/index.d.ts"],
+      "@deepseek-ai/dsh-llm/*": ["D:/deepseek-harness/packages/llm/llm/lib/types/*"],
+      "@deepseek-ai/dsh-skill-filesystem": ["D:/deepseek-harness/packages/skill/skill-filesystem/lib/types/index.d.ts"],
+      "@deepseek-ai/dsh-skill-filesystem/*": ["D:/deepseek-harness/packages/skill/skill-filesystem/lib/types/*"],
+      "@deepseek-ai/dsh-tools": ["D:/deepseek-harness/packages/core/tools/lib/types/index.d.ts"],
+      "@deepseek-ai/dsh-tools/*": ["D:/deepseek-harness/packages/core/tools/lib/types/*"],
+      "@deepseek-ai/schemastery": ["D:/deepseek-harness/vendor/schemastery/lib/types/index.d.ts"],
+      "@deepseek-ai/schemastery/*": ["D:/deepseek-harness/vendor/schemastery/lib/types/*"]
+    }
   },
   "include": ["verify/**/*.mts", "scripts/**/*.mjs"]
 }
