@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "check:readmes": "node scripts/check-readme-sync.mjs",
-    "check": "tsc -p tsconfig.check.json",
+    "check": "node scripts/typecheck-checkout.mjs",
     "check:ci": "tsc -p tsconfig.check.ci.json"
   },
   "engines": {
