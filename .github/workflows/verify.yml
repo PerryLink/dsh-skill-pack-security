@@ -40,6 +40,15 @@ jobs:
         working-directory: harness
         run: pnpm install --frozen-lockfile
 
+      # The pack's own type ruler: `check:ci` existed as a script but this repo
+      # gates under verify.yml (no ci.yml), so no job ever invoked it (G-4b).
+      # It needs the pack's devDependencies, which nothing installed before.
+      - name: Install skill pack dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck (published line)
+        run: pnpm run check:ci
+
       - name: Readme sync (five languages)
         run: pnpm run check:readmes
 
