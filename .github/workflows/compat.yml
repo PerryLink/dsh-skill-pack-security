@@ -64,6 +64,7 @@ jobs:
           node --input-type=module -e "import('@perrylink/dsh-skill-pack-security-provider').then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})"
   profile:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
 
