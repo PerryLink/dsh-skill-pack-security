@@ -6,3 +6,12 @@
 # cold CI runner with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION.
 minimumReleaseAgeExclude:
   - '@perrylink/dsh-skill-pack-security-provider'
+  - '@deepseek-ai/cosmokit@1.8.5'
+  - '@deepseek-ai/dsh-brand@0.1.7-alpha.2'
+  - '@deepseek-ai/dsh-fs@0.1.7-alpha.2'
+  - '@deepseek-ai/dsh-home-paths@0.1.7-alpha.2'
+  - '@deepseek-ai/dsh-sandbox@0.1.7-alpha.2'
+  - '@deepseek-ai/dsh-skill-filesystem@0.1.7-alpha.2'
+  - '@deepseek-ai/dsh-skill@0.1.7-alpha.2'
+  - '@deepseek-ai/dsh-util-values@0.1.7-alpha.2'
+  - '@deepseek-ai/schemastery@3.18.4'

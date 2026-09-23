@@ -12,7 +12,7 @@
   },
   "engines": {
     "node": "^22.19.0 || >=24.0.0",
-    "dsh": ">=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0"
+    "dsh": ">=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0 || >=0.1.7-0 <0.2.0"
   },
   "packageManager": "pnpm@11.7.0",
   "keywords": [
@@ -35,9 +35,10 @@
     "@perrylink/dsh-skill-pack-security-provider": "2.2.16"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-skill-filesystem": ">=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0"
+    "@deepseek-ai/dsh-skill-filesystem": ">=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0 || >=0.1.7-0 <0.2.0"
   },
   "devDependencies": {
+    "@deepseek-ai/dsh-skill-filesystem": "0.1.7-alpha.2",
     "@types/node": "^24.0.0",
     "typescript": "^5.9.3"
   },
