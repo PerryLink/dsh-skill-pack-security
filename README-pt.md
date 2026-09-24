@@ -28,7 +28,7 @@
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness **`dsh-v0.1.7-alpha.2`** (GitHub tag, verificado em 2026-09-11: cadeia completa de gates + smoke de instalação de perfil). Linha de dependência npm: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). O envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
+| Harness | DeepSeek Harness **`dsh-v0.1.7-rc.1`** (GitHub tag, verificado em 2026-09-24: cadeia completa de gates + smoke de instalação de perfil). Linha de dependência npm: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). O envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
 | Node | `^22.19.0 \|\| >=24.0.0` (o runtime do DeepSeek Harness) |
 | Plataformas | Todas (as skills são conteúdo; o provider é um plugin de host) |
 | Modelo | Qualquer (as skills carregam sob demanda com a ferramenta `skill`; `plugin_vet` é determinístico) |
@@ -181,7 +181,7 @@ Todas as opções são campos Schemastery `Config` (modificáveis a partir do co
 | `vet.maxFindingsPerCheck` | `12` | Teto de achados por verificação |
 | `vet.dataResponsibility` | `true` | Executa a revisão de responsabilidade de dados (desativável por implantação) |
 | `vet.externalScanners` | `true` | Orquestra `osv-scanner`/`npm audit` quando seus CLIs estão presentes; `false` força a verificação de dependências autoconsultada integrada |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.16 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de download |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.17 (+https://github.com/PerryLink/dsh-skill-pack-security)` | User-agent de download |
 | `vet.gate.policy` | `warn` | Portão de instalação: `warn` (não bloqueante) ou `deny` (bloqueia ante FAIL) |
 
 ## Tools & surfaces

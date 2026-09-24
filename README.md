@@ -29,7 +29,7 @@
 
 | Surface | Status |
 |---|---|
-| Harness | DeepSeek Harness **`dsh-v0.1.7-alpha.2`** (GitHub tag, verified 2026-09-11: full gate chain + profile install smoke). npm dependency line: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). The session envelope keeps its ignorable field for stored-log read compatibility only - Session.append still cannot stamp it, so audit-gate behavior is unchanged. |
+| Harness | DeepSeek Harness **`dsh-v0.1.7-rc.1`** (GitHub tag, verified 2026-09-24: full gate chain + profile install smoke). npm dependency line: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). The session envelope keeps its ignorable field for stored-log read compatibility only - Session.append still cannot stamp it, so audit-gate behavior is unchanged. |
 | Node | `^22.19.0 \|\| >=24.0.0` (the DeepSeek Harness runtime) |
 | Platforms | All (the skills are content; the provider is a host plugin) |
 | Model | Any (skills load on demand via the `skill` tool; `plugin_vet` is deterministic) |
@@ -183,7 +183,7 @@ All tunables are Schemastery `Config` fields (changeable from cordis.yml). `prov
 | `vet.maxFindingsPerCheck` | `12` | Findings cap per check |
 | `vet.dataResponsibility` | `true` | Run the data-responsibility review (disable per deployment) |
 | `vet.externalScanners` | `true` | Orchestrate `osv-scanner`/`npm audit` when their CLIs are present; `false` forces the built-in self-computed dependency scan |
-| `vet.userAgent` | `dsh-skill-pack-security/2.2.16 (+https://github.com/PerryLink/dsh-skill-pack-security)` | Fetch user-agent |
+| `vet.userAgent` | `dsh-skill-pack-security/2.2.17 (+https://github.com/PerryLink/dsh-skill-pack-security)` | Fetch user-agent |
 | `vet.gate.policy` | `warn` | Install gate: `warn` (non-blocking) or `deny` (block on FAIL) |
 
 ## Tools & surfaces

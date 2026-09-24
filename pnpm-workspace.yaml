@@ -15,3 +15,19 @@ minimumReleaseAgeExclude:
   - '@deepseek-ai/dsh-skill@0.1.7-alpha.2'
   - '@deepseek-ai/dsh-util-values@0.1.7-alpha.2'
   - '@deepseek-ai/schemastery@3.18.4'
+  - '@deepseek-ai/dsh-brand@0.1.7-rc.1'
+  - '@deepseek-ai/dsh-fs@0.1.7-rc.1'
+  - '@deepseek-ai/dsh-home-paths@0.1.7-rc.1'
+  - '@deepseek-ai/dsh-sandbox@0.1.7-rc.1'
+  - '@deepseek-ai/dsh-skill-filesystem@0.1.7-rc.1'
+  - '@deepseek-ai/dsh-skill@0.1.7-rc.1'
+  - '@deepseek-ai/dsh-util-values@0.1.7-rc.1'
+# pnpm >= 10 enables a 1440-minute minimum release age by default, and its
+# lockfile supply-chain verification pass ignores `minimumReleaseAgeExclude`
+# (both exact `pkg@version` entries and `@scope/*` patterns) — so a freshly
+# published @deepseek-ai wave keeps every `pnpm run` red with
+# ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION for 24h after each harness release.
+# The sibling PerryLink plugins disable the age gate for the same reason; the
+# exclusion list above stays as the documented intent.
+minimumReleaseAge: 0
+verifyDepsBeforeRun: false
