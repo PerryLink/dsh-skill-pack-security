@@ -91,7 +91,7 @@
     "@deepseek-ai/dsh-skill-filesystem": "0.1.5-rc.2",
     "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
     "@deepseek-ai/schemastery": "^3.18.2",
-    "@types/node": "^26.6.0",
+    "@types/node": "^26.6.2",
     "typescript": "^7.0.2"
   },
   "scripts": {
