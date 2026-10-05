@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [2.2.21] - undefined
+
+undefined
+
 ## [2.2.20] - 2026-10-05
 
 ### Fixed
