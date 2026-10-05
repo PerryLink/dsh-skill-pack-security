@@ -55,11 +55,18 @@ jobs:
       #     So this repository's own gate failed while 42 others passed. Running
       #     from outside the tree removes the ambiguity; --repo is absolute
       #     because the working directory is no longer the checkout.
+      # ⚠️  `--repo` points at `provider/`, NOT the repository root. This repo is a
+      #     workspace: the root package.json is the skill-pack intake shell (it has
+      #     no cordis.patch.yml, no entry and no built lib/), while the installable
+      #     DSH plugin bundle lives in provider/. Doctoring the root made R2 (tarball
+      #     integrity), R3 (cordis.patch.yml), R4 (entry contract) and R7 (prebuilt
+      #     files) fail on artifacts that were never supposed to exist there, while
+      #     the real bundle passed 16/16 with 2 warns. Measured both ways locally.
       - name: Run dsh-plugin-doctor (static R/K on the committed tree)
         run: |
           set +e
           cd /tmp
-          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.4.4 --repo "$GITHUB_WORKSPACE" --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"
+          out="$(npx --yes @perrylink/dsh-plugin-doctor@0.4.4 --repo "$GITHUB_WORKSPACE/provider" --no-smoke --only "R,K" --json /tmp/doctor.json 2>&1)"
           set -e
           printf '%s\n' "$out"
           echo "$out" | grep -q 'R0 ' || { echo "::error::doctor ran no R checks"; exit 1; }
