@@ -24,7 +24,6 @@ import { fileURLToPath } from 'node:url'
 import type { Context } from '@deepseek-ai/cordis'
 import { FileSystemSkillProvider } from '@deepseek-ai/dsh-skill-filesystem'
 import z from '@deepseek-ai/schemastery'
-import type Schema from '@deepseek-ai/schemastery'
 import { resolveVetConfig, type VetConfigInput } from './vet/config.js'
 import { buildVetTool } from './vet/tool.js'
 
@@ -49,7 +48,16 @@ export interface Config {
   vet?: VetConfigInput
 }
 
-export const Config: Schema<Config> = z.object({
+// Left un-annotated on purpose, matching the family's other providers: annotating
+// this `Schema<Config>` cannot typecheck under `exactOptionalPropertyTypes`, because
+// `.default()` makes a field's mode generic and the annotation then sees
+// `Volatile<T | undefined>` rather than `T | undefined`. schemastery 3.18.4 widened
+// that (`SchemaOutput` gained the `volatile`/`volatile-defined` modes), which turned
+// the annotation into `error TS2322` and broke this package's build.
+//
+// The `Config` interface above stays the consumer-facing type — it is what `apply()`
+// takes and what a caller reads — and the two are kept in step by hand.
+export const Config = z.object({
   watch: z.boolean().default(false),
   language: z.union(['zh', 'en'] as const).default('zh'),
   skillsDir: z.string().min(1),
