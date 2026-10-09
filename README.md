@@ -25,6 +25,20 @@
 
 ---
 
+## What is dsh-skill-pack-security?
+
+Eight security-audit skills plus an automated plugin supply-chain gate for DeepSeek Harness.
+
+The skills teach the audit methodology; the `plugin_vet` tool executes the pre-install scan — license / SBOM / commit pinning / malicious patterns / five-dimension risk card.
+
+![Terminal demo of dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+
+## Comparison
+
+![Measured comparison chart for dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-evidence.png)
+
+38 poison samples (20 malicious, 18 benign) · benchmark/RESULTS.md
+
 ## Compatibility
 
 | Surface | Status |
@@ -106,8 +120,12 @@ Each bundle keeps its main file ≤ 300 lines (progressive disclosure; details l
 ## Quick start
 
 ```sh
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
+```
+
+```sh
 # 1. install the bundle into your profile
-dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
 
 # or from npm (published releases)
 dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
@@ -118,7 +136,7 @@ dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 
 ## Install & uninstall
 
-- **git channel** (latest `main`): `dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"` — mounts the provider bundle; `prepack` embeds both editions into the tarball.
+- **git channel** (latest `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — mounts the provider bundle; `prepack` embeds both editions into the tarball.
 - **npm channel** (published releases): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`.
 - **tarball channel**: `pnpm pack` in `provider/`, then `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`.
 - **uninstall**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (or remove the row; pure-skill copies are removed with the installer's `-Uninstall` / `--uninstall`).
