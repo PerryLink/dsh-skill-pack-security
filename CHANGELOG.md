@@ -3,7 +3,39 @@
 All notable changes to dsh-skill-pack-security are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.22] - 2026-10-05
+
+### Changed
+
+- Correct the release date in the previous section, which was stamped with the literal string `undefined` by the release stamper. No content or behaviour change; the version is bumped only because npm will not republish an existing version.
+
+
 ## [Unreleased]
+
+## [2.2.21] - 2026-10-05
+
+undefined
+
+## [2.2.20] - 2026-10-05
+
+### Fixed
+
+- The PUBLISHED manifest now declares the 0.2 host line. The 2.2.19 note below says the "engines.dsh and peerDependencies union" gained the 0.2 clauses — that was true of the workspace root manifest but **not** of `provider/package.json`, which is the manifest npm actually ships. Measured on the published tarball: `@perrylink/dsh-skill-pack-security-provider@2.2.19` still carried the three-clause range `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0`, so the compatibility gate rejected (or, on the 0.2.0 prereleases, silently admitted) the provider on every 0.2 host. The provider manifest's `engines.dsh`, `@deepseek-ai/dsh-skill-filesystem` and `@deepseek-ai/dsh-tools` ranges now match the root manifest's coverage.
+
+### Changed
+
+- The provider's upper bound is `<0.3.0-0` rather than the family's `<0.3.0`. Under the loader's `semver.satisfies(runtime, range, { includePrerelease: true })`, `<0.3.0` admits `0.3.0-0` and `0.3.0-rc.*` because a prerelease sorts below its release; the `-0` sentinel closes that window so a future 0.3 prerelease is rejected until this pack is re-verified against it. The root manifest keeps the older form and should be aligned at the next family-wide touch.
+- `dsh.compatibility.dshVersions` is deliberately **not** touched: that timeline records host lines this pack was actually *re-verified* against, and this release re-verified nothing — it corrects a declaration to match the coverage the family already claims.
+
+## [2.2.19] - 2026-10-04
+
+### Fixed
+
+- The 2.2.18 release could not be published: the registry answers `409 Cannot publish over previously staged version "2.2.18"` for the provider package, so that version number is unusable on the npm side. This release carries the identical content under a fresh version.
+
+### Changed
+
+- Host pins move to `0.2.1-alpha.1`; re-verified against that host line. Every `@deepseek-ai/dsh-*` dev/test dependency now pins `0.2.1-alpha.1`, the `dshWorkshop.compatibility.dshVersions` timeline appends `0.2.1-alpha.1`, and the compatibility baseline in every README records the `dsh-v0.2.1-alpha.1` host. The declared host ranges (`engines.dsh` and the `peerDependencies` union) gain the `|| >=0.2.0-0 <0.3.0 || >=0.2.1-0 <0.3.0` clauses: the previous upper bound was `<0.2.0`, which under semver rejects every 0.2.x host, so the probe host itself was not installable. Nothing was narrowed — the `0.1.x` clauses are unchanged, in place and in order.
 
 ## [2.2.18] - 2026-10-04
 
