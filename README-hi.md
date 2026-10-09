@@ -24,6 +24,20 @@
 
 ---
 
+## What is dsh-skill-pack-security?
+
+DeepSeek Harness के लिए आठ सुरक्षा-ऑडिट स्किल और एक स्वचालित प्लगइन सप्लाई-चेन गेट।
+
+स्किल ऑडिट पद्धति सिखाती हैं; `plugin_vet` टूल प्री-इंस्टॉल स्कैन निष्पादित करता है — लाइसेंस / SBOM / कमिट पिनिंग / दुर्भावनापूर्ण पैटर्न / पाँच-आयामी जोखिम कार्ड।
+
+![dsh-skill-pack-security का टर्मिनल डेमो: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+
+## Comparison
+
+![dsh-skill-pack-security का मापा गया तुलना चार्ट](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-evidence.png)
+
+38 poison samples (20 malicious, 18 benign) · benchmark/RESULTS.md
+
 ## Compatibility
 
 | सतह | स्थिति |
@@ -105,8 +119,12 @@ Claude Code इकोसिस्टम की 3000+ स्किल इस र�
 ## Quick start
 
 ```sh
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
+```
+
+```sh
 # 1. bundle को अपने profile में इंस्टॉल करें
-dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
 
 # या npm से (प्रकाशित संस्करण)
 dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
@@ -117,7 +135,7 @@ dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 
 ## Install & uninstall
 
-- **git चैनल** (नवीनतम `main`): `dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"` — provider bundle माउंट करता है; `prepack` दोनों संस्करण tarball में एम्बेड करता है।
+- **git चैनल** (नवीनतम `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — provider bundle माउंट करता है; `prepack` दोनों संस्करण tarball में एम्बेड करता है।
 - **npm चैनल** (प्रकाशित संस्करण): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`।
 - **tarball चैनल**: `provider/` में `pnpm pack`, फिर `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`।
 - **अनइंस्टॉल**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (या पंक्ति हटाएँ; शुद्ध-स्किल प्रतियाँ इंस्टॉलर के `-Uninstall` / `--uninstall` से हटती हैं)।

@@ -24,6 +24,20 @@
 
 ---
 
+## What is dsh-skill-pack-security?
+
+Ocho skills de auditoría de seguridad más una puerta automática de cadena de suministro de plugins para DeepSeek Harness.
+
+Las skills enseñan la metodología de auditoría; la herramienta `plugin_vet` ejecuta el escaneo previo a la instalación — licencia / SBOM / pin de commit / patrones maliciosos / tarjeta de riesgo de cinco dimensiones.
+
+![Demostración de terminal de dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+
+## Comparison
+
+![Gráfico comparativo medido de dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-evidence.png)
+
+38 poison samples (20 malicious, 18 benign) · benchmark/RESULTS.md
+
 ## Compatibility
 
 | Superficie | Estado |
@@ -104,8 +118,12 @@ Cada bundle mantiene su archivo principal ≤ 300 líneas (divulgación progresi
 ## Quick start
 
 ```sh
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
+```
+
+```sh
 # 1. instala el bundle en tu perfil
-dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
 
 # o desde npm (versiones publicadas)
 dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
@@ -116,7 +134,7 @@ dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 
 ## Install & uninstall
 
-- **Canal git** (último `main`): `dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"` — monta el bundle del provider; `prepack` embebe ambas ediciones en el tarball.
+- **Canal git** (último `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — monta el bundle del provider; `prepack` embebe ambas ediciones en el tarball.
 - **Canal npm** (versiones publicadas): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`.
 - **Canal tarball**: `pnpm pack` en `provider/`, luego `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`.
 - **Desinstalar**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (o elimina la fila; las copias puras de skills se quitan con `-Uninstall` / `--uninstall` del instalador).

@@ -24,6 +24,20 @@
 
 ---
 
+## What is dsh-skill-pack-security?
+
+面向 DeepSeek Harness 的八个安全审计技能 + 一个自动化插件供应链门禁。
+
+技能教审计方法论；`plugin_vet` 工具执行安装前扫描——许可证 / SBOM / commit 锁定 / 恶意模式 / 五维风险卡片。
+
+![dsh-skill-pack-security 终端演示：dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+
+## Comparison
+
+![dsh-skill-pack-security 的实测对比柱状图](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-evidence.png)
+
+38 poison samples (20 malicious, 18 benign) · benchmark/RESULTS.md
+
 ## Compatibility
 
 | 维度 | 状态 |
@@ -105,8 +119,12 @@ Claude Code 生态 3000+ 技能已经证明这种形态的分发价值。DSH 的
 ## Quick start
 
 ```sh
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
+```
+
+```sh
 # 1. 把 bundle 安装进 profile
-dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"
+dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security
 
 # 或从 npm（发布版本）
 dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
@@ -117,7 +135,7 @@ dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 
 ## Install & uninstall
 
-- **git 通道**（最新 `main`）：`dsh plugin --profile web add "github:PerryLink/dsh-skill-pack-security#main"` —— 挂载 provider bundle；`prepack` 把双语言版嵌入 tarball。
+- **git 通道**（最新 `main`）：`dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` —— 挂载 provider bundle；`prepack` 把双语言版嵌入 tarball。
 - **npm 通道**（发布版本）：`dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`。
 - **tarball 通道**：在 `provider/` 里 `pnpm pack`，再 `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`。
 - **卸载**：`dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider`（或删除该行；纯技能副本用安装器的 `-Uninstall` / `--uninstall` 删除）。
