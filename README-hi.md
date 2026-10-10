@@ -32,6 +32,10 @@ DeepSeek Harness के लिए आठ सुरक्षा-ऑडिट स�
 
 ![dsh-skill-pack-security का टर्मिनल डेमो: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
 
+![Animated terminal demo of dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.gif)
+
+*वही रन, एनिमेटेड।*
+
 ## Comparison
 
 ![dsh-skill-pack-security का मापा गया तुलना चार्ट](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-evidence.png)
