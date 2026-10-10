@@ -1,5 +1,9 @@
 # 可选 provider 插件（npm bundle）/ Optional provider plugin (npm bundle)
 
+[![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-skill-pack-security-provider)](https://www.npmjs.com/package/@perrylink/dsh-skill-pack-security-provider)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../LICENSE)
+[![DSH Market](https://raw.githubusercontent.com/2BingLing/dsh-market/master/assets/readme/badge-top-rated.svg)](https://dsh.market/)
+
 [English](#english) | [中文](#中文)
 
 本目录是一个**可选的** DSH 插件：把包内技能目录注册进 `ctx.skills`，免去把技能复制到扫描根目录的步骤。技能包本体不依赖它。默认发布中文版 `skills/`，`language: 'en'` 发布英文版 `skills-en/`。包已声明 `dsh.bundle` 并发布在 npm：`dsh plugin add @perrylink/dsh-skill-pack-security-provider` 一键挂载。
@@ -7,6 +11,12 @@
 ## English
 
 This directory is an **optional** DSH plugin: it registers the pack's skill directory on `ctx.skills`, so the skills do not need to be copied into a scanned root. The pack itself does not depend on it. It publishes the Chinese edition `skills/` by default; `language: 'en'` publishes the English edition `skills-en/`. The package declares `dsh.bundle` and is published on npm: `dsh plugin add @perrylink/dsh-skill-pack-security-provider` mounts it in one command.
+
+![Terminal demo of dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+
+![Animated terminal demo of dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.gif)
+
+*The same run, animated.*
 
 ### Design
 

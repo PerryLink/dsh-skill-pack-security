@@ -69,7 +69,7 @@ export const Config = z.object({
     maxExtractBytes: z.natural().min(1024).max(512 * 1024 * 1024).default(64 * 1024 * 1024),
     maxDepNodes: z.natural().min(1).max(10000).default(600),
     maxFindingsPerCheck: z.natural().min(1).max(100).default(12),
-    userAgent: z.string().max(200).default('dsh-skill-pack-security/2.2.23 (+https://github.com/PerryLink/dsh-skill-pack-security)'),
+    userAgent: z.string().max(200).default('dsh-skill-pack-security/2.2.24 (+https://github.com/PerryLink/dsh-skill-pack-security)'),
     dataResponsibility: z.boolean().default(true),
     externalScanners: z.boolean().default(true),
     gate: z.object({
