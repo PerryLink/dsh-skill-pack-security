@@ -21,9 +21,21 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add dsh-skill-pack-security
+```
+
+
 </div>
 
 ---
+
+## Install & uninstall
+
+- **git channel** (latest `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — mounts the provider bundle; `prepack` embeds both editions into the tarball.
+- **npm channel** (published releases): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`.
+- **tarball channel**: `pnpm pack` in `provider/`, then `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`.
+- **uninstall**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (or remove the row; pure-skill copies are removed with the installer's `-Uninstall` / `--uninstall`).
 
 ## What is dsh-skill-pack-security?
 
@@ -31,7 +43,7 @@ Eight security-audit skills plus an automated plugin supply-chain gate for DeepS
 
 The skills teach the audit methodology; the `plugin_vet` tool executes the pre-install scan — license / SBOM / commit pinning / malicious patterns / five-dimension risk card.
 
-![Terminal demo of dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+![Terminal demo of dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-hero.png)
 
 ![Animated terminal demo of dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.gif)
 
@@ -99,7 +111,7 @@ Each bundle keeps its main file ≤ 300 lines (progressive disclosure; details l
 - **Data-responsibility review** — the policy-scan dimensions as deterministic rules: ungated listeners on sensitive seams (`agent/pre-step`, `tools/pre-execute`, `session/event`, …), outbound endpoints without README telemetry/privacy disclosure, description-behavior keyword coverage, and embedded instruction-override payloads in shipped text (skills, docs, prompts, tests). Every finding cites `prompt-injection-review` for the manual deep-dive; disable per deployment with `vet.dataResponsibility: false`. A model-assisted review stage is the documented future upgrade.
 - **Five-dimension risk report** — license / source / dependencies / build scripts / maintenance, each 0–100, folded into an overall verdict: PASS, WARN, or FAIL.
 
-**Install gate.** The verdict feeds an installation gate — `gate.policy: warn` (default, non-blocking) prints a warning on FAIL; `gate.policy: deny` blocks the installation:
+**Install gate.** The verdict feeds an installation gate — `gate.policy: warn` (default, non-blocking) prints a warning on FAIL; `gate.policy: deny` returns a deny verdict. The tool does not intercept the host's `dsh plugin add`; wire the verdict into your installer/CI to enforce it:
 
 ```yaml
 - id: skill-pack-security
@@ -108,7 +120,7 @@ Each bundle keeps its main file ≤ 300 lines (progressive disclosure; details l
     language: en
     vet:
       gate:
-        policy: deny   # block installs that fail plugin_vet
+        policy: deny   # return a deny verdict for failed plugin_vet (caller enforces)
 ```
 
 **Complementary to `dsh-plugin-check`.** The official plugin validator's 36 checks verify a plugin's *contract and quality* (config schema, effect registration, tool JSON shape); `plugin_vet` verifies the *supply chain* of where a plugin comes from. Run both:
@@ -137,13 +149,6 @@ dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
 # 2. restart and verify the row
 dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 ```
-
-## Install & uninstall
-
-- **git channel** (latest `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — mounts the provider bundle; `prepack` embeds both editions into the tarball.
-- **npm channel** (published releases): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`.
-- **tarball channel**: `pnpm pack` in `provider/`, then `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`.
-- **uninstall**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (or remove the row; pure-skill copies are removed with the installer's `-Uninstall` / `--uninstall`).
 
 ## Installing the skills by hand
 
@@ -215,7 +220,7 @@ All tunables are Schemastery `Config` fields (changeable from cordis.yml). `prov
 | `plugin_vet` | tool | Pre-install supply-chain scan (license / SBOM / commit lock / malicious / risk card); findings cite skill sections |
 | `skill-pack-security` | skill provider | Registers the pack's `skills/` or `skills-en/` edition on `ctx.skills` |
 | Eight `SKILL.md` bundles | skills | The audit methodology, in two language editions |
-| install gate | gate | `vet.gate.policy: warn \| deny` feeds installation decisions |
+| install gate | gate | `vet.gate.policy: warn \| deny` returns a verdict; the caller (installer/CI) enforces it |
 
 ## Permissions & data
 
@@ -240,7 +245,7 @@ All tunables are Schemastery `Config` fields (changeable from cordis.yml). `prov
 7. 13 bad-frontmatter fixtures exercise the official fail-closed rules (missing fields, legacy camel-case keys, non-boolean values, non-kebab names, nested dirs, name mismatch); flat-file skills load and nested `**/SKILL.md` is not discovered
 8. The optional provider plugin mounts the Chinese and the English edition via `ctx.effect()`, disposes cleanly, and rejects misconfiguration (empty or nonexistent `skillsDir`)
 9–15. Self-hardening checks: zh↔en structural parity, references wiring (no dangling/orphan files), provider version sync, documented skill-root ranks vs the official constants, POSIX-portable `grep -E` patterns, secret self-check, UTF-8-safe release checklist
-16–19. `plugin_vet` through the real tools runtime: it registers on `ctx.tools`; the compliant fixture passes; the no-license fixture fails and cites `dependency-audit §3`; the malicious postinstall fixture fails (scripts/exfil/obfuscation, citing `supply-chain-review §1`); the gate blocks installation under `policy: deny`
+16–19. `plugin_vet` through the real tools runtime: it registers on `ctx.tools`; the compliant fixture passes; the no-license fixture fails and cites `dependency-audit §3`; the malicious postinstall fixture fails (scripts/exfil/obfuscation, citing `supply-chain-review §1`); the gate returns a deny verdict under `policy: deny` (the caller enforces it)
 20. The scan engine is zero-dependency (`node:` builtins and relative imports only)
 21. Report redaction keeps secret-shaped text out of rendered output
 

@@ -20,9 +20,21 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add dsh-skill-pack-security
+```
+
+
 </div>
 
 ---
+
+## Install & uninstall
+
+- **git 通道**（最新 `main`）：`dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` —— 挂载 provider bundle；`prepack` 把双语言版嵌入 tarball。
+- **npm 通道**（发布版本）：`dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`。
+- **tarball 通道**：在 `provider/` 里 `pnpm pack`，再 `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`。
+- **卸载**：`dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider`（或删除该行；纯技能副本用安装器的 `-Uninstall` / `--uninstall` 删除）。
 
 ## What is dsh-skill-pack-security?
 
@@ -30,7 +42,7 @@
 
 技能教审计方法论；`plugin_vet` 工具执行安装前扫描——许可证 / SBOM / commit 锁定 / 恶意模式 / 五维风险卡片。
 
-![dsh-skill-pack-security 终端演示：dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+![dsh-skill-pack-security 终端演示：dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-hero.png)
 
 ![Animated terminal demo of dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.gif)
 
@@ -98,7 +110,7 @@ Claude Code 生态 3000+ 技能已经证明这种形态的分发价值。DSH 的
 - **数据责任审查** —— 策略扫描三维的确定性规则版：敏感 seam（`agent/pre-step`、`tools/pre-execute`、`session/event` 等）上的无门控监听、README 未披露出站端点、描述-行为关键词覆盖率、随包文本中的指令覆盖类注入载荷（技能/文档/提示词/测试）。每条发现都指向 `prompt-injection-review` 供人工深审；可用 `vet.dataResponsibility: false` 按部署关闭。模型辅助审查阶段为已文档化的后续升级。
 - **五维风险报告** —— 许可证 / 来源 / 依赖 / 构建脚本 / 维护状态，各 0–100 分，汇总为整体判定：PASS、WARN 或 FAIL。
 
-**安装前门禁。** 判定结果进入安装门禁——`gate.policy: warn`（默认，不阻断）在 FAIL 时打印警告；`gate.policy: deny` 直接阻断安装：
+**安装前门禁。** 判定结果进入安装门禁——`gate.policy: warn`（默认，不阻断）在 FAIL 时打印警告；`gate.policy: deny` 返回拒绝判定；工具本身不拦截宿主的 `dsh plugin add`，需由安装器/CI 执行该判定：
 
 ```yaml
 - id: skill-pack-security
@@ -107,7 +119,7 @@ Claude Code 生态 3000+ 技能已经证明这种形态的分发价值。DSH 的
     language: en
     vet:
       gate:
-        policy: deny   # 阻断 plugin_vet 不过的安装
+        policy: deny   # 对 plugin_vet 不过的目标返回拒绝判定（由调用方执行）
 ```
 
 **与 `dsh-plugin-check` 互补。** 官方插件校验器的 36 项检测验证插件的*契约与质量*（配置 Schema、effect 注册、工具 JSON 形态）；`plugin_vet` 验证插件的*来源供应链*是否可信。两者都跑：
@@ -136,13 +148,6 @@ dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
 # 2. 重启并校验该行
 dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 ```
-
-## Install & uninstall
-
-- **git 通道**（最新 `main`）：`dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` —— 挂载 provider bundle；`prepack` 把双语言版嵌入 tarball。
-- **npm 通道**（发布版本）：`dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`。
-- **tarball 通道**：在 `provider/` 里 `pnpm pack`，再 `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`。
-- **卸载**：`dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider`（或删除该行；纯技能副本用安装器的 `-Uninstall` / `--uninstall` 删除）。
 
 ## Installing the skills by hand
 
@@ -214,7 +219,7 @@ bash ./scripts/install.sh --target user-agents --language en
 | `plugin_vet` | tool | 安装前供应链扫描（许可证 / SBOM / commit 锁定 / 恶意 / 风险卡片）；发现引用技能章节 |
 | `skill-pack-security` | skill provider | 把本包的 `skills/` 或 `skills-en/` 版本注册到 `ctx.skills` |
 | 八个 `SKILL.md` 技能 | skills | 审计方法论，两个语言版 |
-| 安装门禁 | gate | `vet.gate.policy: warn \| deny` 决定安装是否放行 |
+| 安装门禁 | gate | `vet.gate.policy: warn \| deny` 返回判定；由安装器/CI 放行 |
 
 ## Permissions & data
 

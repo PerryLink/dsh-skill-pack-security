@@ -20,9 +20,21 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add dsh-skill-pack-security
+```
+
+
 </div>
 
 ---
+
+## Install & uninstall
+
+- **Canal git** (último `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — monta o bundle do provider; `prepack` embebe ambas as edições no tarball.
+- **Canal npm** (versões publicadas): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`.
+- **Canal tarball**: `pnpm pack` em `provider/`, depois `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`.
+- **Desinstalar**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (ou remova a linha; as cópias puras de skills são removidas com `-Uninstall` / `--uninstall` do instalador).
 
 ## What is dsh-skill-pack-security?
 
@@ -30,7 +42,7 @@ Oito skills de auditoria de segurança mais um portão automático de cadeia de 
 
 As skills ensinam a metodologia de auditoria; a ferramenta `plugin_vet` executa a varredura pré-instalação — licença / SBOM / pin de commit / padrões maliciosos / cartão de risco em cinco dimensões.
 
-![Demonstração de terminal do dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.png)
+![Demonstração de terminal do dsh-skill-pack-security: dsh-skill-pack-security — install the provider, verify all 25 checks](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-hero.png)
 
 ![Animated terminal demo of dsh-skill-pack-security](https://raw.githubusercontent.com/PerryLink/dsh-skill-pack-security/main/docs/assets/dsh-skill-pack-security-demo.gif)
 
@@ -97,7 +109,7 @@ O `plugin_vet` é o complemento automático do pacote: um scanner sem dependênc
 - **Padrões maliciosos** — scripts de ciclo de vida (`preinstall`/`install`/`postinstall`), domínios de exfiltração e payloads ofuscados/codificados.
 - **Relatório de risco em cinco dimensões** — licença / origem / dependências / scripts de build / manutenção, cada uma 0–100, dobradas em um veredicto global: PASS, WARN ou FAIL.
 
-**Portão de instalação.** O veredicto alimenta um portão de instalação — `gate.policy: warn` (padrão, não bloqueante) imprime um aviso ante FAIL; `gate.policy: deny` bloqueia a instalação:
+**Portão de instalação.** O veredicto alimenta um portão de instalação — `gate.policy: warn` (padrão, não bloqueante) imprime um aviso ante FAIL; `gate.policy: deny` devolve um veredicto de negação; a ferramenta não intercepta `dsh plugin add`, o instalador/CI aplica:
 
 ```yaml
 - id: skill-pack-security
@@ -106,7 +118,7 @@ O `plugin_vet` é o complemento automático do pacote: um scanner sem dependênc
     language: en
     vet:
       gate:
-        policy: deny   # bloqueia instalações que falham no plugin_vet
+        policy: deny   # devolve negação; o chamador aplica
 ```
 
 **Complementar ao `dsh-plugin-check`.** As 36 verificações do validador oficial verificam o *contrato e a qualidade* de um plugin (esquema de configuração, registro de efeitos, forma JSON das ferramentas); o `plugin_vet` verifica a *cadeia de suprimentos* de onde um plugin vem. Execute ambos:
@@ -135,13 +147,6 @@ dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider
 # 2. reinicie e verifique a linha
 dsh --profile web --dump-config | grep -A3 'id: skill-pack-security'
 ```
-
-## Install & uninstall
-
-- **Canal git** (último `main`): `dsh plugin --profile web add github:PerryLink/dsh-skill-pack-security` — monta o bundle do provider; `prepack` embebe ambas as edições no tarball.
-- **Canal npm** (versões publicadas): `dsh plugin --profile web add @perrylink/dsh-skill-pack-security-provider`.
-- **Canal tarball**: `pnpm pack` em `provider/`, depois `dsh plugin --profile web add ./@perrylink-dsh-skill-pack-security-provider-<version>.tgz`.
-- **Desinstalar**: `dsh plugin --profile web remove @perrylink/dsh-skill-pack-security-provider` (ou remova a linha; as cópias puras de skills são removidas com `-Uninstall` / `--uninstall` do instalador).
 
 ## Installing the skills by hand
 
