@@ -401,7 +401,9 @@ tsx verify/verify-skill-pack.mts    # 25-जाँच headless सत्या�
 
 </details>
 
-</details>## License
+</details>
+
+## License
 
 [Apache License 2.0](LICENSE) © 2026 dsh-skill-pack-security contributors
 
