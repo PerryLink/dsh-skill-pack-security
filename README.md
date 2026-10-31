@@ -1,6 +1,9 @@
 <div align="center">
 
 # dsh-skill-pack-security
+
+> **Install the provider:** the runnable plugin is `@perrylink/dsh-skill-pack-security-provider` (npm, with provenance). This repository's root package is private; the provider is the package that registers `plugin_vet` and the security checks.
+
 - **1024 store channel**: `npm i -g dsh1024` once, then `dsh1024 plugin --profile web add dsh-skill-pack-security` (counts toward the [deepseek1024.com](https://deepseek1024.com) install ranking).
 [![Gitee](https://img.shields.io/badge/Gitee-mirror-c71d23?logo=gitee)](https://gitee.com/perrylink/dsh-skill-pack-security)
 [![dshfind](https://dshfind.com/api/badge/PerryLink/dsh-skill-pack-security?metric=downloads)](https://dshfind.com/plugins/PerryLink/dsh-skill-pack-security?ref=badge)

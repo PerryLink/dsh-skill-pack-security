@@ -1,6 +1,9 @@
 <div align="center">
 
 # dsh-skill-pack-security
+
+> **Instale el provider:** el plugin ejecutable es `@perrylink/dsh-skill-pack-security-provider` (npm, con provenance). El paquete raíz de este repositorio es privado; el provider es el paquete que registra `plugin_vet` y las comprobaciones de seguridad.
+
 - **Canal 1024 store**: `npm i -g dsh1024` una vez, luego `dsh1024 plugin --profile web add dsh-skill-pack-security` (cuenta para el ranking de instalaciones de [deepseek1024.com](https://deepseek1024.com)).
 
 **Ocho skills de auditoría de seguridad más una puerta automática de cadena de suministro de plugins para DeepSeek Harness.**
