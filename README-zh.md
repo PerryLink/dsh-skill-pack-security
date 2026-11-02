@@ -1,3 +1,5 @@
+> **已迁移：** 本项目现在位于 **[dsh-security-pack](https://github.com/PerryLink/dsh-security-pack)**。本仓库保留为索引/备份，新工作在新仓库进行。旧 npm 包 `@perrylink/dsh-skill-pack-security-provider` 已弃用，请安装 `dsh-security-pack`。
+
 <div align="center">
 
 # dsh-skill-pack-security

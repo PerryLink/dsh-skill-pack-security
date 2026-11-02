@@ -1,3 +1,5 @@
+> **Moved:** this project is now **[dsh-security-pack](https://github.com/PerryLink/dsh-security-pack)**. This repository stays as a pointer/backup; new work happens in the new home. Old npm package `@perrylink/dsh-skill-pack-security-provider` is deprecated; install `dsh-security-pack`.
+
 <div align="center">
 
 # dsh-skill-pack-security
