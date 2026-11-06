@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-dark.svg">
-  <img src="docs/assets/dsh-skill-pack-security-flow-light.svg" width="100%" alt="dsh-skill-pack-security पाइपलाइन: owner/repo → plugin_vet स्कैन → licence/SBOM/commit-lock/lifecycle/exfil जाँच → पाँच-आयाम जोखिम कार्ड → PASS|WARN|FAIL गेट; साथ में skills/ और skills-en/ के आठ SKILL.md बंडल ctx.skills से लोड होते हैं">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-hero-en-dark.webp">
+  <img src="docs/assets/dsh-skill-pack-security-hero-en-light.webp" width="100%" alt="dsh-skill-pack-security बैनर: इंस्टॉल से पहले जाँच — नौ स्थिर जाँचें पाँच भारित आयामों में समाहित होकर PASS / WARN / FAIL निर्णय देती हैं, और गेट केवल FAIL पर लागू होता है">
 </picture>
 
 # dsh-skill-pack-security
@@ -46,6 +46,11 @@ owner/repo ──tarball (1 बार)──▶ plugin_vet ──▶ license · 
                                       ▼
                  जोखिम कार्ड (5 आयाम x 0-100) ──▶ PASS | WARN | FAIL ──▶ gate.policy
 ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="dsh-skill-pack-security संरचना: नौ जाँचें पाँच भारित आयामों (लाइसेंस 0.25 · स्रोत 0.20 · निर्भरताएँ 0.15 · बिल्ड स्क्रिप्ट 0.25 · रखरखाव 0.15) में समाहित होती हैं, फिर निर्णय सीढ़ी — कोई भी जाँच विफल हो तो FAIL, कुल स्कोर 60 से कम हो तो WARN, अन्यथा PASS — और अंत में warn / deny गेट">
+</picture>
 
 ## तीन चरणों में शुरुआत
 

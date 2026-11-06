@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-dark.svg">
-  <img src="docs/assets/dsh-skill-pack-security-flow-light.svg" width="100%" alt="dsh-skill-pack-security pipeline: owner/repo → plugin_vet scan → license/SBOM/commit-lock/lifecycle/exfil checks → five-dimension risk card → PASS|WARN|FAIL gate; on the other side the eight SKILL.md bundles under skills/ and skills-en/ load through ctx.skills">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-hero-en-dark.webp">
+  <img src="docs/assets/dsh-skill-pack-security-hero-en-light.webp" width="100%" alt="dsh-skill-pack-security banner: inspect before install — nine static checks fold into five weighted dimensions, closing with a PASS / WARN / FAIL verdict and a gate that only applies on FAIL">
 </picture>
 
 # dsh-skill-pack-security
@@ -46,6 +46,11 @@ owner/repo ──tarball (once)──▶ plugin_vet ──▶ license · sbom ·
                                      ▼
                     risk card (5 dims x 0-100) ──▶ PASS | WARN | FAIL ──▶ gate.policy
 ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="dsh-skill-pack-security structure: nine checks merge into five weighted dimensions (license 0.25, source 0.20, dependencies 0.15, build-scripts 0.25, maintenance 0.15), then a verdict staircase — any failed check means FAIL, an overall score below 60 means WARN, otherwise PASS — and the warn / deny gate">
+</picture>
 
 ## Three-step setup
 

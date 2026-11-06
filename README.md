@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-dark.svg">
-  <img src="docs/assets/dsh-skill-pack-security-flow-light.svg" width="100%" alt="dsh-skill-pack-security 管线：owner/repo → plugin_vet 扫描 → 许可证/SBOM/commit 锁定/生命周期脚本/回传 五项检查 → 五维风险卡片 → PASS|WARN|FAIL 门禁；另一侧 skills/ 与 skills-en/ 的八个 SKILL.md 经 ctx.skills 供 skill 工具加载">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-skill-pack-security-hero-zh-light.webp" width="100%" alt="dsh-skill-pack-security 横幅：先验货，再安装——九个静态检查折进五个加权维度，输出 PASS / WARN / FAIL 判定，门禁只在 FAIL 时生效">
 </picture>
 
 # dsh-skill-pack-security
@@ -46,6 +46,11 @@ owner/repo ──tarball(1 次)──▶ plugin_vet ──▶ license · sbom ·
                                    ▼
                     风险卡片（5 维 × 0–100）──▶ PASS | WARN | FAIL ──▶ gate.policy
 ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="dsh-skill-pack-security 结构图：九项检查按五个加权维度归并（许可证 0.25、来源 0.20、依赖 0.15、构建脚本 0.25、维护状态 0.15），经加权求和进入判定阶梯——任一检查失败即 FAIL、总分低于 60 为 WARN、否则 PASS——最后是 warn / deny 门禁">
+</picture>
 
 ## 三步上手
 

@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-dark.svg">
-  <img src="docs/assets/dsh-skill-pack-security-flow-light.svg" width="100%" alt="Fluxo do dsh-skill-pack-security: owner/repo → varredura plugin_vet → verificações de licença/SBOM/commit-lock/lifecycle/exfil → cartão de risco de cinco dimensões → portão PASS|WARN|FAIL; em paralelo os oito SKILL.md de skills/ e skills-en/ carregam via ctx.skills">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-hero-en-dark.webp">
+  <img src="docs/assets/dsh-skill-pack-security-hero-en-light.webp" width="100%" alt="Banner do dsh-skill-pack-security: inspecione antes de instalar — nove verificações estáticas se agrupam em cinco dimensões ponderadas e terminam em um veredito PASS / WARN / FAIL, com um portão que só age em FAIL">
 </picture>
 
 # dsh-skill-pack-security
@@ -46,6 +46,11 @@ owner/repo ──tarball (1x)──▶ plugin_vet ──▶ license · sbom · c
                                    ▼
                   cartão de risco (5 dims x 0-100) ──▶ PASS | WARN | FAIL ──▶ gate.policy
 ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-skill-pack-security-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="Estrutura do dsh-skill-pack-security: as nove verificações são agrupadas em cinco dimensões ponderadas (licença 0,25 · origem 0,20 · dependências 0,15 · scripts de build 0,25 · manutenção 0,15) e passam por uma escada de veredito — qualquer falha resulta em FAIL, pontuação geral abaixo de 60 resulta em WARN, caso contrário PASS — até o portão warn / deny">
+</picture>
 
 ## Instalação em três passos
 
