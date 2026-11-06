@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-label="dsh-skill-pack-security pipeline">
+<title>dsh-skill-pack-security pipeline</title>
+<rect width="1200" height="420" rx="18" fill="#ffffff"/>
+<text x="60" y="62" fill="#1f2328" font-family="ui-sans-serif,system-ui,sans-serif" font-size="30" font-weight="700">dsh-skill-pack-security</text>
+<text x="60" y="94" fill="#57606a" font-family="ui-monospace,monospace" font-size="16">plugin_vet pre-install gate + 8 SKILL.md audit skills</text>
+<line x1="60" y1="116" x2="1140" y2="116" stroke="#d0d7de"/>
+<rect x="60" y="150" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="150" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">owner/repo</text>
+<text x="150" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">tarball x1</text>
+<path d="M246 198h33" stroke="#57606a" stroke-width="3"/>
+<path d="M277 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="285" y="150" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#4B67B4" stroke-width="2"/>
+<text x="375" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">plugin_vet</text>
+<text x="375" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">zero dependency</text>
+<path d="M471 198h33" stroke="#57606a" stroke-width="3"/>
+<path d="M502 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="510" y="150" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="600" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">5 checks</text>
+<text x="600" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">license/sbom/lock</text>
+<path d="M696 198h33" stroke="#57606a" stroke-width="3"/>
+<path d="M727 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="735" y="150" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="825" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">risk card</text>
+<text x="825" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">0-100 x 5 dims</text>
+<path d="M921 198h33" stroke="#57606a" stroke-width="3"/>
+<path d="M952 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="960" y="150" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#16a34a" stroke-width="2"/>
+<text x="1050" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">PASS|WARN|FAIL</text>
+<text x="1050" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">gate: warn|deny</text>
+<rect x="60" y="296" width="1080" height="56" rx="12" fill="#f6f8fa" stroke="#4B67B4" stroke-width="2"/>
+<text x="600" y="331" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="14">skills/ · skills-en/ · 8 x SKILL.md -> ctx.skills -> skill tool</text>
+<text x="60" y="392" fill="#57606a" font-family="ui-monospace,monospace" font-size="13">findings cite skill sections · e.g. supply-chain-review §1 · dependency-audit §3 · prompt-injection-review</text>
+</svg>
