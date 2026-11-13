@@ -20,7 +20,7 @@
  *   3. provider/package.json               version
  *   4. skills/<name>/SKILL.md + skills-en/<name>/SKILL.md  metadata.version (16 files)
  *   5. provider/src/index.ts, provider/src/vet/config.ts   user-agent default
- *   6. README.md + README-{zh,es,pt,hi}.md   vet.userAgent table rows
+ *   6. README.md + README.{en,es,pt,hi}.md   vet.userAgent table rows
  *
  * NOT a carrier: the root `dependencies["@perrylink/dsh-skill-pack-security-provider"]`
  * pin. pnpm 11 runs a dependency-status check before every `pnpm run`, and the
@@ -39,7 +39,7 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
 const SKILL_ROOTS = ['skills', 'skills-en']
-const READMES = ['README.md', 'README-zh.md', 'README-es.md', 'README-pt.md', 'README-hi.md']
+const READMES = ['README.md', 'README.en.md', 'README.es.md', 'README.pt.md', 'README.hi.md']
 const PROVIDER = '@perrylink/dsh-skill-pack-security-provider'
 const UA_PREFIX = 'dsh-skill-pack-security/'
 const UA_FILES = [

@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="660" viewBox="0 0 1100 660" role="img" aria-label="plugin_vet structure: the nine checks grouped into five weighted risk dimensions, merged into a verdict staircase (FAIL, WARN, PASS) and the gate policy">
+<title>plugin_vet: nine checks, five weighted dimensions, one verdict</title>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f9f6fd"/><stop offset="1" stop-color="#e4eaf8"/></linearGradient>
+<filter id="sh" x="-12%" y="-12%" width="124%" height="124%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#1b2a52" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1100" height="660" rx="22" fill="url(#bg)"/>
+<text x="40" y="44" fill="#4B67B4" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" letter-spacing="2.2">PLUGIN_VET · STRUCTURE</text>
+<text x="40" y="86" fill="#1a2233" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="27" font-weight="700" text-anchor="start">Nine checks, five weighted dimensions, one verdict</text>
+<text x="40" y="112" fill="#525d75" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="15" font-weight="400" text-anchor="start">target → tarball ×1 → 9 checks → 5 weighted dims → verdict → gate · zero dependency</text>
+<text x="1060" y="112" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="end">budget 800 files · 256 KiB · 64 MiB</text>
+<text x="40" y="140" fill="#7b859b" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" letter-spacing="1.4">CHECKS · 9</text>
+<text x="410" y="140" fill="#7b859b" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" letter-spacing="1.4">DIMENSION × WEIGHT</text>
+<text x="700" y="140" fill="#7b859b" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" letter-spacing="1.4">VERDICT → GATE</text>
+<rect x="40" y="150" width="320" height="411" rx="22" fill="#ffffff" stroke="#dfe4f2" stroke-width="1" filter="url(#sh)"/>
+<rect x="52" y="170.5" width="4" height="18" rx="2" fill="#4B67B4" opacity="0.9"/>
+<text x="68" y="176" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">license</text>
+<text x="68" y="192" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">dependency-audit §3</text>
+<path d="M388 166V193" stroke="#4B67B4" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+<path d="M388 179.5H410" stroke="#4B67B4" stroke-width="2" opacity="0.55"/>
+<rect x="410" y="159.5" width="254" height="40.0" rx="14" fill="#eef1fa" stroke="#c5cfec" stroke-width="1"/>
+<rect x="420" y="168.5" width="3" height="22" rx="1.5" fill="#4B67B4"/>
+<text x="432" y="185.0" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="16.5" font-weight="700" text-anchor="start">license</text>
+<text x="646" y="185.0" fill="#525d75" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="400" text-anchor="end">×0.25</text>
+<path d="M664 179.5H678" stroke="#4B67B4" stroke-width="2" opacity="0.55"/>
+<rect x="52" y="219.5" width="4" height="18" rx="2" fill="#8494d6" opacity="0.9"/>
+<text x="68" y="225" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">sbom</text>
+<text x="68" y="241" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">dependency-audit §7</text>
+<path d="M388 215V242" stroke="#8494d6" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+<path d="M388 228.5H410" stroke="#8494d6" stroke-width="2" opacity="0.55"/>
+<rect x="410" y="208.5" width="254" height="40.0" rx="14" fill="#eef1fa" stroke="#c5cfec" stroke-width="1"/>
+<rect x="420" y="217.5" width="3" height="22" rx="1.5" fill="#8494d6"/>
+<text x="432" y="234.0" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="16.5" font-weight="700" text-anchor="start">dependencies</text>
+<text x="646" y="234.0" fill="#525d75" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="400" text-anchor="end">×0.20</text>
+<path d="M664 228.5H678" stroke="#8494d6" stroke-width="2" opacity="0.55"/>
+<rect x="52" y="268.5" width="4" height="18" rx="2" fill="#4160b2" opacity="0.9"/>
+<text x="68" y="274" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">install-scripts</text>
+<text x="68" y="290" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">supply-chain-review §1</text>
+<line x1="64" y1="297" x2="346" y2="297" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="52" y="307.5" width="4" height="18" rx="2" fill="#4160b2" opacity="0.9"/>
+<text x="68" y="313" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">network-exfil</text>
+<text x="68" y="329" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">dependency-audit §4.4</text>
+<line x1="64" y1="336" x2="346" y2="336" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="52" y="346.5" width="4" height="18" rx="2" fill="#4160b2" opacity="0.9"/>
+<text x="68" y="352" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">obfuscation</text>
+<text x="68" y="368" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">supply-chain-review §1</text>
+<path d="M388 264V369" stroke="#4160b2" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+<path d="M388 316.5H410" stroke="#4160b2" stroke-width="2" opacity="0.55"/>
+<rect x="410" y="296.5" width="254" height="40.0" rx="14" fill="#eef1fa" stroke="#c5cfec" stroke-width="1"/>
+<rect x="420" y="305.5" width="3" height="22" rx="1.5" fill="#4160b2"/>
+<text x="432" y="322.0" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="16.5" font-weight="700" text-anchor="start">build-scripts</text>
+<text x="646" y="322.0" fill="#525d75" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="400" text-anchor="end">×0.25</text>
+<path d="M664 316.5H678" stroke="#4160b2" stroke-width="2" opacity="0.55"/>
+<rect x="52" y="395.5" width="4" height="18" rx="2" fill="#677fca" opacity="0.9"/>
+<text x="68" y="401" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">source</text>
+<text x="68" y="417" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">dependency-audit §4.3</text>
+<line x1="64" y1="424" x2="346" y2="424" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="52" y="434.5" width="4" height="18" rx="2" fill="#677fca" opacity="0.9"/>
+<text x="68" y="440" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">commit-lock</text>
+<text x="68" y="456" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">supply-chain-review §3</text>
+<line x1="64" y1="463" x2="346" y2="463" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="52" y="473.5" width="4" height="18" rx="2" fill="#677fca" opacity="0.9"/>
+<text x="68" y="479" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">data-responsibility</text>
+<text x="68" y="495" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">prompt-injection-review §2</text>
+<path d="M388 391V496" stroke="#677fca" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+<path d="M388 443.5H410" stroke="#677fca" stroke-width="2" opacity="0.55"/>
+<rect x="410" y="423.5" width="254" height="40.0" rx="14" fill="#eef1fa" stroke="#c5cfec" stroke-width="1"/>
+<rect x="420" y="432.5" width="3" height="22" rx="1.5" fill="#677fca"/>
+<text x="432" y="449.0" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="16.5" font-weight="700" text-anchor="start">source</text>
+<text x="646" y="449.0" fill="#525d75" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="400" text-anchor="end">×0.20</text>
+<path d="M664 443.5H678" stroke="#677fca" stroke-width="2" opacity="0.55"/>
+<rect x="52" y="522.5" width="4" height="18" rx="2" fill="#9aa8e0" opacity="0.9"/>
+<text x="68" y="528" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="17" font-weight="600" text-anchor="start">maintenance</text>
+<text x="68" y="544" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">security-audit §3</text>
+<path d="M388 518V545" stroke="#9aa8e0" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+<path d="M388 531.5H410" stroke="#9aa8e0" stroke-width="2" opacity="0.55"/>
+<rect x="410" y="511.5" width="254" height="40.0" rx="14" fill="#eef1fa" stroke="#c5cfec" stroke-width="1"/>
+<rect x="420" y="520.5" width="3" height="22" rx="1.5" fill="#9aa8e0"/>
+<text x="432" y="537.0" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="16.5" font-weight="700" text-anchor="start">maintenance</text>
+<text x="646" y="537.0" fill="#525d75" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="400" text-anchor="end">×0.15</text>
+<path d="M664 531.5H678" stroke="#9aa8e0" stroke-width="2" opacity="0.55"/>
+<path d="M678 179.5V531.5" stroke="#4B67B4" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+<circle cx="678" cy="206" r="13" fill="#ffffff" stroke="#4B67B4" stroke-width="1.5"/>
+<text x="678" y="211" fill="#4B67B4" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="15" font-weight="700" text-anchor="middle">Σ</text>
+<path d="M691 206H694" stroke="#4B67B4" stroke-width="2"/>
+<path d="M694 200l7 6-7 6" fill="none" stroke="#4B67B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="700" y="150" width="360" height="411" rx="22" fill="#ffffff" stroke="#dfe4f2" stroke-width="1" filter="url(#sh)"/>
+<text x="720" y="180" fill="#4B67B4" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" letter-spacing="1.8">VERDICT</text>
+<text x="1040" y="180" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="end">plugin_vet.report</text>
+<text x="720" y="206" fill="#525d75" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="400" text-anchor="start">overall = Σ(dim × weight)</text>
+<rect x="720" y="220" width="320" height="10" rx="5" fill="#e8ecf7"/>
+<path d="M912.0 215V235" stroke="#1a2233" stroke-width="2" opacity="0.45"/>
+<text x="720" y="252" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="start">0</text>
+<text x="912.0" y="252" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="middle">60</text>
+<text x="1040" y="252" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="end">100</text>
+<line x1="720" y1="268" x2="1040" y2="268" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="720" y="284" width="300" height="56" rx="16" fill="#f7f8fd" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="736" y="298" width="3" height="28" rx="1.5" fill="#bd3a2c"/>
+<text x="750" y="318" fill="#1a2233" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="15.5" font-weight="400" text-anchor="start">any check fails</text>
+<rect x="936" y="298" width="70" height="28" rx="14" fill="#fbeae7" stroke="#bd3a2c" stroke-width="1.2"/>
+<text x="971" y="318" fill="#bd3a2c" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="700" text-anchor="middle">FAIL</text>
+<rect x="734" y="352" width="300" height="56" rx="16" fill="#f7f8fd" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="750" y="366" width="3" height="28" rx="1.5" fill="#a96800"/>
+<text x="764" y="386" fill="#1a2233" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="15.5" font-weight="400" text-anchor="start">overall &lt; 60</text>
+<rect x="950" y="366" width="70" height="28" rx="14" fill="#fbf1de" stroke="#a96800" stroke-width="1.2"/>
+<text x="985" y="386" fill="#a96800" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="700" text-anchor="middle">WARN</text>
+<rect x="748" y="420" width="300" height="56" rx="16" fill="#f7f8fd" stroke="#dfe4f2" stroke-width="1"/>
+<rect x="764" y="434" width="3" height="28" rx="1.5" fill="#1f8f4e"/>
+<text x="778" y="454" fill="#1a2233" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="15.5" font-weight="400" text-anchor="start">otherwise</text>
+<rect x="964" y="434" width="70" height="28" rx="14" fill="#e7f4ec" stroke="#1f8f4e" stroke-width="1.2"/>
+<text x="999" y="454" fill="#1f8f4e" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="700" text-anchor="middle">PASS</text>
+<line x1="720" y1="494" x2="1040" y2="494" stroke="#dfe4f2" stroke-width="1"/>
+<text x="720" y="516" fill="#1a2233" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14.5" font-weight="700" text-anchor="start">gate.policy</text>
+<text x="1040" y="516" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="end">applies only on FAIL</text>
+<rect x="720" y="520" width="176" height="30" rx="15" fill="#eef1fa" stroke="#c5cfec" stroke-width="1"/>
+<text x="808" y="540" fill="#4B67B4" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="middle">warn · non-blocking</text>
+<rect x="904" y="520" width="122" height="30" rx="15" fill="#f7f8fd" stroke="#dfe4f2" stroke-width="1"/>
+<text x="965" y="540" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="middle">deny · blocks</text>
+<text x="40" y="604" fill="#7b859b" font-family="'Segoe UI','Microsoft YaHei',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14" font-weight="400" text-anchor="start">Every finding cites a section of the 8 bundled SKILL.md skills · zh / en editions</text>
+<text x="1060" y="604" fill="#7b859b" font-family="Consolas,'SFMono-Regular','Cascadia Mono',Menlo,monospace" font-size="14" font-weight="400" text-anchor="end">dsh-skill-pack-security</text>
+</svg>
