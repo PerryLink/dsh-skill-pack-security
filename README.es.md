@@ -313,7 +313,7 @@ Este plugin toca exactamente dos seams: registra `plugin_vet` en `ctx.tools` y l
 
 | Superficie | Estado |
 |---|---|
-| Harness | DeepSeek Harness **`dsh-v0.2.1-alpha.1`** (tag de GitHub, verificado 2026-09-25: cadena de puertas completa + instalación de perfil de humo). Línea de dependencia npm: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 \|\| >=0.1.5-alpha.1 <0.2.0`). El sobre de sesión conserva su campo ignorable solo por compatibilidad de lectura de logs guardados: Session.append sigue sin poder estamparlo, así que el comportamiento de la puerta de auditoría no cambia. |
+| Harness | DeepSeek Harness **`dsh-v0.2.2-rc.4`** (tag de GitHub, verificado 2026-11-18: cadena de puertas completa + instalación de perfil de humo). Línea de dependencia npm: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 \|\| >=0.1.5-alpha.1 <0.2.0 \|\| >=0.2.2-0 <0.3.0`). El sobre de sesión conserva su campo ignorable solo por compatibilidad de lectura de logs guardados: Session.append sigue sin poder estamparlo, así que el comportamiento de la puerta de auditoría no cambia. |
 | Node | `^22.19.0 \|\| >=24.0.0` (el runtime de DeepSeek Harness) |
 | Plataformas | Todas (las skills son contenido; el provider es un plugin de host). CI ejecuta las 25 comprobaciones en Ubuntu y en Windows |
 | Modelo | Cualquiera (las skills se cargan bajo demanda con la herramienta `skill`; `plugin_vet` es determinista) |
