@@ -405,7 +405,7 @@ $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 - [@PerryLink](https://github.com/PerryLink) —— 作者与维护者：双语版八个技能、安装脚本、验证套件、provider 包、CI 与文档。
 
 <details>
-<summary>展开全部 95 个插件</summary>
+<summary>展开全部 99 个插件</summary>
 
 | 插件 | 状态 |
 |---|---|

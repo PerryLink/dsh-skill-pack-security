@@ -406,7 +406,7 @@ Este projeto faz parte da família de plugins DeepSeek Harness da [PerryLink](ht
 - [@PerryLink](https://github.com/PerryLink) — autor e mantenedor: as oito skills nas duas edições, os instaladores, a suíte de verificação, o bundle provider, o CI e a documentação.
 
 <details>
-<summary>Expandir os 95 plugins</summary>
+<summary>Expandir os 99 plugins</summary>
 
 | Plugin | Status |
 |---|---|

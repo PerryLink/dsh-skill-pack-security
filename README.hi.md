@@ -406,7 +406,7 @@ $env:DSH_HARNESS_CHECKOUT = 'D:\deepseek-harness'
 - [@PerryLink](https://github.com/PerryLink) — लेखक और अनुरक्षक: दोनों भाषा संस्करणों में आठ स्किल्स, इंस्टॉलर, सत्यापन सूट, provider बंडल, CI और दस्तावेज़ीकरण।
 
 <details>
-<summary>सभी 95 प्लगइन विस्तारित करें</summary>
+<summary>सभी 99 प्लगइन विस्तारित करें</summary>
 
 | प्लगइन | स्थिति |
 |---|---|
