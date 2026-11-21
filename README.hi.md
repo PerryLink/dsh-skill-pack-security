@@ -52,6 +52,11 @@ owner/repo ──tarball (1 बार)──▶ plugin_vet ──▶ license · 
   <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="dsh-skill-pack-security संरचना: नौ जाँचें पाँच भारित आयामों (लाइसेंस 0.25 · स्रोत 0.20 · निर्भरताएँ 0.15 · बिल्ड स्क्रिप्ट 0.25 · रखरखाव 0.15) में समाहित होती हैं, फिर निर्णय सीढ़ी — कोई भी जाँच विफल हो तो FAIL, कुल स्कोर 60 से कम हो तो WARN, अन्यथा PASS — और अंत में warn / deny गेट">
 </picture>
 
+![dsh-skill-pack-security का असली टर्मिनल रन](docs/assets/dsh-skill-pack-security-demo.gif)
+
+*इस रिपॉज़िटरी में दर्ज असली रन का एनिमेटेड रीप्ले।*
+
+
 ## तीन चरणों में शुरुआत
 
 1. **इंस्टॉल** (कोई एक चैनल; चलने वाला पैकेज provider है):

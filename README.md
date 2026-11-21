@@ -36,6 +36,10 @@ dsh plugin --profile <name> add dsh-skill-pack-security
 
 ## 它是什么
 
+![dsh-skill-pack-security 真实终端运行](docs/assets/dsh-skill-pack-security-demo.gif)
+
+*本仓库一次真实运行的动图回放。*
+
 `dsh-skill-pack-security` 是**技能包 + 供应链门禁**：八个安全审计技能以 `SKILL.md` 交给模型按需加载，`plugin_vet` 则把安装前的机械检查跑完——许可证、SBOM、commit 锁定、生命周期脚本与回传域名、五维风险卡片，最后给一个 PASS / WARN / FAIL。技能负责"怎么审"，工具负责"先扫一遍"，二者共用同一套术语与章节编号。根包是 private 的 bundle 清单，真正可运行的是 `@perrylink/dsh-skill-pack-security-provider`。
 
 ```text

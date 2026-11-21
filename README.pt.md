@@ -52,6 +52,11 @@ owner/repo ──tarball (1x)──▶ plugin_vet ──▶ license · sbom · c
   <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="Estrutura do dsh-skill-pack-security: as nove verificações são agrupadas em cinco dimensões ponderadas (licença 0,25 · origem 0,20 · dependências 0,15 · scripts de build 0,25 · manutenção 0,15) e passam por uma escada de veredito — qualquer falha resulta em FAIL, pontuação geral abaixo de 60 resulta em WARN, caso contrário PASS — até o portão warn / deny">
 </picture>
 
+![dsh-skill-pack-security: execução real de terminal](docs/assets/dsh-skill-pack-security-demo.gif)
+
+*Repetição animada de uma execução real registrada neste repositório.*
+
+
 ## Instalação em três passos
 
 1. **Instalar** (escolha um canal; o pacote executável é o provider):

@@ -52,6 +52,11 @@ owner/repo ──tarball (once)──▶ plugin_vet ──▶ license · sbom ·
   <img src="docs/assets/dsh-skill-pack-security-flow-v5-light.svg" width="100%" alt="dsh-skill-pack-security structure: nine checks merge into five weighted dimensions (license 0.25, source 0.20, dependencies 0.15, build-scripts 0.25, maintenance 0.15), then a verdict staircase — any failed check means FAIL, an overall score below 60 means WARN, otherwise PASS — and the warn / deny gate">
 </picture>
 
+![dsh-skill-pack-security: real terminal run](docs/assets/dsh-skill-pack-security-demo.gif)
+
+*Animated replay of a real run recorded in this repository.*
+
+
 ## Three-step setup
 
 1. **Install** (pick one channel; the runnable package is the provider):
